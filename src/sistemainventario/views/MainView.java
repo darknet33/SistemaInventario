@@ -31,6 +31,8 @@ public final class MainView extends javax.swing.JFrame {
         this.opcionSelect = "Inicio";
         this.setSize(1240, 750);
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("/RINHO.png")).getImage());
+
         cargaDatos();
         jpContainer.setLayout(new BorderLayout());
         generarMenu();

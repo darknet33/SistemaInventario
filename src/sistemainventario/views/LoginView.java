@@ -2,6 +2,7 @@ package sistemainventario.views;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import sistemainventario.controller.LoginController;
@@ -11,8 +12,9 @@ import sistemainventario.util.Mensajes;
 public final class LoginView extends javax.swing.JFrame {
     private final LoginController controllerLogin;
     public LoginView() {
-        this.controllerLogin= new LoginController();
+        this.controllerLogin= new LoginController();   
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("/RINHO.png")).getImage());
         
         //Codigo para el ver el Enter y el Escape
         getRootPane().setDefaultButton(btnIngresar);
