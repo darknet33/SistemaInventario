@@ -14,7 +14,7 @@ public final class LoginView extends javax.swing.JFrame {
     public LoginView() {
         this.controllerLogin= new LoginController();   
         initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("/RINHO.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/RHINO.png")).getImage());
         
         //Codigo para el ver el Enter y el Escape
         getRootPane().setDefaultButton(btnIngresar);

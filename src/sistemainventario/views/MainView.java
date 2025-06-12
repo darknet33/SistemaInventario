@@ -31,7 +31,7 @@ public final class MainView extends javax.swing.JFrame {
         this.opcionSelect = "Inicio";
         this.setSize(1240, 750);
         initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("/RINHO.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/RHINO.png")).getImage());
 
         cargaDatos();
         jpContainer.setLayout(new BorderLayout());
@@ -260,7 +260,7 @@ public final class MainView extends javax.swing.JFrame {
     private void generarMenu() {
         jpMenu.removeAll(); // limpia el menú antes de reconstruirlo
 
-        JPanel titulo = crearbtnMenu("RINHO", 20, 50, new Font("Segoe UI", Font.BOLD, 28));
+        JPanel titulo = crearbtnMenu("RHINO", 20, 50, new Font("Segoe UI", Font.BOLD, 28));
         jpMenu.add(titulo);
 
         int y = 90;
@@ -281,7 +281,7 @@ public final class MainView extends javax.swing.JFrame {
             labelOpcion.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-//                    Mensajes.info("Seleccionaste: " + opcion);
+                    Mensajes.info("Seleccionaste: " + opcion);
 //                    if(tienePermiso(opcion)){
                     seleccionarOpcion(opcion);                    
                     generarMenu();
@@ -378,6 +378,13 @@ public final class MainView extends javax.swing.JFrame {
                 Titulo = "Compras";
                 panel = new EntradasPanel();
                 break;
+             case "compras":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
+                this.opcionSelect = this.opciones.get(0);
+                Titulo = "Compras";
+                panel = new EntradasPanel();
+                break;
             case "proveedores":
                 opciones.clear();
                 this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
@@ -390,7 +397,56 @@ public final class MainView extends javax.swing.JFrame {
                 this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
                 this.opcionSelect = this.opciones.get(2);
                 Titulo = opcion;
-                panel = new ProductosPanel();
+                panel = new JPanel();
+                break;
+            case "salidas":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.opciones.get(0);
+                Titulo = "Ventas";
+                panel = new SalidasPanel();
+                break;
+            case "ventas":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.opciones.get(0);
+                Titulo = "Ventas";
+                panel = new SalidasPanel();
+                break;
+            case "clientes":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.opciones.get(1);
+                Titulo = opcion;
+                panel = new ClientesPanel();
+                break;
+            case "cobros":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.opciones.get(2);
+                Titulo = opcion;
+                panel = new JPanel();
+                break;
+            case "setup":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.opcionSelect = this.opciones.get(0);
+                Titulo = "Empresa";
+                panel = new SetupPanel();
+                break;
+            case "empresa":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.opcionSelect = this.opciones.get(0);
+                Titulo = "Empresa";
+                panel = new SetupPanel();
+                break;
+            case "usuario":
+                opciones.clear();
+                this.opciones.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.opcionSelect = this.opciones.get(1);
+                Titulo = "Usuario";
+                panel = new UsuarioPanel();
                 break;
             case "regresar":
                 opciones.clear();

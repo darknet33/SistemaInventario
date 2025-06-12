@@ -12,13 +12,7 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/dao/ProductoDAO.java</file>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/services/ProductoService.java</file>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/controller/ProductoController.java</file>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/mappers/ProductoMapper.java</file>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/mappers/CategoriaMapper.java</file>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/views/ProductosView.java</file>
-            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/dto/CategoriaDTO.java</file>
+            <file>file:/C:/Users/royto/OneDrive/Documentos/Proyecto%20General/JAVA%20SIstema%20Inventario/SistemaInventario/src/sistemainventario/views/MainView.java</file>
         </group>
     </open-files>
 </project-private>

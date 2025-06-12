@@ -85,7 +85,7 @@ public class ProveedorPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblProveedor);
 
-        jpContainer.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 48, 630, 583));
+        jpContainer.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 48, 630, 580));
 
         btnNuevo.setBackground(new java.awt.Color(255, 255, 255));
         btnNuevo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
@@ -307,7 +307,7 @@ public class ProveedorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jpContainer.add(jpDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 40, -1, -1));
+        jpContainer.add(jpDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 30, -1, -1));
 
         btnBuscar.setBackground(new java.awt.Color(255, 255, 255));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/contenedor/btnBuscar.png"))); // NOI18N
@@ -331,7 +331,7 @@ public class ProveedorPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 645, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jpContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
