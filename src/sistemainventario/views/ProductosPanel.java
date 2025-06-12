@@ -144,22 +144,24 @@ public class ProductosPanel extends javax.swing.JPanel {
             jpActionSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpActionSaveLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jpActionSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addComponent(btnGuardar)
                 .addContainerGap())
+            .addGroup(jpActionSaveLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnCancelar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpActionSaveLayout.setVerticalGroup(
             jpActionSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpActionSaveLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnGuardar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCancelar)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jpDatos.add(jpActionSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 252, 180, 80));
+        jpDatos.add(jpActionSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 230, 180, 90));
 
         jpAction.setOpaque(false);
 
@@ -231,7 +233,7 @@ public class ProductosPanel extends javax.swing.JPanel {
         lblUltimamodificacion.setForeground(new java.awt.Color(0, 153, 255));
         lblUltimamodificacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblUltimamodificacion.setText("Ultima Modificacion:");
-        jpDatos.add(lblUltimamodificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 310, 400, -1));
+        jpDatos.add(lblUltimamodificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 280, 400, -1));
 
         lblDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblDescripcion.setForeground(new java.awt.Color(0, 153, 255));
@@ -305,13 +307,13 @@ public class ProductosPanel extends javax.swing.JPanel {
         lblFechaRegistro.setForeground(new java.awt.Color(0, 153, 255));
         lblFechaRegistro.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblFechaRegistro.setText("Fecha Registro:");
-        jpDatos.add(lblFechaRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 230, 400, -1));
+        jpDatos.add(lblFechaRegistro, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 220, 400, -1));
 
         lblFechaActualizado.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblFechaActualizado.setForeground(new java.awt.Color(0, 153, 255));
         lblFechaActualizado.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblFechaActualizado.setText("Fecha Actualizacion:");
-        jpDatos.add(lblFechaActualizado, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 270, 400, -1));
+        jpDatos.add(lblFechaActualizado, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 250, 400, -1));
 
         txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
@@ -396,6 +398,7 @@ public class ProductosPanel extends javax.swing.JPanel {
 
     private void btnNuevoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNuevoMouseClicked
         vistaGuardar(true);
+        txtStockInicial.setEditable(true);
         limpiar();
         productoDTO = null;
     }//GEN-LAST:event_btnNuevoMouseClicked
@@ -422,13 +425,7 @@ public class ProductosPanel extends javax.swing.JPanel {
             productoDTO.setStockInicial(Integer.parseInt(txtStockInicial.getText()));
             productoDTO.setStockActual(Integer.parseInt(txtStockInicial.getText()));
             productoDTO.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
-
-            if (chkEstado.isSelected()) {
-                productoDTO.setEstado("Habilitado");
-            } else {
-                productoDTO.setEstado("Desabilitado");
-            }
-
+            productoDTO.setEstado(chkEstado.isSelected());           
             productoDTO.setUsuario(Sesion.getUsuario());
 
             if (productoController.nuevaProducto(productoDTO)) {
@@ -442,15 +439,8 @@ public class ProductosPanel extends javax.swing.JPanel {
             productoDTO.setPeso(txtPeso.getText());
             productoDTO.setProcedencia(txtProcedencia.getText());
             productoDTO.setMarca(txtMarca.getText());
-            productoDTO.setStockInicial(Integer.parseInt(txtStockInicial.getText()));
             productoDTO.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
-
-            if (chkEstado.isSelected()) {
-                productoDTO.setEstado("Habilitado");
-            } else {
-                productoDTO.setEstado("Desabilitado");
-            }
-
+            productoDTO.setEstado(chkEstado.isSelected());
             productoDTO.setUsuario(Sesion.getUsuario());
 
             if (productoController.actulizarProducto(productoDTO)) {
@@ -475,6 +465,7 @@ public class ProductosPanel extends javax.swing.JPanel {
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
         vistaGuardar(true);
+        txtStockInicial.setEditable(false);
     }//GEN-LAST:event_btnEditarMouseClicked
 
     private void btnEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarMouseClicked
@@ -502,7 +493,7 @@ public class ProductosPanel extends javax.swing.JPanel {
     }
 
     private void cargarProductos(List<ProductoDTO> listaProductos) {
-        String[] columnas = {"ID", "Codigo", "Categoria", "Descripcion", "Marca", "Minimo", "Estado"};
+        String[] columnas = {"ID", "Codigo", "Categoria", "Descripcion", "Marca", "Stock", "Minimo", "Estado"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -512,7 +503,7 @@ public class ProductosPanel extends javax.swing.JPanel {
 
         listaProductos.stream()
                 .map(p -> new Object[]{p.getId(), p.getCodigo(), p.getCategoria().getNombre(),
-            p.getDescripcion(), p.getMarca(), p.getStockMinimo(), p.getEstado()})
+            p.getDescripcion(), p.getMarca(), p.getStockActual(),p.getStockMinimo(), (p.getEstado()? "ON":"OFF")})
                 .forEach(modelo::addRow);
 
         tblProducto.setModel(modelo);
@@ -521,13 +512,13 @@ public class ProductosPanel extends javax.swing.JPanel {
 
     private void limpiar() {
         txtCodigo.setText("");
-        cboCategoria.setSelectedItem(0);
+        cboCategoria.setSelectedIndex(0);
         txtDescripcion.setText("");
         txtMarca.setText("");
         txtProcedencia.setText("");
-        txtPeso.setText("");
-        txtStockInicial.setText("");
-        txtStockMinimo.setText("");
+        txtPeso.setText("-");
+        txtStockInicial.setText("0");
+        txtStockMinimo.setText("0");
 
         productoDTO = null;
         tblProducto.clearSelection();
@@ -571,7 +562,7 @@ public class ProductosPanel extends javax.swing.JPanel {
         txtPeso.setText(productoDTO.getPeso());
         txtStockInicial.setText("" + productoDTO.getStockInicial());
         txtStockMinimo.setText("" + productoDTO.getStockMinimo());
-        chkEstado.setSelected(productoDTO.getEstado().equals("Habilitado"));
+        chkEstado.setSelected(productoDTO.getEstado());
         lblFechaRegistro.setText("Fecha Registro: "+productoDTO.getFechaRegistro().toString());
         lblFechaActualizado.setText("Fecha Actualizacion: "+productoDTO.getFechaActualizado().toString());
         lblUltimamodificacion.setText("Ultima Modificacion: "+productoDTO.getUsuario().getNombres()+" "+productoDTO.getUsuario().getApellidos());
@@ -579,7 +570,7 @@ public class ProductosPanel extends javax.swing.JPanel {
 
     private void cEditable(Boolean value) {
         txtCodigo.setEditable(value);
-        cboCategoria.setEnabled(value);
+        cboCategoria.setEditable(value);
         txtDescripcion.setEditable(value);
         txtMarca.setEditable(value);
         txtProcedencia.setEditable(value);

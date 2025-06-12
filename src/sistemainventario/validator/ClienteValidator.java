@@ -4,17 +4,17 @@ package sistemainventario.validator;
 import sistemainventario.dto.ClienteDTO;
 
 public class ClienteValidator {
-    public static void validar(ClienteDTO cliente){
-        if (cliente==null)
-            throw new IllegalArgumentException("Categoria undefine");
+    public static void validar(ClienteDTO dto){
+        if (dto==null)
+            throw new IllegalArgumentException("Cliente undefine");
         
-        if (cliente.getNombre().isEmpty())
+        if (dto.getNombre().isEmpty())
             throw new IllegalArgumentException("El nombre es Obligatorio");
         
-        if (cliente.getNit().isEmpty())
+        if (dto.getNit().isEmpty())
             throw new IllegalArgumentException("El NIT es Obligatorio");
         
-        if (cliente.getCelular().isEmpty())
+        if (dto.getCelular().isEmpty())
             throw new IllegalArgumentException("El celular es Obligatorio");
     }
 }

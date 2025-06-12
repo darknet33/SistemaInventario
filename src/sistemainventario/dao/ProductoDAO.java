@@ -90,7 +90,7 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
             stmt.setString(5, entity.getProcedencia());
             stmt.setString(6, entity.getPeso());
             stmt.setInt(7, entity.getStockInicial());
-            stmt.setInt(8, entity.getStockInicial());
+            stmt.setInt(8, entity.getStockActual());
             stmt.setInt(9, entity.getStockMinimo());
             stmt.setBoolean(10, entity.getEstado());
             stmt.setInt(11, entity.getUsuario().getId());
@@ -111,7 +111,7 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
             stmt.setString(5, entity.getProcedencia());
             stmt.setString(6, entity.getPeso());
             stmt.setInt(7, entity.getStockInicial());
-            stmt.setInt(8, entity.getStockInicial());
+            stmt.setInt(8, entity.getStockActual());
             stmt.setInt(9, entity.getStockMinimo());
             stmt.setBoolean(10, entity.getEstado());
             stmt.setInt(11, entity.getUsuario().getId());

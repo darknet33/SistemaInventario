@@ -281,7 +281,7 @@ public final class MainView extends javax.swing.JFrame {
             labelOpcion.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    Mensajes.info("Seleccionaste: " + opcion);
+                    //Mensajes.info("Seleccionaste: " + opcion);
 //                    if(tienePermiso(opcion)){
                     seleccionarOpcion(opcion);                    
                     generarMenu();

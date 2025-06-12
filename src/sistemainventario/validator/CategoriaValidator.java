@@ -4,11 +4,11 @@ import sistemainventario.dto.CategoriaDTO;
 
 public class CategoriaValidator {
     
-    public static void validar(CategoriaDTO categoria){
-        if (categoria==null)
+    public static void validar(CategoriaDTO dto){
+        if (dto==null)
             throw new IllegalArgumentException("Categoria undefine");
         
-        if (categoria.getNombre().isEmpty())
+        if (dto.getNombre().isEmpty())
             throw new IllegalArgumentException("El nombre es Obligatorio");
     }
 }

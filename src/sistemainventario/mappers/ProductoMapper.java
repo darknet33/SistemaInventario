@@ -23,11 +23,7 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
         dto.setStockInicial(entity.getStockInicial());
         dto.setStockActual(entity.getStockActual());
         dto.setStockMinimo(entity.getStockMinimo());
-        if (entity.getEstado()){
-            dto.setEstado("Habilitado");
-        }else{
-            dto.setEstado("Desabilitado");
-        }
+        dto.setEstado(entity.getEstado());       
         dto.setFechaRegistro(entity.getFechaRegistro());
         dto.setFechaActualizado(entity.getFechaActualizado());
         dto.setUsuario(usuarioMapper.toDTO(entity.getUsuario()));
@@ -44,12 +40,12 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
         entity.setCategoria(categoriaMapper.toEntity(dto.getCategoria()));
         entity.setDescripcion(dto.getDescripcion());
         entity.setMarca(dto.getMarca());
-        entity.setProcedencia(dto.getProcedencia().toUpperCase());
+        entity.setProcedencia(dto.getProcedencia());
         entity.setPeso(dto.getPeso());
         entity.setStockInicial(dto.getStockInicial());
         entity.setStockActual(dto.getStockActual());
         entity.setStockMinimo(dto.getStockMinimo());
-        entity.setEstado(dto.getEstado().equals("Habilitado"));
+        entity.setEstado(dto.getEstado());
         entity.setUsuario(usuarioMapper.toEntity(dto.getUsuario()));
         
         return entity;

@@ -4,6 +4,7 @@ import java.util.List;
 import sistemainventario.dao.ProductoDAO;
 import sistemainventario.dto.ProductoDTO;
 import sistemainventario.mappers.ProductoMapper;
+import sistemainventario.validator.ProductoValidator;
 
 public class ProductoService implements IService<ProductoDTO, Integer>{
     
@@ -29,11 +30,13 @@ public class ProductoService implements IService<ProductoDTO, Integer>{
 
     @Override
     public void guardar(ProductoDTO dto) {
+        ProductoValidator.validar(dto);
         productoDAO.save(productoMapper.toEntity(dto));
     }
 
     @Override
     public void actualizar(ProductoDTO dto) {
+        ProductoValidator.validar(dto);
         productoDAO.update(productoMapper.toEntity(dto));
     }
 
