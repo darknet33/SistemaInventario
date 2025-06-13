@@ -8,10 +8,10 @@ public interface IPanel<T> {
     void nuevo();
     void editar();
     void eliminar();
+    void cancelar();
     void refrescarTablaPrincipal();
     void cargarTablaPrincipal(List<T> lista);
-    void limpiar();
-    void vistaCancelar();
+    void limpiar();    
     void selectDTO();
     void controlGetDTO();
     void controlSetDTO();

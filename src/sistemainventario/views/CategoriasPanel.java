@@ -11,7 +11,6 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     private final CategoriaController categoriaController;
     private CategoriaDTO categoriaDTO;
     private List<CategoriaDTO> categorias;
-    private boolean isEdit;
 
     public CategoriasPanel() {
         this.categoriaController = new CategoriaController();
@@ -246,7 +245,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     }//GEN-LAST:event_btnGuardarMouseClicked
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
-        vistaCancelar();
+        cancelar();
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
@@ -288,22 +287,27 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     @Override
     public void nuevo() {
-        isEdit = false;
-        vistaGuardar(true);
         limpiar();
-        categoriaDTO = new CategoriaDTO();
+        vistaNuevo();
+        categoriaDTO= new CategoriaDTO();
     }
 
     @Override
     public void editar() {
-        isEdit = true;
-        vistaGuardar(true);
+        vistaEditar();
+        controlsEditable(true);
     }
+
+    @Override
+    public void cancelar() {
+        vistaCancelar(tblCategoria);
+    }    
 
     @Override
     public void eliminar() {
         if (categoriaController.eliminarCategoria(categoriaDTO.getId())) {
             refrescarTablaPrincipal();
+            vistaInicial();
         }
     }
 
@@ -323,8 +327,6 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
         );
 
         tblCategoria.setModel(modelo);
-        super.vistaInicial(false);
-        limpiar();
     }
 
     @Override
@@ -333,33 +335,18 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
         tblCategoria.clearSelection();
     }
-        
-    @Override
-    public void vistaCancelar() {
-        if (!isEdit) {
-            vistaInicial(false);
-            tblCategoria.clearSelection();
-        } else {
-            controlGetDTO();
-            super.vistaEditDel(true, () -> controlsEditable(true));
-        }
-        isEdit = false;
-    }
 
     @Override
     public void selectDTO() {
-        int fila = tblCategoria.getSelectedRow();
-        if (fila == -1) {
-            return;
-        }
-        int id = (Integer) tblCategoria.getValueAt(fila, 0);
+        int id = obtenerID(tblCategoria);
         categoriaDTO = categoriaController.obtenerCategoria(id);
+        vistaSeleccion();
         controlGetDTO();
+        controlsEditable(false);
     }
 
     @Override
     public void controlGetDTO() {
-        super.vistaEditDel(true, () -> controlsEditable(true));
         txtNombre.setText(categoriaDTO.getNombre());
     }
 
@@ -372,5 +359,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     public void controlsEditable(boolean  value) {
         txtNombre.setEditable(value);
     }
+
+
 
 }

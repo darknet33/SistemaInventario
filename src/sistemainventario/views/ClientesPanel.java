@@ -11,13 +11,13 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     private final ClienteController clienteController;
     private List<ClienteDTO> clientes;
     private ClienteDTO clienteDTO;
-    private boolean isEdit;
 
     public ClientesPanel() {
         this.clienteController = new ClienteController();
         initComponents();
         inicializarPaneles(jpDatos, jpAction, jpActionSave);
         refrescarTablaPrincipal();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -334,7 +334,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     }//GEN-LAST:event_btnGuardarMouseClicked
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
-        vistaCancelar();
+        cancelar();
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
@@ -390,23 +390,28 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     @Override
     public void nuevo() {
-        isEdit = false;
-        vistaGuardar(true);
         limpiar();
+        vistaNuevo();
         clienteDTO = new ClienteDTO();
     }
 
     @Override
     public void editar() {
-        isEdit = true;
-        vistaGuardar(true);
+        vistaEditar();
+        controlsEditable(true);
     }
 
     @Override
     public void eliminar() {
         if (clienteController.eliminarCliente(clienteDTO.getId())) {
              refrescarTablaPrincipal();
+             vistaInicial();
         }
+    }
+    
+    @Override
+    public void cancelar(){
+        vistaCancelar(tblCliente);
     }
     
     @Override
@@ -430,8 +435,6 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
                 .forEach(modelo::addRow);
 
         tblCliente.setModel(modelo);
-        super.vistaGuardar(isEdit, controlEditable);
-        limpiar();
     }
 
     @Override
@@ -446,40 +449,14 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     }
 
     @Override
-    public void vistaInicial(boolean bool) {
-        super.vistaInicial(bool);
-    }
-
-    @Override
-    public void vistaGuardar(boolean bool) {
-        super.vistaGuardar(bool, () -> controlsEditable(true));
-    }
-
-    @Override
-    public void vistaEditDel(boolean bool) {
-        super.vistaEditDel(bool, () -> controlsEditable(true));
-    }
-
-    @Override
-    public void vistaCancelar() {
-        if (clienteDTO == null) {
-            vistaInicial(false);
-            tblCliente.clearSelection();
-        } else {
-            controlGetDTO();
-            vistaEditDel(true);
-        }
-    }
-
-    @Override
     public void selectDTO() {
-        int fila = tblCliente.getSelectedRow();
-        int id = (Integer) tblCliente.getValueAt(fila, 0);
+        int id = obtenerID(tblCliente);
         clienteDTO = clienteController.obtenerCliente(id);
-        vistaEditDel(true);
+        vistaSeleccion();
         controlGetDTO();
+        controlsEditable(false);
     }
-
+   
     @Override
     public void controlGetDTO() {
         txtNombre.setText(clienteDTO.getNombre());
