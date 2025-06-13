@@ -16,13 +16,13 @@ public class ProductoDTO {
     private int stockMinimo;
     private Date fechaRegistro;
     private Date fechaActualizado;
-    private Boolean estado;
+    private boolean estado;
     private UsuarioDTO usuario;
 
     public ProductoDTO() {
     }
 
-    public ProductoDTO(int id, String codigo, CategoriaDTO categoria, String descripcion, String marca, String procedencia, String Peso, int stockInicial, int stockActual, int stockMinimo, Date fechaRegistro, Date fechaActualizado, Boolean estado, UsuarioDTO usuario) {
+    public ProductoDTO(int id, String codigo, CategoriaDTO categoria, String descripcion, String marca, String procedencia, String Peso, int stockInicial, int stockActual, int stockMinimo, Date fechaRegistro, Date fechaActualizado, boolean estado, UsuarioDTO usuario) {
         this.id = id;
         this.codigo = codigo;
         this.categoria = categoria;
@@ -136,11 +136,11 @@ public class ProductoDTO {
         this.fechaActualizado = fechaActualizado;
     }
 
-    public Boolean getEstado() {
+    public boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(boolean estado) {
         this.estado = estado;
     }
 
