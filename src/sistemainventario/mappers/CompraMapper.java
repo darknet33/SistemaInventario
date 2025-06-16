@@ -43,12 +43,18 @@ public class CompraMapper implements IMapper<Compra, CompraDTO>{
 
     @Override
     public List<CompraDTO> toDTOList(List<Compra> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .toList();
     }
 
     @Override
     public List<Compra> toEntityList(List<CompraDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .toList();
     }
     
 }

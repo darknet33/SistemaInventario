@@ -3,7 +3,7 @@ package sistemainventario.dto;
 import java.util.Date;
 
 
-public class ProductoDTO {
+public class ProductoDTO implements IDTO{
     private int id;
     private String codigo;
     private CategoriaDTO categoria;
@@ -154,7 +154,12 @@ public class ProductoDTO {
 
     @Override
     public String toString() {
-        return "ProductoDTO{" + "id=" + id + ", codigo=" + codigo + ", categoria=" + categoria + ", descripcion=" + descripcion + ", marca=" + marca + ", procedencia=" + procedencia + ", Peso=" + Peso + ", stockInicial=" + stockInicial + ", stockActual=" + stockActual + ", stockMinimo=" + stockMinimo + ", fechaRegistro=" + fechaRegistro + ", fechaActualizado=" + fechaActualizado + ", estado=" + estado + ", usuario=" + usuario + '}';
+        return categoria + " " + descripcion + " " + marca ;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
     }
     
     

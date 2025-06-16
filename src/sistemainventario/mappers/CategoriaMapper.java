@@ -28,11 +28,17 @@ public class CategoriaMapper implements IMapper<Categoria, CategoriaDTO>{
 
     @Override
     public List<CategoriaDTO> toDTOList(List<Categoria> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .toList();
     }
 
     @Override
     public List<Categoria> toEntityList(List<CategoriaDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .toList();
     }
 }

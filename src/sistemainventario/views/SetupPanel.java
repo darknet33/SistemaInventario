@@ -30,15 +30,21 @@ public class SetupPanel extends javax.swing.JPanel {
         cboTipo = new javax.swing.JComboBox<>();
         imagen1 = new sistemainventario.util.Imagen();
 
+        setBackground(new java.awt.Color(255, 255, 255));
+
         lblNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblNombre.setForeground(new java.awt.Color(0, 153, 255));
         lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblNombre.setText("Nombre");
 
+        txtNombre.setBackground(null);
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtNombre.setForeground(new java.awt.Color(102, 102, 102));
         txtNombre.setText("Muelles Rhino");
 
+        txtNit.setBackground(null);
         txtNit.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtNit.setForeground(new java.awt.Color(102, 102, 102));
 
         lblNombre1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblNombre1.setForeground(new java.awt.Color(0, 153, 255));
@@ -50,7 +56,9 @@ public class SetupPanel extends javax.swing.JPanel {
         lblRepresentante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblRepresentante.setText("Representante legal");
 
+        txtRepresentante.setBackground(null);
         txtRepresentante.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtRepresentante.setForeground(new java.awt.Color(102, 102, 102));
         txtRepresentante.setText("David Huayrana");
         txtRepresentante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -63,7 +71,9 @@ public class SetupPanel extends javax.swing.JPanel {
         lblRepresentante1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblRepresentante1.setText("Direccion");
 
+        txtRepresentante1.setBackground(null);
         txtRepresentante1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtRepresentante1.setForeground(new java.awt.Color(102, 102, 102));
         txtRepresentante1.setText("Avenida 1 #2 Zona Rosas Pampa");
 
         lblRepresentante2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -71,7 +81,9 @@ public class SetupPanel extends javax.swing.JPanel {
         lblRepresentante2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblRepresentante2.setText("Celular");
 
+        txtRepresentante2.setBackground(null);
         txtRepresentante2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtRepresentante2.setForeground(new java.awt.Color(102, 102, 102));
         txtRepresentante2.setText("78809825");
 
         lblRepresentante3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -79,16 +91,18 @@ public class SetupPanel extends javax.swing.JPanel {
         lblRepresentante3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblRepresentante3.setText("Email");
 
+        txtRepresentante3.setBackground(null);
         txtRepresentante3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtRepresentante3.setForeground(new java.awt.Color(102, 102, 102));
 
         lblRepresentante4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblRepresentante4.setForeground(new java.awt.Color(0, 153, 255));
         lblRepresentante4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblRepresentante4.setText("Tipo");
 
-        cboTipo.setBackground(new java.awt.Color(255, 255, 255));
+        cboTipo.setBackground(null);
         cboTipo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        cboTipo.setForeground(new java.awt.Color(51, 51, 51));
+        cboTipo.setForeground(new java.awt.Color(102, 102, 102));
         cboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Juridico", "Natural" }));
 
         imagen1.setText("imagen1");
@@ -101,43 +115,38 @@ public class SetupPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblNombre)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblNombre1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(152, 152, 152))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblRepresentante)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtRepresentante, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)))
-                        .addGap(424, 424, 424))
+                    .addComponent(lblNombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblNombre1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblRepresentante, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(lblRepresentante1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblRepresentante2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblRepresentante4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblRepresentante3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblRepresentante1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(12, 12, 12)
-                                .addComponent(txtRepresentante1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtRepresentante, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(152, 152, 152)))
+                        .addContainerGap(424, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtRepresentante1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(lblRepresentante2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
                                         .addComponent(txtRepresentante2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(104, 104, 104))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lblRepresentante4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblRepresentante3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(12, 12, 12)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtRepresentante3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(cboTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtRepresentante3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(273, 273, 273))
                             .addComponent(imagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))

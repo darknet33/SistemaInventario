@@ -31,11 +31,17 @@ public class RolMapper implements IMapper<Rol, RolDTO>{
 
     @Override
     public List<RolDTO> toDTOList(List<Rol> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .toList();
     }
 
     @Override
     public List<Rol> toEntityList(List<RolDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .toList();
     }
 }

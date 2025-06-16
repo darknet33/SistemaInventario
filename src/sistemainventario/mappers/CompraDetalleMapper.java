@@ -13,7 +13,7 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
         CompraDetalleDTO dto= new CompraDetalleDTO();
         dto.setId(entity.getId());
         dto.setMovimiento(compraMapper.toDTO(entity.getMovimiento()));
-        dto.setProduct(productoMapper.toDTO(entity.getProducto()));
+        dto.setProducto(productoMapper.toDTO(entity.getProducto()));
         dto.setCantidad(entity.getCantidad());
         dto.setPrecio(entity.getPrecio());
 
@@ -25,7 +25,7 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
         CompraDetalle entity= new CompraDetalle();
         entity.setId(dto.getId());
         entity.setMovimiento(compraMapper.toEntity(dto.getMovimiento()));
-        entity.setProducto(productoMapper.toEntity(dto.getProduct()));
+        entity.setProducto(productoMapper.toEntity(dto.getProducto()));
         entity.setCantidad(dto.getCantidad());
         entity.setPrecio(dto.getPrecio());
 
@@ -34,24 +34,18 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
 
     @Override
     public List<CompraDetalleDTO> toDTOList(List<CompraDetalle> entities) {
-        List<CompraDetalleDTO> dtos=new ArrayList<>();
-        
-        entities.forEach(cd -> {
-            dtos.add(toDTO(cd));
-        });
-        
-        return dtos;
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .toList();
     }
 
     @Override
     public List<CompraDetalle> toEntityList(List<CompraDetalleDTO> dtos) {
-        List<CompraDetalle> entities=new ArrayList<>();
-        
-        dtos.forEach(cd -> {
-            entities.add(toEntity(cd));
-        });
-        
-        return entities;
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .toList();
     }
     
 }

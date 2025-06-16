@@ -3,7 +3,7 @@ package sistemainventario.dto;
 
 import java.util.Date;
 
-public class ProveedorDTO {
+public class ProveedorDTO implements IDTO {
     private int Id;
     private String Nombre;
     private String Nit;
@@ -91,7 +91,12 @@ public class ProveedorDTO {
 
     @Override
     public String toString() {
-        return "ProveedorDTO{" + "Id=" + Id + ", Nombre=" + Nombre + ", Nit=" + Nit + ", Materiales=" + Materiales + ", Contacto=" + Contacto + ", Celular=" + Celular + ", Email=" + Email + ", Estado=" + Estado + ", fechaRegistro=" + fechaRegistro + '}';
+        return Nombre ;
+    }
+
+    @Override
+    public int getPK() {
+        return Id;
     }
     
     

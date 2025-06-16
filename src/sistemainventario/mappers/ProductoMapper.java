@@ -53,11 +53,17 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
 
     @Override
     public List<ProductoDTO> toDTOList(List<Producto> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .toList();
     }
 
     @Override
     public List<Producto> toEntityList(List<ProductoDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .toList();
     }
 }

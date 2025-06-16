@@ -28,11 +28,17 @@ public class EstadoMapper implements IMapper<Estado, EstadoDTO>{
 
     @Override
     public List<EstadoDTO> toDTOList(List<Estado> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .toList();
     }
 
     @Override
     public List<Estado> toEntityList(List<EstadoDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .toList();
     }
 }

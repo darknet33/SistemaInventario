@@ -1,6 +1,6 @@
 package sistemainventario.dto;
 
-public class ComprobanteDTO {
+public class ComprobanteDTO implements IDTO {
     private int id;
     private String nombre;
 
@@ -29,7 +29,12 @@ public class ComprobanteDTO {
 
     @Override
     public String toString() {
-        return  nombre;
+        return nombre;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
     }
    
     

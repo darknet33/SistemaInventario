@@ -1,10 +1,10 @@
 
 package sistemainventario.dto;
 
-public abstract class DetalleDTO<T> {
+public abstract class DetalleDTO<T> implements IDTO {
     protected int id;
     protected T movimiento;
-    protected ProductoDTO product;
+    protected ProductoDTO producto;
     protected int cantidad;
     protected double precio;
 
@@ -27,12 +27,12 @@ public abstract class DetalleDTO<T> {
         this.movimiento = movimiento;
     }
 
-    public ProductoDTO getProduct() {
-        return product;
+    public ProductoDTO getProducto() {
+        return producto;
     }
 
-    public void setProduct(ProductoDTO product) {
-        this.product = product;
+    public void setProducto(ProductoDTO producto) {
+        this.producto = producto;
     }
 
     public int getCantidad() {
@@ -49,6 +49,11 @@ public abstract class DetalleDTO<T> {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    @Override
+    public String toString() {
+        return producto + " cantidad=" + cantidad + " precio=" + precio;
     }
     
     

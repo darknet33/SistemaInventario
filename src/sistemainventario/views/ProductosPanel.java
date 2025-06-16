@@ -360,8 +360,8 @@ public class ProductosPanel extends javax.swing.JPanel {
             .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jpContainerLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 908, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(36, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
+                    .addGap(36, 36, 36)))
         );
         jpContainerLayout.setVerticalGroup(
             jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,8 +380,8 @@ public class ProductosPanel extends javax.swing.JPanel {
             .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jpContainerLayout.createSequentialGroup()
                     .addGap(53, 53, 53)
-                    .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(356, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                    .addGap(356, 356, 356)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

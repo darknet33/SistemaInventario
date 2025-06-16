@@ -4,13 +4,10 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CategoriaController;
 import sistemainventario.dto.CategoriaDTO;
-import sistemainventario.util.ModeloTablaBuilder;
 
 public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     private final CategoriaController categoriaController;
-    private CategoriaDTO categoriaDTO;
-    private List<CategoriaDTO> categorias;
 
     public CategoriasPanel() {
         this.categoriaController = new CategoriaController();
@@ -276,12 +273,12 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
         controlSetDTO();
 
         boolean result = isEdit
-                ? categoriaController.actulizarCategoria(categoriaDTO)
-                : categoriaController.nuevaCategoria(categoriaDTO);
+                ? categoriaController.actulizarCategoria(entidadDTO)
+                : categoriaController.nuevaCategoria(entidadDTO);
 
         if (result) {
-            categorias = categoriaController.listarCategoria();
-            cargarTablaPrincipal(categorias);
+            listadoDTOS = categoriaController.listarCategoria();
+            cargarTablaPrincipal(listadoDTOS);
         }
     }
 
@@ -289,7 +286,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     public void nuevo() {
         limpiar();
         vistaNuevo();
-        categoriaDTO= new CategoriaDTO();
+        entidadDTO= new CategoriaDTO();
     }
 
     @Override
@@ -300,33 +297,33 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     @Override
     public void cancelar() {
-        vistaCancelar(tblCategoria);
+        vistaCancelar(tblCategoria,()->selectDTO());
     }    
 
     @Override
     public void eliminar() {
-        if (categoriaController.eliminarCategoria(categoriaDTO.getId())) {
+        if (categoriaController.eliminarCategoria(entidadDTO.getId())) {
             refrescarTablaPrincipal();
-            vistaInicial();
         }
     }
 
     @Override
     public void refrescarTablaPrincipal() {
-        categorias = categoriaController.listarCategoria();
-        cargarTablaPrincipal(categorias);
+        listadoDTOS = categoriaController.listarCategoria();
+        cargarTablaPrincipal(listadoDTOS);
+        vistaInicial();
     }
 
     @Override
-    public void cargarTablaPrincipal(List<CategoriaDTO> listaCategoria) {
+    public void cargarTablaPrincipal(List<CategoriaDTO> lista) {
         String[] columnas = {"ID", "Nombre"};
-        
-        ModeloTablaBuilder<CategoriaDTO> builder = new ModeloTablaBuilder<>();
-        DefaultTableModel modelo = builder.construirModelo(columnas, listaCategoria,
-                c -> new Object[]{c.getId(), c.getNombre()}
+                
+        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
+                e -> new Object[]{e.getId(), e.getNombre()}
         );
 
         tblCategoria.setModel(modelo);
+        AnchoColumnaTabla(tblCategoria, 50, 1);
     }
 
     @Override
@@ -337,9 +334,8 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     }
 
     @Override
-    public void selectDTO() {
-        int id = obtenerID(tblCategoria);
-        categoriaDTO = categoriaController.obtenerCategoria(id);
+    public void selectDTO() {       
+        entidadDTO =obtenerEntidad(tblCategoria);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
@@ -347,19 +343,17 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     @Override
     public void controlGetDTO() {
-        txtNombre.setText(categoriaDTO.getNombre());
+        txtNombre.setText(entidadDTO.getNombre());
     }
 
     @Override
     public void controlSetDTO() {
-        categoriaDTO.setNombre(txtNombre.getText());
+        entidadDTO.setNombre(txtNombre.getText());
     }
 
     @Override
     public void controlsEditable(boolean  value) {
         txtNombre.setEditable(value);
     }
-
-
 
 }

@@ -63,7 +63,6 @@ public class ProveedorPanel extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(950, 600));
 
         jpContainer.setBackground(new java.awt.Color(255, 255, 255));
-        jpContainer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tblProveedor.setBackground(new java.awt.Color(255, 255, 255));
         tblProveedor.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -85,8 +84,6 @@ public class ProveedorPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblProveedor);
 
-        jpContainer.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(7, 48, 630, 580));
-
         btnNuevo.setBackground(new java.awt.Color(255, 255, 255));
         btnNuevo.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
         btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
@@ -98,7 +95,6 @@ public class ProveedorPanel extends javax.swing.JPanel {
                 btnNuevoMouseClicked(evt);
             }
         });
-        jpContainer.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 12, -1, -1));
 
         jpDatos.setOpaque(false);
 
@@ -307,8 +303,6 @@ public class ProveedorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jpContainer.add(jpDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 30, -1, -1));
-
         btnBuscar.setBackground(new java.awt.Color(255, 255, 255));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/contenedor/btnBuscar.png"))); // NOI18N
         btnBuscar.setBorder(null);
@@ -318,16 +312,51 @@ public class ProveedorPanel extends javax.swing.JPanel {
                 btnBuscarActionPerformed(evt);
             }
         });
-        jpContainer.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 0, 40, 40));
 
         txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jpContainer.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 380, -1));
+
+        javax.swing.GroupLayout jpContainerLayout = new javax.swing.GroupLayout(jpContainer);
+        jpContainer.setLayout(jpContainerLayout);
+        jpContainerLayout.setHorizontalGroup(
+            jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpContainerLayout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpContainerLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnNuevo)
+                        .addGap(13, 13, 13)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE))
+                .addGap(3, 3, 3)
+                .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+        );
+        jpContainerLayout.setVerticalGroup(
+            jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpContainerLayout.createSequentialGroup()
+                .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpContainerLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(btnNuevo))
+                    .addGroup(jpContainerLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jpContainerLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
+            .addComponent(jpContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

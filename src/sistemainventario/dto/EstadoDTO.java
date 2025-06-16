@@ -1,6 +1,6 @@
 package sistemainventario.dto;
 
-public class EstadoDTO {
+public class EstadoDTO implements IDTO {
     private int id;
     private String nombre;
 
@@ -29,8 +29,15 @@ public class EstadoDTO {
 
     @Override
     public String toString() {
-        return  nombre;
+        return nombre;
     }
+
+    @Override
+    public int getPK() {
+        return id;
+    }
+
+ 
    
     
     

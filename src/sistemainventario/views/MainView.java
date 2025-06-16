@@ -20,14 +20,16 @@ public final class MainView extends javax.swing.JFrame {
     private final LoginController controllerLogin;
     private final Color colorMenu = new Color(50, 150, 255);
     private final Color colorHover = new Color(50, 200, 230);
-    private List<String> opciones = new ArrayList<>();
+    private final List<String> menuPrimario = Sesion.getPermisos(); 
+    private List<String> menuSecundario=new ArrayList<>();
+
     private String opcionSelect;
 
     public MainView() {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.controllerLogin = new LoginController();
-        this.opciones.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
+
         this.opcionSelect = "Inicio";
         this.setSize(1240, 750);
         initComponents();
@@ -35,8 +37,9 @@ public final class MainView extends javax.swing.JFrame {
 
         cargaDatos();
         jpContainer.setLayout(new BorderLayout());
-        generarMenu();
-        seleccionarOpcion("inicio");
+        
+        generarMenu(menuPrimario);
+        seleccionarPanel(opcionSelect);
         
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
                 .put(KeyStroke.getKeyStroke("ESCAPE"), "cerrar");
@@ -226,14 +229,28 @@ public final class MainView extends javax.swing.JFrame {
         salir();
     }//GEN-LAST:event_btnCerrarMouseClicked
 
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private sistemainventario.util.Imagen btnCerrar;
+    private sistemainventario.util.Imagen btnMinimizar;
+    private sistemainventario.util.Imagen imagen1;
+    private javax.swing.JPanel jpBG;
+    private javax.swing.JPanel jpContainer;
+    private javax.swing.JPanel jpHeader;
+    private javax.swing.JPanel jpMenu;
+    private javax.swing.JLabel lblNombreCompleto;
+    private javax.swing.JLabel lblRol;
+    private javax.swing.JLabel lblTitulo;
+    // End of variables declaration//GEN-END:variables
+    
     public void cargaDatos() {
         UsuarioDTO u = Sesion.getUsuario();
 
         lblNombreCompleto.setText(u.getNombres() + " " + u.getApellidos());
         lblRol.setText(u.getRol().getNombre());
-        lblTitulo.setText("Inicio");
 
-        u.getRol().getPermisos().forEach(p -> System.out.println(p.getModulo()));
+        Sesion.getPermisos().forEach(System.out::println);
     }
 
     public void salir() {
@@ -245,19 +262,11 @@ public final class MainView extends javax.swing.JFrame {
 
     }
 
-    public boolean tienePermiso(String modulo) {
-        if (Sesion.getPermiso(modulo) != null) {
-            return Sesion.getPermiso(modulo).isEstado(); //Mensajes.advertencia("Modulo en mantenimiento");
-        }
-        //Mensajes.advertencia("Modulo No Exisite");
-        return false;
-    }
-
     public void minimizar() {
         this.setState(sistemainventario.views.MainView.ICONIFIED);
     }
 
-    private void generarMenu() {
+    private void generarMenu(List<String> menu) {
         jpMenu.removeAll(); // limpia el menú antes de reconstruirlo
 
         JPanel titulo = crearbtnMenu("RHINO", 20, 50, new Font("Segoe UI", Font.BOLD, 28));
@@ -265,8 +274,8 @@ public final class MainView extends javax.swing.JFrame {
 
         int y = 90;
 
-        for (String opcion : opciones) {
-            if (opcion.equals(opciones.getLast())) {
+        for (String opcion : menu) {
+            if (opcion.equals(menu.getLast())) {
                 y = 630;
             }
             JPanel labelOpcion = crearbtnMenu(opcion, y, 50, new Font("Arial", Font.PLAIN, 20));
@@ -283,8 +292,8 @@ public final class MainView extends javax.swing.JFrame {
                 public void mouseClicked(MouseEvent e) {
                     //Mensajes.info("Seleccionaste: " + opcion);
 //                    if(tienePermiso(opcion)){
-                    seleccionarOpcion(opcion);                    
-                    generarMenu();
+                    seleccionarPanel(opcion);                    
+                    generarMenu(menu);
                     //} else{
 //                        Mensajes.advertencia("No tiene acceso a este modulo");
 //                    }
@@ -344,114 +353,114 @@ public final class MainView extends javax.swing.JFrame {
         return panel;
     }
 
-    private void seleccionarOpcion(String opcion) {
+    private void seleccionarPanel(String opcion) {
         jpContainer.removeAll();
         String Titulo = "";
         JPanel panel;
 
         switch (opcion.toLowerCase()) {
             case "inicio":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Dashboard";
                 panel = new InicioPanel();
                 break;
             case "productos":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Productos", "Categorias", "Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Productos", "Categorias", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = opcion;
                 panel = new ProductosPanel();
                 break;
             case "categorias":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Productos", "Categorias", "Regresar"));
-                this.opcionSelect = this.opciones.get(1);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Productos", "Categorias", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = opcion;
                 panel = new CategoriasPanel();
                 break;
             case "entradas":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Compras";
                 panel = new EntradasPanel();
                 break;
              case "compras":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Compras";
                 panel = new EntradasPanel();
                 break;
             case "proveedores":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
-                this.opcionSelect = this.opciones.get(1);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = opcion;
                 panel = new ProveedorPanel();
                 break;
             case "pagos":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
-                this.opcionSelect = this.opciones.get(2);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(2);
                 Titulo = opcion;
                 panel = new JPanel();
                 break;
             case "salidas":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Ventas";
                 panel = new SalidasPanel();
                 break;
             case "ventas":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Ventas";
                 panel = new SalidasPanel();
                 break;
             case "clientes":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
-                this.opcionSelect = this.opciones.get(1);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = opcion;
                 panel = new ClientesPanel();
                 break;
             case "cobros":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
-                this.opcionSelect = this.opciones.get(2);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
+                this.opcionSelect = this.menuSecundario.get(2);
                 Titulo = opcion;
                 panel = new JPanel();
                 break;
             case "setup":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Empresa";
                 panel = new SetupPanel();
                 break;
             case "empresa":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Empresa";
                 panel = new SetupPanel();
                 break;
             case "usuario":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
-                this.opcionSelect = this.opciones.get(1);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = "Usuario";
                 panel = new UsuarioPanel();
                 break;
             case "regresar":
-                opciones.clear();
-                this.opciones.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
-                this.opcionSelect = this.opciones.get(0);
+                menuSecundario.clear();
+                this.menuSecundario.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
+                this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Inicio";
                 panel = new InicioPanel();
                 break;
@@ -468,19 +477,5 @@ public final class MainView extends javax.swing.JFrame {
 
         jpContainer.revalidate();
         jpContainer.repaint();  
-}
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sistemainventario.util.Imagen btnCerrar;
-    private sistemainventario.util.Imagen btnMinimizar;
-    private sistemainventario.util.Imagen imagen1;
-    private javax.swing.JPanel jpBG;
-    private javax.swing.JPanel jpContainer;
-    private javax.swing.JPanel jpHeader;
-    private javax.swing.JPanel jpMenu;
-    private javax.swing.JLabel lblNombreCompleto;
-    private javax.swing.JLabel lblRol;
-    private javax.swing.JLabel lblTitulo;
-    // End of variables declaration//GEN-END:variables
+    }
 }

@@ -1,6 +1,6 @@
 package sistemainventario.dto;
 
-public class CategoriaDTO {
+public class CategoriaDTO implements IDTO{
     private int id;
     private String nombre;
 
@@ -30,6 +30,11 @@ public class CategoriaDTO {
     @Override
     public String toString() {
         return  nombre;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
     }
     
 }

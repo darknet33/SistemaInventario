@@ -30,11 +30,13 @@ public class UsuarioService implements IService<UsuarioDTO, Integer>{
 
     @Override
     public void guardar(UsuarioDTO dto) {
+        UsuarioValidator.validar(dto);
         usuarioDAO.save(usuarioMapper.toEntity(dto));
     }
 
     @Override
     public void actualizar(UsuarioDTO dto) {
+        UsuarioValidator.validar(dto);
         usuarioDAO.update(usuarioMapper.toEntity(dto));
     }
 

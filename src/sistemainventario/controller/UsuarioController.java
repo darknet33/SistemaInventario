@@ -22,10 +22,18 @@ public class UsuarioController {
                 
     }
     
+    public List<UsuarioDTO> listarUsuarios(){
+        return usuarioService.listarTodos();
+    }
+    
+    public UsuarioDTO obtenerUsuario(int id){
+        return usuarioService.obtenerPorId(id);
+    }
+    
     public boolean nuevoUsuario(UsuarioDTO dto) {
         try {
             usuarioService.guardar(dto);
-            Mensajes.info("Se guardó el Proveedor correctamente");
+            Mensajes.info("Se guardó el Usuario correctamente");
             return true;
         } catch (Exception e) {
             Mensajes.errorValidaciones(e);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CompraDTO {
+public class CompraDTO  implements IDTO{
     private int id;
     private Date fecha;    
     private ProveedorDTO proveedor;
@@ -89,6 +89,16 @@ public class CompraDTO {
 
     public void setDetalles(List<CompraDetalleDTO> detalles) {
         this.detalles = detalles;
+    }
+
+    @Override
+    public String toString() {
+        return  fecha + " " + proveedor + " " + comprobante + "-" + nroComprobante;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
     }
     
     

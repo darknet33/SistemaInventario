@@ -9,8 +9,6 @@ import sistemainventario.dto.ClienteDTO;
 public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     private final ClienteController clienteController;
-    private List<ClienteDTO> clientes;
-    private ClienteDTO clienteDTO;
 
     public ClientesPanel() {
         this.clienteController = new ClienteController();
@@ -380,8 +378,8 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
         controlSetDTO();
 
         boolean result = isEdit
-                ? clienteController.actualizarCliente(clienteDTO)
-                : clienteController.nuevoCliente(clienteDTO);
+                ? clienteController.actualizarCliente(entidadDTO)
+                : clienteController.nuevoCliente(entidadDTO);
 
         if (result) {
              refrescarTablaPrincipal();
@@ -392,7 +390,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     public void nuevo() {
         limpiar();
         vistaNuevo();
-        clienteDTO = new ClienteDTO();
+        entidadDTO = new ClienteDTO();
     }
 
     @Override
@@ -403,38 +401,33 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     @Override
     public void eliminar() {
-        if (clienteController.eliminarCliente(clienteDTO.getId())) {
+        if (clienteController.eliminarCliente(entidadDTO.getId())) {
              refrescarTablaPrincipal();
-             vistaInicial();
         }
     }
     
     @Override
     public void cancelar(){
-        vistaCancelar(tblCliente);
+        vistaCancelar(tblCliente,()->selectDTO());
     }
     
     @Override
     public void refrescarTablaPrincipal(){
-        clientes = clienteController.listarClientes();
-        cargarTablaPrincipal(clientes);
+        listadoDTOS = clienteController.listarClientes();
+        cargarTablaPrincipal(listadoDTOS);
+        vistaInicial();
     }
 
     @Override
     public void cargarTablaPrincipal(List<ClienteDTO> lista) {
-        String[] columnas = {"ID", "Nombre", "Celular"};
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas no editables
-            }
-        };
-
-        lista.stream()
-                .map(c -> new Object[]{c.getId(), c.getNombre(), c.getCelular()})
-                .forEach(modelo::addRow);
+        String[] columnas = {"ID", "Nombre", "Celular","Estado"};
+        
+        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
+                e -> new Object[]{e.getId(), e.getNombre(), e.getCelular(),e.getEstado()? "ON":"OFF"}
+        );
 
         tblCliente.setModel(modelo);
+        AnchoColumnaTabla(tblCliente,50, 1);
     }
 
     @Override
@@ -449,9 +442,8 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     }
 
     @Override
-    public void selectDTO() {
-        int id = obtenerID(tblCliente);
-        clienteDTO = clienteController.obtenerCliente(id);
+    public void selectDTO() {        
+        entidadDTO = obtenerEntidad(tblCliente);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
@@ -459,20 +451,20 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
    
     @Override
     public void controlGetDTO() {
-        txtNombre.setText(clienteDTO.getNombre());
-        txtNit.setText(clienteDTO.getNit());
-        txtCelular.setText(clienteDTO.getCelular());
-        txtDireccion.setText(clienteDTO.getDireccion());
-        chkEstado.setSelected(clienteDTO.getEstado());
+        txtNombre.setText(entidadDTO.getNombre());
+        txtNit.setText(entidadDTO.getNit());
+        txtCelular.setText(entidadDTO.getCelular());
+        txtDireccion.setText(entidadDTO.getDireccion());
+        chkEstado.setSelected(entidadDTO.getEstado());
     }
 
     @Override
     public void controlSetDTO() {
-        clienteDTO.setNombre(txtNombre.getText());
-        clienteDTO.setNit(txtNit.getText());
-        clienteDTO.setCelular(txtCelular.getText());
-        clienteDTO.setDireccion(txtDireccion.getText());
-        clienteDTO.setEstado(chkEstado.isSelected());
+        entidadDTO.setNombre(txtNombre.getText());
+        entidadDTO.setNit(txtNit.getText());
+        entidadDTO.setCelular(txtCelular.getText());
+        entidadDTO.setDireccion(txtDireccion.getText());
+        entidadDTO.setEstado(chkEstado.isSelected());
     }
 
     @Override
@@ -486,10 +478,10 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     private List<ClienteDTO> buscarClientes(String valorBuscado) {
         if (valorBuscado == null || valorBuscado.isEmpty()) {
-            return clientes;
+            return listadoDTOS;
         }
 
-        return this.clientes.stream()
+        return listadoDTOS.stream()
                 .filter(c -> c.toString().toLowerCase().contains(valorBuscado.toLowerCase()))
                 .collect(Collectors.toList());
     }

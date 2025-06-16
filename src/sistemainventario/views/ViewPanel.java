@@ -1,21 +1,23 @@
 package sistemainventario.views;
 
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
+import sistemainventario.dto.IDTO;
+import sistemainventario.util.ModeloTablaBuilder;
 
 public abstract class ViewPanel<T> extends javax.swing.JPanel implements IPanel<T> {
-    // Paneles comunes de la vista
 
     protected JPanel jpDatos;
     protected JPanel jpAction;
     protected JPanel jpActionSave;
     protected boolean isEdit;
     protected int idDTO;
+    protected ModeloTablaBuilder<T> builder = new ModeloTablaBuilder<>();
+    protected T entidadDTO;
+    protected List<T> listadoDTOS;
 
-    /**
-     * Método para inicializar los paneles usados por las vistas. Este debe
-     * llamarse en el constructor del panel hijo.
-     */
     protected void inicializarPaneles(JPanel datos, JPanel action, JPanel actionSave) {
         this.jpDatos = datos;
         this.jpAction = action;
@@ -51,19 +53,41 @@ public abstract class ViewPanel<T> extends javax.swing.JPanel implements IPanel<
         return (Integer) tblPrincipal.getValueAt(fila, 0);
     }
 
-    protected void vistaCancelar(JTable tblPrincipal) {
+    protected void vistaCancelar(JTable tblPrincipal, Runnable enabledControl) {
         if (isEdit) {
             cambiarVista(true, true, false);
             isEdit = false;
+            enabledControl.run();
         } else {
             vistaInicial();
             tblPrincipal.clearSelection();
         }
     }
 
+    protected void AnchoColumnaTabla(JTable tabla, int ancho, int nroColumna) {
+        TableColumn columna0 = tabla.getColumnModel().getColumn(nroColumna - 1);
+
+        // Fijar ancho mínimo, máximo y preferido
+        columna0.setMinWidth(ancho);
+        columna0.setMaxWidth(ancho);
+        columna0.setPreferredWidth(ancho);
+    }
+
+    protected T obtenerEntidad(JTable tabla) {
+        int id = obtenerID(tabla);
+
+        return listadoDTOS.stream()
+                .map(e -> (IDTO) e)   // hacer cast si T no extiende IDTO directamente
+                .filter(e -> e.getPK()== id)
+                .map(e -> (T) e)      // volver a castear al tipo original
+                .findFirst()
+                .orElse(null);
+    }
+
     private void cambiarVista(boolean datos, boolean Accion, boolean Guardar) {
         jpDatos.setVisible(datos);
         jpAction.setVisible(Accion);
-        jpActionSave.setVisible(!Guardar);
+        jpActionSave.setVisible(Guardar);
     }
+
 }
