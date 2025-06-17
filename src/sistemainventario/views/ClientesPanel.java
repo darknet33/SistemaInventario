@@ -382,7 +382,9 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
                 : clienteController.nuevoCliente(entidadDTO);
 
         if (result) {
+            listadoDTOS = clienteController.listarClientes();
              refrescarTablaPrincipal();
+             vistaInicial();
         }
     }
 
@@ -439,6 +441,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
         chkEstado.setSelected(false);
 
         tblCliente.clearSelection();
+        controlsEditable(true);
     }
 
     @Override

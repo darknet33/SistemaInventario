@@ -1,12 +1,10 @@
 package sistemainventario.views;
 
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import sistemainventario.controller.LoginController;
 import sistemainventario.util.Mensajes;
+import sistemainventario.util.UIConstants;
 
 
 public final class LoginView extends javax.swing.JFrame {
@@ -15,6 +13,14 @@ public final class LoginView extends javax.swing.JFrame {
         this.controllerLogin= new LoginController();   
         initComponents();
         setIconImage(new ImageIcon(getClass().getResource("/RHINO.png")).getImage());
+        
+        jpBG.setBackground(UIConstants.COLOR_PRIMARIO);
+        lblTitulo.setForeground(UIConstants.COLOR_PRIMARIO);
+        lblUsuario.setForeground(UIConstants.COLOR_PRIMARIO);
+        lblContrasenia.setForeground(UIConstants.COLOR_PRIMARIO);
+        btnIngresar.setBackground(UIConstants.COLOR_PRIMARIO);
+        btnCerrar.setBackground(UIConstants.COLOR_SECUNDARIO);
+        lblLogo.setRuta("/logo.jpg");
         
         //Codigo para el ver el Enter y el Escape
         getRootPane().setDefaultButton(btnIngresar);
@@ -43,6 +49,7 @@ public final class LoginView extends javax.swing.JFrame {
         txtContrasenia = new javax.swing.JPasswordField();
         btnSalir = new javax.swing.JButton();
         btnIngresar = new javax.swing.JButton();
+        lblLogo = new sistemainventario.util.Imagen();
         btnMinimizar = new sistemainventario.util.Imagen();
         btnCerrar = new sistemainventario.util.Imagen();
 
@@ -95,14 +102,18 @@ public final class LoginView extends javax.swing.JFrame {
             }
         });
 
+        lblLogo.setText("imagen1");
+
         javax.swing.GroupLayout jpContenedorLayout = new javax.swing.GroupLayout(jpContenedor);
         jpContenedor.setLayout(jpContenedorLayout);
         jpContenedorLayout.setHorizontalGroup(
             jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpContenedorLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpContenedorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addGroup(jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpContenedorLayout.createSequentialGroup()
-                        .addGap(314, 314, 314)
                         .addGroup(jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -111,13 +122,13 @@ public final class LoginView extends javax.swing.JFrame {
                             .addComponent(txtUsuario)
                             .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jpContenedorLayout.createSequentialGroup()
-                        .addGap(343, 343, 343)
+                        .addGap(29, 29, 29)
                         .addGroup(jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(348, Short.MAX_VALUE))
+                .addGap(42, 42, 42))
         );
         jpContenedorLayout.setVerticalGroup(
             jpContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,6 +148,10 @@ public final class LoginView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(40, Short.MAX_VALUE))
+            .addGroup(jpContenedorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         btnMinimizar.setText("imagen1");
@@ -235,6 +250,7 @@ public final class LoginView extends javax.swing.JFrame {
     private javax.swing.JPanel jpBG;
     private javax.swing.JPanel jpContenedor;
     private javax.swing.JLabel lblContrasenia;
+    private sistemainventario.util.Imagen lblLogo;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JPasswordField txtContrasenia;

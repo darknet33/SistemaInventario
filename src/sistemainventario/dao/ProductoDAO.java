@@ -8,16 +8,16 @@ import sistemainventario.entity.Producto;
 import sistemainventario.entity.Usuario;
 import sistemainventario.util.Mensajes;
 
+public class ProductoDAO implements IDAO<Producto, Integer> {
 
-public class ProductoDAO implements IDAO<Producto, Integer>{
     private final Connection conn;
-    private final CategoriaDAO categoriaDAO=new CategoriaDAO();
-    private final UsuarioDAO usuarioDAO=new UsuarioDAO();
-    
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+
     public ProductoDAO() {
         this.conn = ConexionDAO.getConexion();
     }
-    
+
     @Override
     public Producto mapResultSetToEntity(ResultSet rs) throws SQLException {
         Producto entity = new Producto();
@@ -33,24 +33,23 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
         entity.setFechaRegistro(rs.getTimestamp("f_registro_producto"));
         entity.setFechaActualizado(rs.getTimestamp("f_actualizado_producto"));
         entity.setEstado(rs.getBoolean("estado_producto"));
-        
-        Categoria categoria=categoriaDAO.getById(rs.getInt("categoria_id"));        
+
+        Categoria categoria = categoriaDAO.getById(rs.getInt("categoria_id"));
         entity.setCategoria(categoria);
-        
-        Usuario usuario=usuarioDAO.getById(rs.getInt("usuario_id"));
+
+        Usuario usuario = usuarioDAO.getById(rs.getInt("usuario_id"));
         entity.setUsuario(usuario);
 
         return entity;
-    } 
-    
+    }
 
     @Override
     public Producto getById(Integer id) {
-        String sql= "SELECT * FROM productos WHERE id_producto = ?";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+        String sql = "SELECT * FROM productos WHERE id_producto = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            ResultSet rs=stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return mapResultSetToEntity(rs);
             }
@@ -65,13 +64,12 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
         List<Producto> lista = new ArrayList<>();
         String sql = "SELECT * FROM productos";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 lista.add(mapResultSetToEntity(rs));
             }
-            
+
         } catch (SQLException e) {
             Mensajes.error(sql, e);
         }
@@ -81,7 +79,7 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
 
     @Override
     public void save(Producto entity) {
-        String sql = "INSERT INTO productos (codigo_producto, categoria_id, descripcion_producto, marca_producto, procedencia_producto, peso_producto, stock_inicial_producto, stock_actual_producto, stock_minimo_producto,estado_producto,usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+        String sql = "INSERT INTO productos (codigo_producto, categoria_id, descripcion_producto, marca_producto, procedencia_producto, peso_producto, stock_minimo_producto,estado_producto,usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, entity.getCodigo());
             stmt.setInt(2, entity.getCategoria().getId());
@@ -89,12 +87,10 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
             stmt.setString(4, entity.getMarca());
             stmt.setString(5, entity.getProcedencia());
             stmt.setString(6, entity.getPeso());
-            stmt.setInt(7, entity.getStockInicial());
-            stmt.setInt(8, entity.getStockActual());
-            stmt.setInt(9, entity.getStockMinimo());
-            stmt.setBoolean(10, entity.getEstado());
-            stmt.setInt(11, entity.getUsuario().getId());
-            stmt.executeUpdate();  
+            stmt.setInt(7, entity.getStockMinimo());
+            stmt.setBoolean(8, entity.getEstado());
+            stmt.setInt(9, entity.getUsuario().getId());
+            stmt.executeUpdate();
         } catch (Exception e) {
             Mensajes.error(sql, e);
         }
@@ -102,8 +98,8 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
 
     @Override
     public void update(Producto entity) {
-        String sql="UPDATE productos SET codigo_producto = ?, categoria_id = ?, descripcion_producto = ?, marca_producto = ?, procedencia_producto = ?, peso_producto = ?, stock_inicial_producto = ?, stock_actual_producto = ?, stock_minimo_producto = ?,estado_producto = ?,usuario_id = ? WHERE id_producto = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+        String sql = "UPDATE productos SET codigo_producto = ?, categoria_id = ?, descripcion_producto = ?, marca_producto = ?, procedencia_producto = ?, peso_producto = ?, stock_inicial_producto = ?, stock_actual_producto = ?, stock_minimo_producto = ?,estado_producto = ?,usuario_id = ? WHERE id_producto = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, entity.getCodigo());
             stmt.setInt(2, entity.getCategoria().getId());
             stmt.setString(3, entity.getDescripcion());
@@ -120,7 +116,7 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
         } catch (Exception e) {
             Mensajes.error(sql, e);
         }
-    }   
+    }
 
     @Override
     public void delete(Integer id) {
@@ -132,7 +128,7 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
             Mensajes.error(sql, e);
         }
     }
-    
+
     public int contarPorCategoria(Integer categoriaId) {
         String sql = "SELECT COUNT(*) FROM productos WHERE categoria_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -147,5 +143,4 @@ public class ProductoDAO implements IDAO<Producto, Integer>{
         return 0;
     }
 
-    
 }

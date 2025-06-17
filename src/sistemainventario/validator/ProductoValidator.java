@@ -26,7 +26,7 @@ public class ProductoValidator {
         if (dto.getMarca().isEmpty())
             throw new IllegalArgumentException("La marca es Obligatorio");
         
-        if (dto.getStockMinimo()>0)
+        if (dto.getStockMinimo()<=0)
             throw new IllegalArgumentException("Stock Minimo debe ser mayor a 0");
 
     }

@@ -469,7 +469,7 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
 
     @Override
     public void controlSetDTO() {
-        entidadDTO.setUsername(txtNombre.getText());
+        entidadDTO.setUsername(txtUsername.getText());
         entidadDTO.setPassword(txtContrasenia.getText());
         entidadDTO.setNombres(txtNombre.getText());
         entidadDTO.setApellidos(txtApellido.getText());

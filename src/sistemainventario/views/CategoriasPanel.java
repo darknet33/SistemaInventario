@@ -279,6 +279,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
         if (result) {
             listadoDTOS = categoriaController.listarCategoria();
             cargarTablaPrincipal(listadoDTOS);
+            vistaInicial();
         }
     }
 
@@ -296,16 +297,16 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     }
 
     @Override
-    public void cancelar() {
-        vistaCancelar(tblCategoria,()->selectDTO());
-    }    
-
-    @Override
     public void eliminar() {
         if (categoriaController.eliminarCategoria(entidadDTO.getId())) {
             refrescarTablaPrincipal();
         }
     }
+    
+    @Override
+    public void cancelar() {
+        vistaCancelar(tblCategoria,()->selectDTO());
+    }    
 
     @Override
     public void refrescarTablaPrincipal() {
@@ -331,6 +332,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
         txtNombre.setText("");
 
         tblCategoria.clearSelection();
+        controlsEditable(true);
     }
 
     @Override

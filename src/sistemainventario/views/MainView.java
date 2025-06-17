@@ -14,12 +14,13 @@ import sistemainventario.util.Mensajes;
 import sistemainventario.util.Sesion;
 import sistemainventario.util.Imagen;
 import sistemainventario.controller.LoginController;
+import sistemainventario.util.UIConstants;
 
 public final class MainView extends javax.swing.JFrame {
 
     private final LoginController controllerLogin;
-    private final Color colorMenu = new Color(50, 150, 255);
-    private final Color colorHover = new Color(50, 200, 230);
+    private final Color colorMenu = UIConstants.COLOR_PRIMARIO;
+    private final Color colorHover = UIConstants.COLOR_SECUNDARIO;
     private final List<String> menuPrimario = Sesion.getPermisos(); 
     private List<String> menuSecundario=new ArrayList<>();
 
@@ -69,7 +70,6 @@ public final class MainView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(1200, 750));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -110,7 +110,6 @@ public final class MainView extends javax.swing.JFrame {
             }
         });
 
-        imagen1.setText("imagen1");
         imagen1.setRuta("/resources/images/cabezera/Usuario.png");
 
         javax.swing.GroupLayout jpHeaderLayout = new javax.swing.GroupLayout(jpHeader);
@@ -120,18 +119,18 @@ public final class MainView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNombreCompleto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRol, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 281, Short.MAX_VALUE)
+                .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblRol, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                    .addComponent(lblNombreCompleto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jpHeaderLayout.createSequentialGroup()
                         .addComponent(btnMinimizar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(imagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24))
+                    .addComponent(imagen1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
         jpHeaderLayout.setVerticalGroup(
             jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +148,7 @@ public final class MainView extends javax.swing.JFrame {
                         .addGap(16, 16, 16))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpHeaderLayout.createSequentialGroup()
                         .addComponent(lblRol, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblNombreCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12))))
         );
@@ -160,7 +159,7 @@ public final class MainView extends javax.swing.JFrame {
         jpContainer.setLayout(jpContainerLayout);
         jpContainerLayout.setHorizontalGroup(
             jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 944, Short.MAX_VALUE)
+            .addGap(0, 948, Short.MAX_VALUE)
         );
         jpContainerLayout.setVerticalGroup(
             jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,7 +248,11 @@ public final class MainView extends javax.swing.JFrame {
 
         lblNombreCompleto.setText(u.getNombres() + " " + u.getApellidos());
         lblRol.setText(u.getRol().getNombre());
-
+        
+        lblTitulo.setForeground(UIConstants.COLOR_SECUNDARIO);
+        lblNombreCompleto.setForeground(UIConstants.COLOR_PRIMARIO);
+        lblRol.setForeground(UIConstants.COLOR_PRIMARIO);        
+        jpMenu.setBackground(UIConstants.COLOR_PRIMARIO);
         Sesion.getPermisos().forEach(System.out::println);
     }
 
@@ -269,7 +272,7 @@ public final class MainView extends javax.swing.JFrame {
     private void generarMenu(List<String> menu) {
         jpMenu.removeAll(); // limpia el menú antes de reconstruirlo
 
-        JPanel titulo = crearbtnMenu("RHINO", 20, 50, new Font("Segoe UI", Font.BOLD, 28));
+        JPanel titulo = crearbtnMenuTitulo("RHINO", 20, 40, new Font("Segoe UI", Font.BOLD, 28));
         jpMenu.add(titulo);
 
         int y = 90;
@@ -278,78 +281,84 @@ public final class MainView extends javax.swing.JFrame {
             if (opcion.equals(menu.getLast())) {
                 y = 630;
             }
-            JPanel labelOpcion = crearbtnMenu(opcion, y, 50, new Font("Arial", Font.PLAIN, 20));
+            JPanel menuOption = crearbtnMenu(opcion, y, 54, new Font("Arial", Font.PLAIN, 20));
 
             // Comportamiento visual
-            if (opcion.equalsIgnoreCase(opcionSelect)) {
-                labelOpcion.setBackground(colorHover);
-            } else {
-                labelOpcion.setBackground(colorMenu);
-            }
 
-            labelOpcion.addMouseListener(new MouseAdapter() {
+            menuOption.setBackground(opcion.equalsIgnoreCase(opcionSelect)?colorHover:colorMenu);
+
+
+            menuOption.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    //Mensajes.info("Seleccionaste: " + opcion);
-//                    if(tienePermiso(opcion)){
                     seleccionarPanel(opcion);                    
-                    generarMenu(menu);
-                    //} else{
-//                        Mensajes.advertencia("No tiene acceso a este modulo");
-//                    }
+                    generarMenu(menuSecundario);
                 }
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    labelOpcion.setBackground(colorHover);
+                    menuOption.setBackground(colorHover);
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     if (opcion.equalsIgnoreCase(opcionSelect)) {
-                        labelOpcion.setBackground(colorHover);
+                        menuOption.setBackground(colorHover);
                     } else {
-                        labelOpcion.setBackground(colorMenu);
+                        menuOption.setBackground(colorMenu);
                     }
                 }
             });
 
-            jpMenu.add(labelOpcion);
+            jpMenu.add(menuOption);
             y += 60;
         }
 
         jpMenu.revalidate();
         jpMenu.repaint();
     }
-
-    private JLabel crearImgMenu(String texto, int alto) {
+    
+    private JPanel crearbtnMenuTitulo(String texto, int y, int alto, Font fuente) {
         Imagen img = new Imagen();
-        img.setRuta("/resources/images/menu/" + texto + ".png");
-        img.setBounds(10, 2, 40, alto - 10); // corregido: Y relativo al panel, no global
-        return img;
-    }
-
-    private JLabel crearLabelMenu(String texto, int alto, Font fuente) {
+        img.setRuta(UIConstants.getIconPath(texto));
+        img.setBounds(10, 2, 70, alto - 10);
+        
         JLabel label = new JLabel(texto);
         label.setBounds(90, 2, 160, alto - 4);
         label.setFont(fuente);
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(SwingConstants.LEFT);
-        return label;
-    }
-
-    private JPanel crearbtnMenu(String texto, int y, int alto, Font fuente) {
+        
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(0, y, 250, alto);
         panel.setBackground(colorMenu);
         panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        JLabel image = crearImgMenu(texto, alto);
-        JLabel txtmenu = crearLabelMenu(texto, alto, fuente);
+        panel.add(img);
+        panel.add(label);
+        return panel;
+    }
 
-        panel.add(image);
-        panel.add(txtmenu);
+    private JPanel crearbtnMenu(String texto, int y, int alto, Font fuente) {
+        Imagen img = new Imagen();
+        img.setRuta(UIConstants.getIconPath(texto));
+        img.setBounds(10, 4, 40, alto - 10);
+        
+        JLabel label = new JLabel(texto);
+        label.setBounds(90, 4, 160, alto - 4);
+        label.setFont(fuente);
+        label.setForeground(Color.WHITE);
+        label.setHorizontalAlignment(SwingConstants.LEFT);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBounds(0, y, 250, alto);
+        panel.setBackground(colorMenu);
+        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        panel.add(img);
+        panel.add(label);
         return panel;
     }
 
@@ -358,108 +367,94 @@ public final class MainView extends javax.swing.JFrame {
         String Titulo = "";
         JPanel panel;
 
+        this.menuSecundario.clear();
         switch (opcion.toLowerCase()) {
             case "inicio":
-                menuSecundario.clear();
-                this.menuSecundario.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
+                this.menuSecundario.addAll(menuPrimario);
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Dashboard";
                 panel = new InicioPanel();
                 break;
             case "productos":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Productos", "Categorias", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = opcion;
                 panel = new ProductosPanel();
                 break;
             case "categorias":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Productos", "Categorias", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = opcion;
                 panel = new CategoriasPanel();
                 break;
             case "entradas":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Compras";
                 panel = new EntradasPanel();
                 break;
              case "compras":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Compras";
                 panel = new EntradasPanel();
                 break;
             case "proveedores":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = opcion;
                 panel = new ProveedorPanel();
                 break;
             case "pagos":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Compras", "Proveedores", "Pagos", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(2);
                 Titulo = opcion;
                 panel = new JPanel();
                 break;
             case "salidas":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Ventas";
                 panel = new SalidasPanel();
                 break;
             case "ventas":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Ventas";
                 panel = new SalidasPanel();
                 break;
             case "clientes":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = opcion;
                 panel = new ClientesPanel();
                 break;
             case "cobros":
-                menuSecundario.clear();
                 this.menuSecundario.addAll(Arrays.asList("Ventas", "Clientes", "Cobros", "Regresar"));
                 this.opcionSelect = this.menuSecundario.get(2);
                 Titulo = opcion;
                 panel = new JPanel();
                 break;
             case "setup":
-                menuSecundario.clear();
-                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Modulos", "Comprobantes","Transacciones","Estados","Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Empresa";
                 panel = new SetupPanel();
                 break;
             case "empresa":
-                menuSecundario.clear();
-                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Modulos", "Comprobantes","Transacciones","Estados","Regresar"));
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Empresa";
                 panel = new SetupPanel();
                 break;
             case "usuario":
-                menuSecundario.clear();
-                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Permisos", "Comprobantes","Transacciones","Estados","Regresar"));
+                this.menuSecundario.addAll(Arrays.asList("Empresa","Usuario", "Roles", "Modulos", "Comprobantes","Transacciones","Estados","Regresar"));
                 this.opcionSelect = this.menuSecundario.get(1);
                 Titulo = "Usuario";
                 panel = new UsuarioPanel();
                 break;
             case "regresar":
-                menuSecundario.clear();
-                this.menuSecundario.addAll(Arrays.asList("Inicio", "Productos", "Entradas", "Salidas", "Reportes", "Gastos", "Setup", "Logout"));
+                this.menuSecundario.addAll(menuPrimario);
                 this.opcionSelect = this.menuSecundario.get(0);
                 Titulo = "Inicio";
                 panel = new InicioPanel();
@@ -469,7 +464,9 @@ public final class MainView extends javax.swing.JFrame {
                 new LoginView().setVisible(true);
                 return;
             default:
+                this.menuSecundario.addAll(Arrays.asList("Regresar"));                
                 panel = new JPanel();
+                Mensajes.advertencia("Modulo en Desarrolo");
         }
 
         lblTitulo.setText(Titulo);

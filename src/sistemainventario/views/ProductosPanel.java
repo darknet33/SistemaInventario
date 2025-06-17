@@ -1,8 +1,8 @@
 package sistemainventario.views;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CategoriaController;
 import sistemainventario.controller.ProductoController;
@@ -10,22 +10,21 @@ import sistemainventario.dto.CategoriaDTO;
 import sistemainventario.dto.ProductoDTO;
 import sistemainventario.util.Sesion;
 
-public class ProductosPanel extends javax.swing.JPanel {
+public final class ProductosPanel extends ViewPanel<ProductoDTO> {
 
     private final CategoriaController categoriaController;
     private final ProductoController productoController;
-    private ProductoDTO productoDTO = null;
-    private List<CategoriaDTO> categorias;
-    private List<ProductoDTO> productos;
+    private final List<CategoriaDTO> categorias;
 
     public ProductosPanel() {
-        this.categoriaController = new CategoriaController();
         this.productoController = new ProductoController();
-        this.productos = productoController.listarProductos();
+        this.categoriaController = new CategoriaController();
         this.categorias = categoriaController.listarCategoria();
         initComponents();
+        inicializarPaneles(jpDatos, jpAction, jpActionSave);
+        refrescarTablaPrincipal();
         cargarCategorias();
-        cargarProductos(productos);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -397,232 +396,36 @@ public class ProductosPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNuevoMouseClicked
-        vistaGuardar(true);
-        txtStockInicial.setEditable(true);
-        limpiar();
-        productoDTO = null;
+        nuevo();
     }//GEN-LAST:event_btnNuevoMouseClicked
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
-        int fila = tblProducto.getSelectedRow();
-        int id = (Integer) tblProducto.getValueAt(fila, 0);
-        productoDTO = productoController.obtenerProducto(id);
-        vistaEditDel(true);
-        cargaDTO();
+        selectDTO();
     }//GEN-LAST:event_tblProductoMouseClicked
 
     private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
-        CategoriaDTO categoria = buscarCategoria(cboCategoria.getSelectedItem().toString());
-
-        if (productoDTO == null) {
-            productoDTO = new ProductoDTO();
-            productoDTO.setCodigo(txtCodigo.getText());
-            productoDTO.setCategoria(categoria);
-            productoDTO.setDescripcion(txtDescripcion.getText());
-            productoDTO.setPeso(txtPeso.getText());
-            productoDTO.setProcedencia(txtProcedencia.getText());
-            productoDTO.setMarca(txtMarca.getText());
-            productoDTO.setStockInicial(Integer.parseInt(txtStockInicial.getText()));
-            productoDTO.setStockActual(Integer.parseInt(txtStockInicial.getText()));
-            productoDTO.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
-            productoDTO.setEstado(chkEstado.isSelected());           
-            productoDTO.setUsuario(Sesion.getUsuario());
-
-            if (productoController.nuevaProducto(productoDTO)) {
-                productos = productoController.listarProductos();
-                cargarProductos(productos);
-            }
-        } else {
-            productoDTO.setCodigo(txtCodigo.getText());
-            productoDTO.setCategoria(categoria);
-            productoDTO.setDescripcion(txtDescripcion.getText());
-            productoDTO.setPeso(txtPeso.getText());
-            productoDTO.setProcedencia(txtProcedencia.getText());
-            productoDTO.setMarca(txtMarca.getText());
-            productoDTO.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
-            productoDTO.setEstado(chkEstado.isSelected());
-            productoDTO.setUsuario(Sesion.getUsuario());
-
-            if (productoController.actulizarProducto(productoDTO)) {
-                productos = productoController.listarProductos();
-                cargarProductos(productos);
-            }
-        }
-
-        tblProducto.clearSelection();
-        productoDTO = null;
+        guardar();
     }//GEN-LAST:event_btnGuardarMouseClicked
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
-        if (productoDTO == null) {
-            vista(false);
-            tblProducto.clearSelection();
-        } else {
-            cargaDTO();
-            vistaEditDel(true);
-        }
+        cancelar();
     }//GEN-LAST:event_btnCancelarMouseClicked
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
-        vistaGuardar(true);
-        txtStockInicial.setEditable(false);
+        editar();
     }//GEN-LAST:event_btnEditarMouseClicked
 
     private void btnEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarMouseClicked
-        if (productoController.eliminarProducto(productoDTO.getId())) {
-            this.productos = productoController.listarProductos();
-            cargarProductos(this.productos);
-        }
+        eliminar();
     }//GEN-LAST:event_btnEliminarMouseClicked
 
     private void btnRefreshCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRefreshCategoriaMouseClicked
-        categorias = categoriaController.listarCategoria();
         cargarCategorias();
-        cboCategoria.setSelectedIndex(0);
     }//GEN-LAST:event_btnRefreshCategoriaMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        String criterioBusqueda = cboCriterio.getSelectedItem().toString();
-        String valorBuscado = txtBuscar.getText();
-        cargarProductos(buscarProducto(valorBuscado, criterioBusqueda));
+        cargarBusqueda();
     }//GEN-LAST:event_btnBuscarActionPerformed
-    public void cargarCategorias() {
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        categorias.forEach(c -> modelo.addElement(c.getNombre()));
-        cboCategoria.setModel(modelo);
-    }
-
-    private void cargarProductos(List<ProductoDTO> listaProductos) {
-        String[] columnas = {"ID", "Codigo", "Categoria", "Descripcion", "Marca", "Stock", "Minimo", "Estado"};
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas no editables
-            }
-        };
-
-        listaProductos.stream()
-                .map(p -> new Object[]{p.getId(), p.getCodigo(), p.getCategoria().getNombre(),
-            p.getDescripcion(), p.getMarca(), p.getStockActual(),p.getStockMinimo(), (p.getEstado()? "ON":"OFF")})
-                .forEach(modelo::addRow);
-
-        tblProducto.setModel(modelo);
-        vista(false);
-    }
-
-    private void limpiar() {
-        txtCodigo.setText("");
-        cboCategoria.setSelectedIndex(0);
-        txtDescripcion.setText("");
-        txtMarca.setText("");
-        txtProcedencia.setText("");
-        txtPeso.setText("-");
-        txtStockInicial.setText("0");
-        txtStockMinimo.setText("0");
-
-        productoDTO = null;
-        tblProducto.clearSelection();
-
-    }
-
-    private void vista(Boolean bool) {
-        jpDatos.setVisible(bool);
-        jpAction.setVisible(bool);
-        jpActionSave.setVisible(bool);
-    }
-
-    private void vistaGuardar(Boolean bool) {
-        jpDatos.setVisible(bool);
-        jpAction.setVisible(!bool);
-        jpActionSave.setVisible(bool);
-        cEditable(true);
-        
-        lblFechaRegistro.setVisible(false);
-        lblFechaActualizado.setVisible(false);
-        lblUltimamodificacion.setVisible(false);
-    }
-
-    private void vistaEditDel(Boolean bool) {
-        jpDatos.setVisible(bool);
-        jpAction.setVisible(bool);
-        jpActionSave.setVisible(!bool);
-
-        cEditable(false);
-        lblFechaRegistro.setVisible(true);
-        lblFechaActualizado.setVisible(true);
-        lblUltimamodificacion.setVisible(true);
-    }
-
-    private void cargaDTO() {
-        txtCodigo.setText(productoDTO.getCodigo());
-        cboCategoria.setSelectedItem(productoDTO.getCategoria().getNombre());
-        txtDescripcion.setText(productoDTO.getDescripcion());
-        txtMarca.setText(productoDTO.getMarca());
-        txtProcedencia.setText(productoDTO.getProcedencia());
-        txtPeso.setText(productoDTO.getPeso());
-        txtStockInicial.setText("" + productoDTO.getStockInicial());
-        txtStockMinimo.setText("" + productoDTO.getStockMinimo());
-        chkEstado.setSelected(productoDTO.getEstado());
-        lblFechaRegistro.setText("Fecha Registro: "+productoDTO.getFechaRegistro().toString());
-        lblFechaActualizado.setText("Fecha Actualizacion: "+productoDTO.getFechaActualizado().toString());
-        lblUltimamodificacion.setText("Ultima Modificacion: "+productoDTO.getUsuario().getNombres()+" "+productoDTO.getUsuario().getApellidos());
-    }
-
-    private void cEditable(Boolean value) {
-        txtCodigo.setEditable(value);
-        cboCategoria.setEditable(value);
-        txtDescripcion.setEditable(value);
-        txtMarca.setEditable(value);
-        txtProcedencia.setEditable(value);
-        txtPeso.setEditable(value);
-        txtStockInicial.setEditable(value);
-        txtStockMinimo.setEditable(value);
-        chkEstado.setEnabled(value);
-    }
-
-    public CategoriaDTO buscarCategoria(String Nombre) {
-        return categorias.stream()
-                .filter(c -> c.getNombre().equalsIgnoreCase(Nombre))
-                .findFirst()
-                .orElse(null);
-    }
-
-    private List<ProductoDTO> buscarProducto(String valorBuscado) {
-        if (valorBuscado == null || valorBuscado.isEmpty()) {
-            return productos;
-        }
-
-        return this.productos.stream()
-                .filter(p -> p.toString().toLowerCase().contains(valorBuscado.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    private List<ProductoDTO> buscarProducto(String valorBuscado, String criterioBusqueda) {
-        if (valorBuscado == null || valorBuscado.isEmpty()) {
-            return productos;
-        }
-
-        String valor = valorBuscado.toLowerCase();
-
-        return productos.stream()
-                .filter(p -> {
-                    switch (criterioBusqueda.toLowerCase()) {
-                        case "descripcion":
-                            return p.getDescripcion().toLowerCase().contains(valor);
-                        case "categoria":
-                            return p.getCategoria().getNombre().toLowerCase().contains(valor);
-                        case "marca":
-                            return p.getMarca().toLowerCase().contains(valor);
-                        case "procedencia":
-                            return p.getProcedencia().toLowerCase().contains(valor);
-                        case "codigo":
-                            return p.getCodigo().toLowerCase().contains(valor);
-                        default:
-                            return false;
-                    }
-                })
-                .collect(Collectors.toList());
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -662,4 +465,180 @@ public class ProductosPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtStockInicial;
     private javax.swing.JTextField txtStockMinimo;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void guardar() {
+        controlSetDTO();
+
+        boolean result = isEdit
+                ? productoController.actulizarProducto(entidadDTO)
+                : productoController.nuevaProducto(entidadDTO);
+
+        if (result) {
+            listadoDTOS = productoController.listarProductos();
+            cargarTablaPrincipal(listadoDTOS);
+            vistaInicial();
+        }
+    }
+
+    @Override
+    public void nuevo() {
+        limpiar();
+        vistaNuevo();
+        entidadDTO = new ProductoDTO();
+    }
+
+    @Override
+    public void editar() {
+        vistaEditar();
+        controlsEditable(true);
+    }
+
+    @Override
+    public void eliminar() {
+        if (productoController.eliminarProducto(entidadDTO.getId())) {
+            refrescarTablaPrincipal();
+        }
+    }
+
+    @Override
+    public void cancelar() {
+        vistaCancelar(tblProducto, () -> selectDTO());
+    }
+
+    @Override
+    public void refrescarTablaPrincipal() {
+        listadoDTOS = productoController.listarProductos();
+        cargarTablaPrincipal(listadoDTOS);
+        vistaInicial();
+    }
+
+    @Override
+    public void cargarTablaPrincipal(List<ProductoDTO> lista) {
+        String[] columnas = {"ID", "Codigo", "Categoria", "Descripcion", "Marca", "Stock", "Minimo", "Estado"};
+
+        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
+                p -> new Object[]{p.getId(), p.getCodigo(), p.getCategoria().getNombre(),
+                    p.getDescripcion(), p.getMarca(), p.getStockActual(),
+                    p.getStockMinimo(), (p.getEstado() ? "ON" : "OFF")}
+        );
+
+        tblProducto.setModel(modelo);
+        AnchoColumnaTabla(tblProducto, 50, 1);
+    }
+
+    @Override
+    public void limpiar() {
+        txtCodigo.setText("");
+        cboCategoria.setSelectedIndex(0);
+        txtDescripcion.setText("");
+        txtMarca.setText("");
+        txtProcedencia.setText("");
+        txtPeso.setText("-");
+        txtStockInicial.setText("0");
+        txtStockMinimo.setText("0");
+
+        tblProducto.clearSelection();
+        controlsEditable(true);
+    }
+
+    @Override
+    public void selectDTO() {
+        entidadDTO = obtenerEntidad(tblProducto);
+        vistaSeleccion();
+        controlGetDTO();
+        controlsEditable(false);
+    }
+
+    @Override
+    public void controlGetDTO() {
+        txtCodigo.setText(entidadDTO.getCodigo());
+        cboCategoria.setSelectedItem(entidadDTO.getCategoria().getNombre());
+        txtDescripcion.setText(entidadDTO.getDescripcion());
+        txtMarca.setText(entidadDTO.getMarca());
+        txtProcedencia.setText(entidadDTO.getProcedencia());
+        txtPeso.setText(entidadDTO.getPeso());
+        txtStockInicial.setText("" + entidadDTO.getStockInicial());
+        txtStockMinimo.setText("" + entidadDTO.getStockMinimo());
+        chkEstado.setSelected(entidadDTO.getEstado());
+        lblFechaRegistro.setText("Fecha Registro: " + entidadDTO.getFechaRegistro().toString());
+        lblFechaActualizado.setText("Fecha Actualizacion: " + entidadDTO.getFechaActualizado().toString());
+        lblUltimamodificacion.setText("Ultima Modificacion: " + entidadDTO.getUsuario().getNombres() + " " + entidadDTO.getUsuario().getApellidos());
+
+    }
+
+    @Override
+    public void controlSetDTO() {
+        CategoriaDTO categoria = buscarCategoria(cboCategoria.getSelectedItem().toString());
+
+        entidadDTO.setCodigo(txtCodigo.getText());
+        entidadDTO.setCategoria(categoria);
+        entidadDTO.setDescripcion(txtDescripcion.getText());
+        entidadDTO.setPeso(txtPeso.getText());
+        entidadDTO.setProcedencia(txtProcedencia.getText());
+        entidadDTO.setMarca(txtMarca.getText());
+        entidadDTO.setStockInicial(Integer.parseInt(txtStockInicial.getText()));
+        entidadDTO.setStockActual(Integer.parseInt(txtStockInicial.getText()));
+        entidadDTO.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
+        entidadDTO.setEstado(chkEstado.isSelected());
+        entidadDTO.setUsuario(Sesion.getUsuario());
+    }
+
+    @Override
+    public void controlsEditable(boolean value) {
+        txtCodigo.setEditable(value);
+        cboCategoria.setEnabled(value);
+        txtDescripcion.setEditable(value);
+        txtMarca.setEditable(value);
+        txtProcedencia.setEditable(value);
+        txtPeso.setEditable(value);
+        txtStockInicial.setEditable(value);
+        txtStockMinimo.setEditable(value);
+        chkEstado.setEnabled(value);
+    }
+
+    public void cargarCategorias() {
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        categorias.forEach(c -> modelo.addElement(c.getNombre()));
+        cboCategoria.setModel(modelo);
+    }
+
+    public CategoriaDTO buscarCategoria(String Nombre) {
+        return categorias.stream()
+                .filter(c -> c.getNombre().equalsIgnoreCase(Nombre))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void cargarBusqueda() {
+        cargarTablaPrincipal(buscarProducto(txtBuscar.getText().strip(), cboCriterio.getSelectedItem().toString()));
+        vistaInicial();
+    }
+
+    private List<ProductoDTO> buscarProducto(String valorBuscado, String criterioBusqueda) {
+        if (valorBuscado == null || valorBuscado.isEmpty()) {
+            return listadoDTOS;
+        }
+
+        String valor = valorBuscado.toLowerCase();
+
+        return listadoDTOS.stream()
+                .filter(p -> {
+                    switch (criterioBusqueda.toLowerCase()) {
+                        case "codigo":
+                            return p.getCodigo().toLowerCase().contains(valor);
+                        case "descripcion":
+                            return p.getDescripcion().toLowerCase().contains(valor);
+                        case "categoria":
+                            return p.getCategoria().getNombre().toLowerCase().contains(valor);
+                        case "marca":
+                            return p.getMarca().toLowerCase().contains(valor);
+                        case "procedencia":
+                            return p.getProcedencia().toLowerCase().contains(valor);
+                        default:
+                            return false;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }
