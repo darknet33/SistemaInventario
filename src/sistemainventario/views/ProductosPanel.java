@@ -3,28 +3,28 @@ package sistemainventario.views;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CategoriaController;
 import sistemainventario.controller.ProductoController;
 import sistemainventario.dto.CategoriaDTO;
 import sistemainventario.dto.ProductoDTO;
 import sistemainventario.util.Sesion;
+import sistemainventario.util.Texto;
 
 public final class ProductosPanel extends ViewPanel<ProductoDTO> {
 
     private final CategoriaController categoriaController;
     private final ProductoController productoController;
-    private final List<CategoriaDTO> categorias;
+    private List<CategoriaDTO> categorias;
 
     public ProductosPanel() {
         this.productoController = new ProductoController();
         this.categoriaController = new CategoriaController();
-        this.categorias = categoriaController.listarCategoria();
         initComponents();
         inicializarPaneles(jpDatos, jpAction, jpActionSave);
         refrescarTablaPrincipal();
         cargarCategorias();
 
+        activarButton(btnBuscar);
     }
 
     @SuppressWarnings("unchecked")
@@ -96,7 +96,6 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
             }
         ));
         tblProducto.setGridColor(new java.awt.Color(255, 255, 255));
-        tblProducto.setRowHeight(20);
         tblProducto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblProductoMouseClicked(evt);
@@ -214,6 +213,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
         btnRefreshCategoria.setBackground(new java.awt.Color(255, 255, 255));
         btnRefreshCategoria.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
         btnRefreshCategoria.setForeground(new java.awt.Color(255, 255, 255));
+        btnRefreshCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/contenedor/btnRecargar.png"))); // NOI18N
         btnRefreshCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRefreshCategoria.setIconTextGap(50);
         btnRefreshCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -221,7 +221,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
                 btnRefreshCategoriaMouseClicked(evt);
             }
         });
-        jpDatos.add(btnRefreshCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, -1));
+        jpDatos.add(btnRefreshCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, -1, 30));
 
         lblMarca.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblMarca.setForeground(new java.awt.Color(0, 153, 255));
@@ -294,7 +294,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
         cboCategoria.setBackground(new java.awt.Color(255, 255, 255));
         cboCategoria.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cboCategoria.setForeground(new java.awt.Color(51, 51, 51));
-        jpDatos.add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, 360, 34));
+        jpDatos.add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, 320, 34));
 
         lblStockInicial1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblStockInicial1.setForeground(new java.awt.Color(0, 153, 255));
@@ -328,7 +328,6 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
         btnBuscar.setBackground(new java.awt.Color(255, 255, 255));
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/contenedor/btnBuscar.png"))); // NOI18N
         btnBuscar.setBorder(null);
-        btnBuscar.setOpaque(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -424,7 +423,10 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     }//GEN-LAST:event_btnRefreshCategoriaMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        cargarBusqueda();
+        String valorBuscado=txtBuscar.getText().strip();
+        String criterio=cboCriterio.getSelectedItem().toString();
+        CargarTabla(buscarProducto(valorBuscado, criterio),tblProducto);
+        vistaInicial();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -435,7 +437,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     private javax.swing.JLabel btnGuardar;
     private javax.swing.JLabel btnNuevo;
     private javax.swing.JLabel btnRefreshCategoria;
-    private javax.swing.JComboBox<String> cboCategoria;
+    private javax.swing.JComboBox<CategoriaDTO> cboCategoria;
     private javax.swing.JComboBox<String> cboCriterio;
     private javax.swing.JCheckBox chkEstado;
     private javax.swing.JScrollPane jScrollPane;
@@ -475,9 +477,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
                 : productoController.nuevaProducto(entidadDTO);
 
         if (result) {
-            listadoDTOS = productoController.listarProductos();
-            cargarTablaPrincipal(listadoDTOS);
-            vistaInicial();
+            refrescarTablaPrincipal();
         }
     }
 
@@ -507,24 +507,29 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     }
 
     @Override
-    public void refrescarTablaPrincipal() {
-        listadoDTOS = productoController.listarProductos();
-        cargarTablaPrincipal(listadoDTOS);
-        vistaInicial();
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Codigo", "Categoria", "Descripcion", "Marca", "Stock", "Minimo", "Estado"};
     }
 
     @Override
-    public void cargarTablaPrincipal(List<ProductoDTO> lista) {
-        String[] columnas = {"ID", "Codigo", "Categoria", "Descripcion", "Marca", "Stock", "Minimo", "Estado"};
+    public Object[] toRow(ProductoDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getCodigo(),
+            e.getCategoria().getNombre(),
+            e.getDescripcion(), 
+            e.getMarca(), 
+            e.getStockActual(),
+            e.getStockMinimo(),
+            (e.getEstado() ? "ON" : "OFF")
+        };
+    }
 
-        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
-                p -> new Object[]{p.getId(), p.getCodigo(), p.getCategoria().getNombre(),
-                    p.getDescripcion(), p.getMarca(), p.getStockActual(),
-                    p.getStockMinimo(), (p.getEstado() ? "ON" : "OFF")}
-        );
-
-        tblProducto.setModel(modelo);
-        AnchoColumnaTabla(tblProducto, 50, 1);
+    @Override
+    public void refrescarTablaPrincipal() {
+        listadoDTOS = productoController.listarProductos();
+        CargarTabla(listadoDTOS,tblProducto);
+        vistaInicial();
     }
 
     @Override
@@ -544,7 +549,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
 
     @Override
     public void selectDTO() {
-        entidadDTO = obtenerEntidad(tblProducto);
+        obtenerEntidad(tblProducto);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
@@ -553,7 +558,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     @Override
     public void controlGetDTO() {
         txtCodigo.setText(entidadDTO.getCodigo());
-        cboCategoria.setSelectedItem(entidadDTO.getCategoria().getNombre());
+        cboCategoria.setSelectedItem(entidadDTO.getCategoria());
         txtDescripcion.setText(entidadDTO.getDescripcion());
         txtMarca.setText(entidadDTO.getMarca());
         txtProcedencia.setText(entidadDTO.getProcedencia());
@@ -569,17 +574,17 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
 
     @Override
     public void controlSetDTO() {
-        CategoriaDTO categoria = buscarCategoria(cboCategoria.getSelectedItem().toString());
+        CategoriaDTO categoria = (CategoriaDTO) cboCategoria.getSelectedItem();
 
-        entidadDTO.setCodigo(txtCodigo.getText());
+        entidadDTO.setCodigo(txtCodigo.getText().toUpperCase().strip());
         entidadDTO.setCategoria(categoria);
-        entidadDTO.setDescripcion(txtDescripcion.getText());
-        entidadDTO.setPeso(txtPeso.getText());
-        entidadDTO.setProcedencia(txtProcedencia.getText());
-        entidadDTO.setMarca(txtMarca.getText());
-        entidadDTO.setStockInicial(Integer.parseInt(txtStockInicial.getText()));
-        entidadDTO.setStockActual(Integer.parseInt(txtStockInicial.getText()));
-        entidadDTO.setStockMinimo(Integer.parseInt(txtStockMinimo.getText()));
+        entidadDTO.setDescripcion(Texto.capitalizeTexto(txtDescripcion.getText().strip()));
+        entidadDTO.setPeso(txtPeso.getText().strip());
+        entidadDTO.setProcedencia(Texto.capitalizeTexto(txtProcedencia.getText().strip()));
+        entidadDTO.setMarca(txtMarca.getText().toUpperCase().strip());
+        entidadDTO.setStockInicial(txtStockInicial.getText().strip());
+        entidadDTO.setStockActual(txtStockInicial.getText().strip());
+        entidadDTO.setStockMinimo(txtStockMinimo.getText().strip());
         entidadDTO.setEstado(chkEstado.isSelected());
         entidadDTO.setUsuario(Sesion.getUsuario());
     }
@@ -598,8 +603,9 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     }
 
     public void cargarCategorias() {
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        categorias.forEach(c -> modelo.addElement(c.getNombre()));
+        categorias=categoriaController.listarCategoria();
+        DefaultComboBoxModel<CategoriaDTO> modelo = new DefaultComboBoxModel<>();
+        categorias.forEach(modelo::addElement);
         cboCategoria.setModel(modelo);
     }
 
@@ -608,11 +614,6 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
                 .filter(c -> c.getNombre().equalsIgnoreCase(Nombre))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public void cargarBusqueda() {
-        cargarTablaPrincipal(buscarProducto(txtBuscar.getText().strip(), cboCriterio.getSelectedItem().toString()));
-        vistaInicial();
     }
 
     private List<ProductoDTO> buscarProducto(String valorBuscado, String criterioBusqueda) {
@@ -641,4 +642,5 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
                 })
                 .collect(Collectors.toList());
     }
+
 }

@@ -1,6 +1,6 @@
 package sistemainventario.entity;
 
 
-public class CompraDetalle extends Detalle<Compra>{
+public class CompraDetalle extends Detalle{
     
 }

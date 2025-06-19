@@ -5,6 +5,7 @@ import sistemainventario.dto.PermisoDTO;
 import sistemainventario.entity.Permiso;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PermisoMapper implements IMapper<Permiso, PermisoDTO>{
     
@@ -29,7 +30,7 @@ public class PermisoMapper implements IMapper<Permiso, PermisoDTO>{
         return entities
                  .stream()
                  .map(this::toDTO)
-                 .toList();
+                 .collect(Collectors.toList());
     }
     
     @Override
@@ -37,6 +38,6 @@ public class PermisoMapper implements IMapper<Permiso, PermisoDTO>{
         return dtos
                  .stream()
                  .map(this::toEntity)
-                 .toList();
+                 .collect(Collectors.toList());
     }
 }

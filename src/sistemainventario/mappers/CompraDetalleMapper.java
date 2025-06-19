@@ -2,6 +2,7 @@ package sistemainventario.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.CompraDetalleDTO;
 import sistemainventario.entity.CompraDetalle;
 
@@ -12,10 +13,10 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
     public CompraDetalleDTO toDTO(CompraDetalle entity) {
         CompraDetalleDTO dto= new CompraDetalleDTO();
         dto.setId(entity.getId());
-        dto.setMovimiento(compraMapper.toDTO(entity.getMovimiento()));
+        dto.setIdMovimiento(entity.getIdMovimiento());
         dto.setProducto(productoMapper.toDTO(entity.getProducto()));
-        dto.setCantidad(entity.getCantidad());
-        dto.setPrecio(entity.getPrecio());
+        dto.setCantidad(String.valueOf(entity.getCantidad()));
+        dto.setPrecio(String.valueOf(entity.getPrecio()));
 
         return dto;
     }
@@ -24,10 +25,10 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
     public CompraDetalle toEntity(CompraDetalleDTO dto) {
         CompraDetalle entity= new CompraDetalle();
         entity.setId(dto.getId());
-        entity.setMovimiento(compraMapper.toEntity(dto.getMovimiento()));
+        entity.setIdMovimiento(dto.getIdMovimiento());
         entity.setProducto(productoMapper.toEntity(dto.getProducto()));
-        entity.setCantidad(dto.getCantidad());
-        entity.setPrecio(dto.getPrecio());
+        entity.setCantidad(Integer.parseInt(dto.getCantidad()));
+        entity.setPrecio(Double.parseDouble(dto.getPrecio()));
 
         return entity;
     }
@@ -37,7 +38,7 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
         return entities
                  .stream()
                  .map(this::toDTO)
-                 .toList();
+                 .collect(Collectors.toList());
     }
 
     @Override
@@ -45,7 +46,7 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
         return dtos
                  .stream()
                  .map(this::toEntity)
-                 .toList();
+                 .collect(Collectors.toList());
     }
     
 }

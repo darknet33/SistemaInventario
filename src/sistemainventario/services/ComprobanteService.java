@@ -1,20 +1,20 @@
 package sistemainventario.services;
 
 import java.util.List;
+import sistemainventario.dao.CompraDAO;
 import sistemainventario.dao.ComprobanteDAO;
-import sistemainventario.dao.ProductoDAO;
 import sistemainventario.dto.ComprobanteDTO;
 import sistemainventario.mappers.ComprobanteMapper;
 import sistemainventario.validator.ComprobanteValidator;
 
 public class ComprobanteService implements IService<ComprobanteDTO, Integer>{
     private final ComprobanteDAO comprobanteDAO;
-    private final ProductoDAO productoDAO;
+    private final CompraDAO compraDAO;
     private final ComprobanteMapper comprobanteMapper;
     
     public ComprobanteService() {
         this.comprobanteDAO = new ComprobanteDAO();
-        this.productoDAO= new ProductoDAO();
+        this.compraDAO= new CompraDAO();
         this.comprobanteMapper =new ComprobanteMapper();
     }
     
@@ -25,10 +25,7 @@ public class ComprobanteService implements IService<ComprobanteDTO, Integer>{
 
     @Override
     public List<ComprobanteDTO> listarTodos() {
-        return comprobanteDAO.getAll()
-                            .stream()
-                            .map(comprobanteMapper::toDTO)
-                            .toList();
+        return comprobanteMapper.toDTOList(comprobanteDAO.getAll());
     }
 
     @Override

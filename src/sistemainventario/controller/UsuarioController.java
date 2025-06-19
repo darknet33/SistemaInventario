@@ -1,15 +1,13 @@
 package sistemainventario.controller;
 
-import java.util.List;
+import java.util.*;
 import sistemainventario.dto.UsuarioDTO;
 import sistemainventario.services.UsuarioService;
 import sistemainventario.util.Mensajes;
 
-
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-
 
     public UsuarioController() {
         this.usuarioService = new UsuarioService();
@@ -17,19 +15,21 @@ public class UsuarioController {
 
     public void mostrarUsuarios() {
         List<UsuarioDTO> usuarios = usuarioService.listarTodos();
-        
-        usuarios.forEach(u->{System.out.println("Usuario: " + u.getUsername() + " - Rol: " + u.getRol());});
-                
+
+        usuarios.forEach(u -> {
+            System.out.println("Usuario: " + u.getUsername() + " - Rol: " + u.getRol());
+        });
+
     }
-    
-    public List<UsuarioDTO> listarUsuarios(){
+
+    public List<UsuarioDTO> listarUsuarios() {
         return usuarioService.listarTodos();
     }
-    
-    public UsuarioDTO obtenerUsuario(int id){
+
+    public UsuarioDTO obtenerUsuario(int id) {
         return usuarioService.obtenerPorId(id);
     }
-    
+
     public boolean nuevoUsuario(UsuarioDTO dto) {
         try {
             usuarioService.guardar(dto);
@@ -64,12 +64,12 @@ public class UsuarioController {
             Mensajes.errorValidaciones(e);
             return false;
         }
-    } 
-        
-    public void cambiarEstado(int id){
+    }
+
+    public void cambiarEstado(int id) {
         usuarioService.cambiarEstado(id);
-        
+
         Mensajes.info("Se cambio el estado");
     }
-    
+
 }

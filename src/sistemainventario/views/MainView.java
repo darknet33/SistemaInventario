@@ -253,7 +253,6 @@ public final class MainView extends javax.swing.JFrame {
         lblNombreCompleto.setForeground(UIConstants.COLOR_PRIMARIO);
         lblRol.setForeground(UIConstants.COLOR_PRIMARIO);        
         jpMenu.setBackground(UIConstants.COLOR_PRIMARIO);
-        Sesion.getPermisos().forEach(System.out::println);
     }
 
     public void salir() {

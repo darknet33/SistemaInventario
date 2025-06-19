@@ -23,10 +23,7 @@ public class ClienteService implements IService<ClienteDTO, Integer>{
 
     @Override
     public List<ClienteDTO> listarTodos() {
-        return clienteDAO.getAll()
-                            .stream()
-                            .map(clienteMapper::toDTO)
-                            .toList();
+        return clienteMapper.toDTOList(clienteDAO.getAll());
     }
 
     @Override

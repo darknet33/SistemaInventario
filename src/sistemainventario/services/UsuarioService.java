@@ -22,10 +22,7 @@ public class UsuarioService implements IService<UsuarioDTO, Integer>{
 
     @Override
     public List<UsuarioDTO> listarTodos() {
-        return usuarioDAO.getAll()
-                 .stream()
-                 .map(usuarioMapper::toDTO)
-                 .toList();
+        return usuarioMapper.toDTOList(usuarioDAO.getAll());
     }
 
     @Override

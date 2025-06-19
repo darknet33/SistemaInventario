@@ -1,14 +1,50 @@
 package sistemainventario.views;
 
-import javax.swing.table.DefaultTableModel;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import javax.swing.DefaultComboBoxModel;
+import sistemainventario.controller.CompraController;
+import sistemainventario.controller.ComprobanteController;
+import sistemainventario.controller.EstadoController;
+import sistemainventario.controller.ProductoController;
+import sistemainventario.controller.ProveedorController;
+import sistemainventario.dto.CompraDTO;
+import sistemainventario.dto.CompraDetalleDTO;
+import sistemainventario.dto.ComprobanteDTO;
+import sistemainventario.dto.EstadoDTO;
+import sistemainventario.dto.ProductoDTO;
+import sistemainventario.dto.ProveedorDTO;
+import sistemainventario.util.Mensajes;
+import sistemainventario.util.ModeloTablaBuilder;
+import sistemainventario.util.Sesion;
+import sistemainventario.util.Texto;
 
+public class EntradasPanel extends ViewPanel<CompraDTO> {
 
-public class EntradasPanel extends javax.swing.JPanel {
+    private final ProveedorController proveedorController = new ProveedorController();
+    private List<ProveedorDTO> proveedoresDTOS;
+    private final ComprobanteController comprobanteController = new ComprobanteController();
+    private List<ComprobanteDTO> comprobantesDTOS;
+    private final EstadoController estadoController = new EstadoController();
+    private List<EstadoDTO> estadosDTOS;
 
+    private final ProductoController productoController = new ProductoController();
+    private List<ProductoDTO> produtoDTOS;
+
+    protected ModeloTablaBuilder<CompraDetalleDTO> builderDetails = new ModeloTablaBuilder<>();
+    private final CompraController compraController;
 
     public EntradasPanel() {
+        this.compraController = new CompraController();
         initComponents();
-        //jtpPestanias.setUI(null);
+        refrescarTablaPrincipal();
+        cargarProveedores();
+        cargarComprobantes();
+        cargarEstados();
+        cargarProductos();
+
+        ocultarPestañas(jtpPestanias);
     }
 
     @SuppressWarnings("unchecked")
@@ -51,6 +87,7 @@ public class EntradasPanel extends javax.swing.JPanel {
         txtTotal = new javax.swing.JTextField();
         lblTotal = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(950, 600));
 
         jtpPestanias.setName(""); // NOI18N
@@ -66,6 +103,11 @@ public class EntradasPanel extends javax.swing.JPanel {
 
             }
         ));
+        tblCompras.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblComprasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblCompras);
 
         btnNuevo.setBackground(new java.awt.Color(255, 255, 255));
@@ -140,7 +182,7 @@ public class EntradasPanel extends javax.swing.JPanel {
                     .addGroup(jpComprasLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 906, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jpComprasLayout.setVerticalGroup(
             jpComprasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,7 +192,7 @@ public class EntradasPanel extends javax.swing.JPanel {
                     .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jpAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -197,7 +239,6 @@ public class EntradasPanel extends javax.swing.JPanel {
         btnBuscarProductos.setBackground(new java.awt.Color(255, 255, 255));
         btnBuscarProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/contenedor/btnBuscar.png"))); // NOI18N
         btnBuscarProductos.setBorder(null);
-        btnBuscarProductos.setOpaque(false);
         btnBuscarProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarProductosActionPerformed(evt);
@@ -360,27 +401,25 @@ public class EntradasPanel extends javax.swing.JPanel {
                             .addGroup(jpComprasRegistroLayout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jpComprasRegistroLayout.createSequentialGroup()
-                                        .addComponent(lblCosto)
-                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(lblCosto)
                                     .addGroup(jpComprasRegistroLayout.createSequentialGroup()
                                         .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btnAgregar)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnQuitar)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addComponent(btnQuitar)))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpComprasRegistroLayout.createSequentialGroup()
-                                .addGap(0, 95, Short.MAX_VALUE)
+                                .addGap(0, 109, Short.MAX_VALUE)
                                 .addComponent(lblTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpComprasRegistroLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lblEstado)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cboEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cboEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(17, 17, 17))
         );
         jpComprasRegistroLayout.setVerticalGroup(
@@ -448,31 +487,24 @@ public class EntradasPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jtpPestanias)
-                .addContainerGap())
+            .addComponent(jtpPestanias)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jtpPestanias))
+            .addComponent(jtpPestanias)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnNuevoMouseClicked
-        vistaGuardar(true);
-        limpiar();
-        //compraDTO=null;
+        nuevo();
     }//GEN-LAST:event_btnNuevoMouseClicked
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
-
+        editar();
     }//GEN-LAST:event_btnEditarMouseClicked
 
     private void btnEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarMouseClicked
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarMouseClicked
 
     private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
@@ -480,82 +512,24 @@ public class EntradasPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void btnQuitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitarMouseClicked
-        // TODO add your handling code here:
+        quitarDetalle();
     }//GEN-LAST:event_btnQuitarMouseClicked
 
     private void btnAgregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarMouseClicked
-        // TODO add your handling code here:
+        agregarDetalle();
     }//GEN-LAST:event_btnAgregarMouseClicked
 
     private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
-
+        guardar();
     }//GEN-LAST:event_btnGuardarMouseClicked
 
     private void btnCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseClicked
-        jtpPestanias.setSelectedIndex(0);
+        cancelar();
     }//GEN-LAST:event_btnCancelarMouseClicked
-    private void limpiar() {
-        txtFecha.setText("");
-        cboProveedores.setSelectedItem(0);
-        cboComprobantes.setSelectedItem(0);
-        txtNroComprobante.setText("");
-        cboEstados.setSelectedItem(0);
 
-        txtBuscarProductos.setText("");
-        limpiarDetalle();
-
-        cboProductos.setSelectedItem(0);
-        txtCantidad.setText("");
-        txtTotal.setText("");
-
-        //comprasDTO=null;
-        tblCompras.clearSelection();
-
-    }
-
-    public void limpiarDetalle() {
-        DefaultTableModel modelo = (DefaultTableModel) tblDetalle.getModel();
-        modelo.setRowCount(0); // Limpia filas
-    }
-
-    private void vista(Boolean bool) {
-        //jpDatos.setVisible(bool);
-        jpAction.setVisible(bool);
-        jpActionSave.setVisible(bool);
-    }
-
-    private void vistaGuardar(Boolean bool) {
-        //jpDatos.setVisible(bool);
-        jpAction.setVisible(!bool);
-        jpActionSave.setVisible(bool);
-        cEditable(true);
-        jtpPestanias.setSelectedIndex(1);
-    }
-
-    private void vistaEditDel(Boolean bool) {
-        // jpDatos.setVisible(bool);
-        jpAction.setVisible(bool);
-        jpActionSave.setVisible(!bool);
-
-        cEditable(false);
-    }
-
-    private void cargaDTO() {
-        /*txtFecha.setText(productoDTO.getCodigo());
-        cboProveedores.setSelectedItem(productoDTO.getCategoria().getNombre());
-        cboComprobantes.setSelectedItem(productoDTO.getCategoria().getNombre());
-        txtNroComprobante.setText(productoDTO.getMarca());
-        cboEstados.setSelectedItem(productoDTO.getCategoria().getNombre());*/
-    }
-
-    private void cEditable(Boolean value) {
-        txtFecha.setEditable(value);
-        cboProveedores.setEnabled(value);
-        cboComprobantes.setEditable(value);
-        txtNroComprobante.setEditable(value);
-        cboEstados.setEditable(value);
-
-    }
+    private void tblComprasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblComprasMouseClicked
+        selectDTO();
+    }//GEN-LAST:event_tblComprasMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnAgregar;
@@ -594,4 +568,271 @@ public class EntradasPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtNroComprobante;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void guardar() {
+        controlSetDTO();
+
+        boolean result = isEdit
+                ? compraController.actualizarCompra(entidadDTO)
+                : compraController.nuevaCompra(entidadDTO);
+
+        if (result) {
+            refrescarTablaPrincipal();
+        }
+    }
+
+    @Override
+    public void nuevo() {
+        jtpPestanias.setSelectedIndex(1);
+        isEdit=false;
+        limpiar();
+        entidadDTO = new CompraDTO();
+    }
+
+    @Override
+    public void editar() {
+        if (tblCompras.getSelectedRowCount() <= 0) {
+            Mensajes.advertencia("Tiene que seleccionar una registro");
+            return;
+        }
+        isEdit = true;
+        jtpPestanias.setSelectedIndex(1);
+        limpiarDetalle();
+    }
+
+    @Override
+    public void eliminar() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void cancelar() {
+        if (isEdit) {
+            tblCompras.clearSelection();
+        }
+
+        jtpPestanias.setSelectedIndex(0);
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Fecha", "Proveedor", "Comprobante", "Estado", "Total", "Usuario"};
+    }
+
+    @Override
+    public Object[] toRow(CompraDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getFecha(),
+            e.getProveedor(),
+            e.getComprobante() + " Nro " + e.getNroComprobante(),
+            e.getEstado(),
+            e.getTotal(),
+            e.getUsuario().getNombres()
+        };
+    }
+
+    @Override
+    public void refrescarTablaPrincipal() {
+        listadoDTOS = compraController.listarCompras();
+        CargarTabla(listadoDTOS, tblCompras);
+        jtpPestanias.setSelectedIndex(0);
+    }
+
+    @Override
+    public void limpiar() {
+        txtFecha.setText(LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        cboProveedores.setSelectedIndex(0);
+        cboComprobantes.setSelectedIndex(0);
+        txtNroComprobante.setText("0");
+        cboEstados.setSelectedIndex(0);
+        txtTotal.setText("0");
+
+        txtBuscarProductos.setText("");
+        cargarProductos();
+        limpiarDetalle();
+        txtCosto.setText("0");
+
+        tblDetalle.clearSelection();
+        tblCompras.clearSelection();
+    }
+
+    public void limpiarDetalle() {
+        txtCantidad.setText("1");
+    }
+
+    @Override
+    public void selectDTO() {
+        obtenerEntidad(tblCompras);
+        isEdit = false;
+        controlGetDTO();
+    }
+
+    @Override
+    public void controlGetDTO() {
+        txtFecha.setText(entidadDTO.getFecha());
+        cboProveedores.setSelectedItem(entidadDTO.getProveedor());
+        cboComprobantes.setSelectedItem(entidadDTO.getComprobante());
+        txtNroComprobante.setText(entidadDTO.getNroComprobante());
+        cboEstados.setSelectedItem(entidadDTO.getEstado());
+        txtTotal.setText(String.valueOf(entidadDTO.getTotal()));
+        
+        cargarDetalles();
+    }
+
+    @Override
+    public void controlSetDTO() {
+
+        ProveedorDTO proveedor = obtenerProveedor(cboProveedores.getSelectedItem().toString());
+        ComprobanteDTO comprobante = obtenerComprobante(cboComprobantes.getSelectedItem().toString());
+        EstadoDTO estado = obtenerEstado(cboEstados.getSelectedItem().toString());
+
+        entidadDTO.setFecha(txtFecha.getText().strip());
+        entidadDTO.setProveedor(proveedor);
+        entidadDTO.setComprobante(comprobante);
+        entidadDTO.setNroComprobante(txtNroComprobante.getText().strip());
+        entidadDTO.setEstado(estado);
+        entidadDTO.setTotal(Double.parseDouble((txtTotal.getText())));
+        entidadDTO.setUsuario(Sesion.getUsuario());
+    }
+
+    @Override
+    public void controlsEditable(boolean value) {
+
+    }
+
+    private void cargarProveedores() {
+        proveedoresDTOS = proveedorController.listarProveedores();
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        proveedoresDTOS.forEach(p -> modelo.addElement(p.toString()));
+        cboProveedores.setModel(modelo);
+    }
+
+    private ProveedorDTO obtenerProveedor(String toString) {
+        return proveedoresDTOS.stream()
+                .filter(e -> e.toString().equalsIgnoreCase(toString))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void cargarComprobantes() {
+        comprobantesDTOS = comprobanteController.listarComprobante();
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        comprobantesDTOS.forEach(c -> modelo.addElement(c.toString()));
+        cboComprobantes.setModel(modelo);
+    }
+
+    private ComprobanteDTO obtenerComprobante(String toString) {
+        return comprobantesDTOS.stream()
+                .filter(e -> e.toString().equalsIgnoreCase(toString))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void cargarEstados() {
+        estadosDTOS = estadoController.listarEstado();
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        estadosDTOS.forEach(e -> modelo.addElement(e.toString()));
+        cboEstados.setModel(modelo);
+    }
+
+    private EstadoDTO obtenerEstado(String toString) {
+        return estadosDTOS.stream()
+                .filter(e -> e.toString().equalsIgnoreCase(toString))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void cargarProductos() {
+        produtoDTOS = productoController.listarProductos();
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        produtoDTOS.stream()
+                .map(Object::toString)
+                .forEach(modelo::addElement);
+        cboProductos.setModel(modelo);
+    }
+
+    private ProductoDTO obtenerProducto(String toString) {
+        return produtoDTOS.stream()
+                .filter(e -> e.toString().equalsIgnoreCase(toString))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public CompraDetalleDTO existeDetalle(ProductoDTO producto) {
+        return entidadDTO.getDetalles().stream()
+                .filter(d -> d.getProducto().getId() == producto.getId())
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void agregarDetalle() {
+        ProductoDTO producto = obtenerProducto(cboProductos.getSelectedItem().toString());
+        String cantidad = txtCantidad.getText().strip();
+        String costo = txtCosto.getText().strip();
+        boolean result;
+        CompraDetalleDTO detalleExistente = existeDetalle(producto);
+
+        if (detalleExistente != null) {
+            int cantidadAgregada=Integer.parseInt(detalleExistente.getCantidad())+1;
+            detalleExistente.setCantidad(String.valueOf(cantidadAgregada));
+            detalleExistente.setPrecio(costo);
+            compraController.editDetalle(detalleExistente);
+        } else {
+            CompraDetalleDTO nuevoDetalle = new CompraDetalleDTO();
+            nuevoDetalle.setIdMovimiento(entidadDTO.getId());
+            nuevoDetalle.setProducto(producto);
+            nuevoDetalle.setCantidad(cantidad);
+            nuevoDetalle.setPrecio(costo);
+            result = compraController.addDetalle(nuevoDetalle);
+            if (result) {
+                entidadDTO.getDetalles().add(nuevoDetalle);
+            }
+        }
+
+        cargarDetalles();
+        limpiarDetalle();
+    }
+
+    public void quitarDetalle() {
+        int fila = tblDetalle.getSelectedRow();
+        if (fila == -1) {
+            Mensajes.advertencia("Elija un registro del detalle de compra");
+            return;
+        }
+        int idProducto = (Integer) tblDetalle.getValueAt(fila, 0);
+
+        for (CompraDetalleDTO detalle : entidadDTO.getDetalles()) {
+            if (detalle.getProducto().getId() == idProducto) {
+                compraController.delDetalle(detalle);
+                entidadDTO.getDetalles().remove(detalle);
+            }
+        }
+
+        cargarDetalles();
+    }
+
+    public void cargarDetalles() {
+        String[] columnas = new String[]{"IDProducto", "Producto", "Cantidad", "Costo", "Importe"};
+        var model = builderDetails.construirModelo(
+                columnas,
+                entidadDTO.getDetalles(),
+                this::toRowDetails // referencia a método
+        );
+        tblDetalle.setModel(model);
+        txtTotal.setText(String.valueOf(sumarColumna(tblDetalle, 4)));
+        AnchoColumnaTabla(tblDetalle, 0, 1);
+        AnchoColumnaTabla(tblDetalle, 560, 2);
+    }
+
+    private Object[] toRowDetails(CompraDetalleDTO e) {
+        return new Object[]{
+            e.getProducto().getId(),
+            e.getProducto(),
+            e.getCantidad(),
+            e.getPrecio(),
+            Double.parseDouble(e.getPrecio()) * Integer.parseInt(e.getCantidad())
+        };
+    }
 }

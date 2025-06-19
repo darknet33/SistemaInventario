@@ -79,26 +79,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
 
     @Override
     public void save(Producto entity) {
-        String sql = "INSERT INTO productos (codigo_producto, categoria_id, descripcion_producto, marca_producto, procedencia_producto, peso_producto, stock_minimo_producto,estado_producto,usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, entity.getCodigo());
-            stmt.setInt(2, entity.getCategoria().getId());
-            stmt.setString(3, entity.getDescripcion());
-            stmt.setString(4, entity.getMarca());
-            stmt.setString(5, entity.getProcedencia());
-            stmt.setString(6, entity.getPeso());
-            stmt.setInt(7, entity.getStockMinimo());
-            stmt.setBoolean(8, entity.getEstado());
-            stmt.setInt(9, entity.getUsuario().getId());
-            stmt.executeUpdate();
-        } catch (Exception e) {
-            Mensajes.error(sql, e);
-        }
-    }
-
-    @Override
-    public void update(Producto entity) {
-        String sql = "UPDATE productos SET codigo_producto = ?, categoria_id = ?, descripcion_producto = ?, marca_producto = ?, procedencia_producto = ?, peso_producto = ?, stock_inicial_producto = ?, stock_actual_producto = ?, stock_minimo_producto = ?,estado_producto = ?,usuario_id = ? WHERE id_producto = ?";
+        String sql = "INSERT INTO productos (codigo_producto, categoria_id, descripcion_producto, marca_producto, procedencia_producto, peso_producto, stock_inicial_producto, stock_actual_producto, stock_minimo_producto,estado_producto,usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, entity.getCodigo());
             stmt.setInt(2, entity.getCategoria().getId());
@@ -111,7 +92,26 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
             stmt.setInt(9, entity.getStockMinimo());
             stmt.setBoolean(10, entity.getEstado());
             stmt.setInt(11, entity.getUsuario().getId());
-            stmt.setInt(12, entity.getId());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            Mensajes.error(sql, e);
+        }
+    }
+
+    @Override
+    public void update(Producto entity) {
+        String sql = "UPDATE productos SET codigo_producto = ?, categoria_id = ?, descripcion_producto = ?, marca_producto = ?, procedencia_producto = ?, peso_producto = ?, stock_minimo_producto = ?,estado_producto = ?,usuario_id = ? WHERE id_producto = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, entity.getCodigo());
+            stmt.setInt(2, entity.getCategoria().getId());
+            stmt.setString(3, entity.getDescripcion());
+            stmt.setString(4, entity.getMarca());
+            stmt.setString(5, entity.getProcedencia());
+            stmt.setString(6, entity.getPeso());
+            stmt.setInt(7, entity.getStockMinimo());
+            stmt.setBoolean(8, entity.getEstado());
+            stmt.setInt(9, entity.getUsuario().getId());
+            stmt.setInt(10, entity.getId());
             stmt.executeUpdate();
         } catch (Exception e) {
             Mensajes.error(sql, e);

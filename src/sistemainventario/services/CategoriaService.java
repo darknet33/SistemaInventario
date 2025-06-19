@@ -25,10 +25,7 @@ public class CategoriaService implements IService<CategoriaDTO, Integer>{
 
     @Override
     public List<CategoriaDTO> listarTodos() {
-        return categoriaDAO.getAll()
-                            .stream()
-                            .map(categoriaMapper::toDTO)
-                            .toList();
+        return categoriaMapper.toDTOList(categoriaDAO.getAll());
     }
 
     @Override

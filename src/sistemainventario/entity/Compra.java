@@ -1,13 +1,13 @@
 
 package sistemainventario.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Compra {
     private int id;
-    private Date fecha;
+    private LocalDate fecha;
     private Proveedor proveedor;
     private Comprobante comprobante;
     private String nroComprobante;
@@ -28,11 +28,11 @@ public class Compra {
         this.id = id;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 

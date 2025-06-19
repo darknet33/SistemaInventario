@@ -2,6 +2,7 @@
 package sistemainventario.validator;
 
 import sistemainventario.dto.ProductoDTO;
+import sistemainventario.util.Texto;
 
 public class ProductoValidator {
     public static void validar(ProductoDTO dto){
@@ -26,8 +27,20 @@ public class ProductoValidator {
         if (dto.getMarca().isEmpty())
             throw new IllegalArgumentException("La marca es Obligatorio");
         
-        if (dto.getStockMinimo()<=0)
-            throw new IllegalArgumentException("Stock Minimo debe ser mayor a 0");
+        if (dto.getStockInicial().isEmpty())
+            throw new IllegalArgumentException("Stock Inicial esta Vacio");
+        
+        if (!Texto.isInteger(dto.getStockInicial()))
+            throw new IllegalArgumentException("Stock Inicial solo acepta numeros");
+
+        if (dto.getStockMinimo().isEmpty())
+            throw new IllegalArgumentException("Stock Minimo esta Vacio");
+        
+        if (!Texto.isInteger(dto.getStockInicial()))
+            throw new IllegalArgumentException("Stock Minimo solo acepta numeros");
+        
+        if(Integer.parseInt(dto.getStockMinimo())<=0)
+            throw new IllegalArgumentException("Stock Minimo tiene que se mayor a 0");
 
     }
 }

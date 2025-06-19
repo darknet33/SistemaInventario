@@ -1,9 +1,8 @@
 package sistemainventario.views;
 
-import java.util.List;
-import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CategoriaController;
 import sistemainventario.dto.CategoriaDTO;
+import sistemainventario.util.Texto;
 
 public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
@@ -60,7 +59,6 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
             }
         ));
         tblCategoria.setGridColor(new java.awt.Color(255, 255, 255));
-        tblCategoria.setRowHeight(20);
         tblCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblCategoriaMouseClicked(evt);
@@ -223,9 +221,9 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
                 .addComponent(btnNuevo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -277,9 +275,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
                 : categoriaController.nuevaCategoria(entidadDTO);
 
         if (result) {
-            listadoDTOS = categoriaController.listarCategoria();
-            cargarTablaPrincipal(listadoDTOS);
-            vistaInicial();
+            refrescarTablaPrincipal();
         }
     }
 
@@ -287,7 +283,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     public void nuevo() {
         limpiar();
         vistaNuevo();
-        entidadDTO= new CategoriaDTO();
+        entidadDTO = new CategoriaDTO();
     }
 
     @Override
@@ -302,29 +298,30 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
             refrescarTablaPrincipal();
         }
     }
-    
+
     @Override
     public void cancelar() {
-        vistaCancelar(tblCategoria,()->selectDTO());
-    }    
+        vistaCancelar(tblCategoria, () -> selectDTO());
+    }
+
+    @Override
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Nombre"};
+    }
+
+    @Override
+    public Object[] toRow(CategoriaDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getNombre()
+        };
+    }
 
     @Override
     public void refrescarTablaPrincipal() {
         listadoDTOS = categoriaController.listarCategoria();
-        cargarTablaPrincipal(listadoDTOS);
+        CargarTabla(listadoDTOS,tblCategoria);
         vistaInicial();
-    }
-
-    @Override
-    public void cargarTablaPrincipal(List<CategoriaDTO> lista) {
-        String[] columnas = {"ID", "Nombre"};
-                
-        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
-                e -> new Object[]{e.getId(), e.getNombre()}
-        );
-
-        tblCategoria.setModel(modelo);
-        AnchoColumnaTabla(tblCategoria, 50, 1);
     }
 
     @Override
@@ -336,8 +333,8 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     }
 
     @Override
-    public void selectDTO() {       
-        entidadDTO =obtenerEntidad(tblCategoria);
+    public void selectDTO() {
+        obtenerEntidad(tblCategoria);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
@@ -350,11 +347,11 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     @Override
     public void controlSetDTO() {
-        entidadDTO.setNombre(txtNombre.getText());
+        entidadDTO.setNombre(Texto.capitalize(txtNombre.getText().strip()));
     }
 
     @Override
-    public void controlsEditable(boolean  value) {
+    public void controlsEditable(boolean value) {
         txtNombre.setEditable(value);
     }
 

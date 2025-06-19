@@ -21,10 +21,11 @@ public class ModeloTablaBuilder<T> {
                 return false; // todas las celdas no editables
             }
         };
-
+        if(datos!=null){
         datos.stream()
              .map(mapeador)
              .forEach(modelo::addRow);
+        }
 
         return modelo;
     }

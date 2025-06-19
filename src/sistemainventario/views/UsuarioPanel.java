@@ -2,27 +2,27 @@ package sistemainventario.views;
 
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.RolController;
 import sistemainventario.controller.UsuarioController;
 import sistemainventario.dto.RolDTO;
 import sistemainventario.dto.UsuarioDTO;
+import sistemainventario.util.Texto;
 
 public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
+
     private final UsuarioController usuarioController;
     private final RolController rolController;
     private List<RolDTO> roles;
-    
+
     public UsuarioPanel() {
-        this.usuarioController=new UsuarioController();
-        this.rolController=new RolController();
+        this.usuarioController = new UsuarioController();
+        this.rolController = new RolController();
         initComponents();
         inicializarPaneles(jpDatos, jpAction, jpActionSave);
         refrescarTablaPrincipal();
         cargarRoles();
     }
 
-   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -378,7 +378,7 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 
-@Override
+    @Override
     public void guardar() {
         controlSetDTO();
 
@@ -387,7 +387,7 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
                 : usuarioController.nuevoUsuario(entidadDTO);
 
         if (result) {
-             refrescarTablaPrincipal();
+            refrescarTablaPrincipal();
         }
     }
 
@@ -407,32 +407,36 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
     @Override
     public void eliminar() {
         if (usuarioController.eliminarUsuario(entidadDTO.getId())) {
-             refrescarTablaPrincipal();
+            refrescarTablaPrincipal();
         }
     }
-    
+
     @Override
-    public void cancelar(){
-        vistaCancelar(tblUsuarios,()->selectDTO());
+    public void cancelar() {
+        vistaCancelar(tblUsuarios, () -> selectDTO());
     }
-    
+
     @Override
-    public void refrescarTablaPrincipal(){
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Usuario", "Nombre y Apellido", "Rol", "Estado"};
+    }
+
+    @Override
+    public Object[] toRow(UsuarioDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getUsername(),
+            e.getNombres() + " " + e.getApellidos(),
+            e.getRol().getNombre(),
+            e.getEstado() ? "ON" : "OFF"
+        };
+    }
+
+    @Override
+    public void refrescarTablaPrincipal() {
         listadoDTOS = usuarioController.listarUsuarios();
-        cargarTablaPrincipal(listadoDTOS);
+        CargarTabla(listadoDTOS, tblUsuarios);
         vistaInicial();
-    }
-
-    @Override
-    public void cargarTablaPrincipal(List<UsuarioDTO> lista) {
-        String[] columnas = {"ID", "Usuario", "Nombre y Apellido","Rol","Estado"};
-        
-        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
-                e -> new Object[]{e.getId(), e.getUsername(),e.getNombres() + " " + e.getApellidos(),e.getRol().getNombre(),e.getEstado()? "ON":"OFF"}
-        );
-
-        tblUsuarios.setModel(modelo);
-        AnchoColumnaTabla(tblUsuarios, 50, 1);
     }
 
     @Override
@@ -449,13 +453,13 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
     }
 
     @Override
-    public void selectDTO() {        
-        entidadDTO = obtenerEntidad(tblUsuarios);
+    public void selectDTO() {
+        obtenerEntidad(tblUsuarios);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
     }
-   
+
     @Override
     public void controlGetDTO() {
         txtUsername.setText(entidadDTO.getUsername());
@@ -469,12 +473,13 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
 
     @Override
     public void controlSetDTO() {
-        entidadDTO.setUsername(txtUsername.getText());
-        entidadDTO.setPassword(txtContrasenia.getText());
-        entidadDTO.setNombres(txtNombre.getText());
-        entidadDTO.setApellidos(txtApellido.getText());
-        entidadDTO.setCargo(txtCargo.getText());
-        entidadDTO.setRol(obtenerRol((String)cboRol.getSelectedItem()));
+        String pass= new String(txtContrasenia.getPassword());
+        entidadDTO.setUsername(txtUsername.getText().strip());
+        entidadDTO.setPassword(pass.strip());
+        entidadDTO.setNombres(Texto.capitalizeTexto(txtNombre.getText().strip()));
+        entidadDTO.setApellidos(Texto.capitalizeTexto(txtApellido.getText().strip()));
+        entidadDTO.setCargo(Texto.capitalize(txtCargo.getText().strip()));
+        entidadDTO.setRol(obtenerRol(cboRol.getSelectedItem().toString()));
         entidadDTO.setEstado(chkEstado.isSelected());
     }
 
@@ -488,18 +493,19 @@ public class UsuarioPanel extends ViewPanel<UsuarioDTO> {
         cboRol.setEnabled(value);
         chkEstado.setEnabled(value);
     }
-    
-    private void cargarRoles(){
+
+    private void cargarRoles() {
         DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        roles=rolController.listarRoles();
+        roles = rolController.listarRoles();
         roles.forEach(e -> modelo.addElement(e.toString()));
         cboRol.setModel(modelo);
     }
-    
-    private RolDTO obtenerRol(String nombre){
+
+    private RolDTO obtenerRol(String nombre) {
         return roles.stream()
-                .filter(e->e.getNombre().equalsIgnoreCase(nombre))
+                .filter(e -> e.getNombre().equalsIgnoreCase(nombre))
                 .findFirst()
                 .orElse(null);
     }
+
 }

@@ -1,12 +1,11 @@
 package sistemainventario.dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CompraDTO  implements IDTO{
     private int id;
-    private Date fecha;    
+    private String fecha;    
     private ProveedorDTO proveedor;
     private ComprobanteDTO comprobante;
     private String nroComprobante;
@@ -27,11 +26,11 @@ public class CompraDTO  implements IDTO{
         this.id = id;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -93,7 +92,7 @@ public class CompraDTO  implements IDTO{
 
     @Override
     public String toString() {
-        return  fecha + " " + proveedor + " " + comprobante + "-" + nroComprobante;
+        return  fecha + " " + proveedor + " " + comprobante + "-" + nroComprobante +" "+total;
     }
 
     @Override

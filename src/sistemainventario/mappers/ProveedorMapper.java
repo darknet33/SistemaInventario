@@ -1,6 +1,7 @@
 package sistemainventario.mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.ProveedorDTO;
 import sistemainventario.entity.Proveedor;
 
@@ -43,7 +44,7 @@ public class ProveedorMapper implements IMapper<Proveedor, ProveedorDTO> {
         return entities
                 .stream()
                 .map(this::toDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ProveedorMapper implements IMapper<Proveedor, ProveedorDTO> {
         return dtos
                 .stream()
                 .map(this::toEntity)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 }

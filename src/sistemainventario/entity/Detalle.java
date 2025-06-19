@@ -1,22 +1,14 @@
 
 package sistemainventario.entity;
 
-public abstract class Detalle<T> {
+public abstract class Detalle {
     protected int id;
-    protected T movimiento;
+    protected int idMovimiento;
     protected Producto producto;
     protected int cantidad;
     protected double precio;
 
     public Detalle() {
-    }
-
-    public Detalle(int id, T movimiento, Producto producto, int cantidad, double precio) {
-        this.id = id;
-        this.movimiento = movimiento;
-        this.producto = producto;
-        this.cantidad = cantidad;
-        this.precio = precio;
     }
 
     public int getId() {
@@ -27,12 +19,12 @@ public abstract class Detalle<T> {
         this.id = id;
     }
 
-    public T getMovimiento() {
-        return movimiento;
+    public int getIdMovimiento() {
+        return idMovimiento;
     }
 
-    public void setMovimiento(T movimiento) {
-        this.movimiento = movimiento;
+    public void setIdMovimiento(int idMovimiento) {
+        this.idMovimiento = idMovimiento;
     }
 
     public Producto getProducto() {
@@ -58,6 +50,7 @@ public abstract class Detalle<T> {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
+    
     
     
 }

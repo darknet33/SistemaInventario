@@ -1,6 +1,7 @@
 package sistemainventario.mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.ComprobanteDTO;
 import sistemainventario.entity.Comprobante;
 
@@ -31,7 +32,7 @@ public class ComprobanteMapper implements IMapper<Comprobante, ComprobanteDTO>{
         return entities
                  .stream()
                  .map(this::toDTO)
-                 .toList();
+                 .collect(Collectors.toList());
     }
 
     @Override
@@ -39,6 +40,6 @@ public class ComprobanteMapper implements IMapper<Comprobante, ComprobanteDTO>{
         return dtos
                  .stream()
                  .map(this::toEntity)
-                 .toList();
+                 .collect(Collectors.toList());
     }
 }

@@ -212,7 +212,10 @@ public final class LoginView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        if (controllerLogin.Ingresar(txtUsuario.getText(),new String(txtContrasenia.getPassword()))){
+        String user=txtUsuario.getText();
+        String pass=new String(txtContrasenia.getPassword());
+        
+        if (controllerLogin.Ingresar(user,pass)){
             this.dispose();
             new MainView().setVisible(true);
         }

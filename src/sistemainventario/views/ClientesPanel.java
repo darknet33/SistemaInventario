@@ -2,11 +2,11 @@ package sistemainventario.views;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.ClienteController;
 import sistemainventario.dto.ClienteDTO;
+import sistemainventario.util.Texto;
 
-public class ClientesPanel extends ViewPanel<ClienteDTO>{
+public class ClientesPanel extends ViewPanel<ClienteDTO> {
 
     private final ClienteController clienteController;
 
@@ -15,7 +15,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
         initComponents();
         inicializarPaneles(jpDatos, jpAction, jpActionSave);
         refrescarTablaPrincipal();
-        
+        activarButton(btnBuscar);
     }
 
     @SuppressWarnings("unchecked")
@@ -345,7 +345,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         String valorBuscado = txtBuscar.getText();
-        cargarTablaPrincipal(buscarClientes(valorBuscado));
+        CargarTabla(buscarClientes(valorBuscado),tblCliente);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -382,9 +382,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
                 : clienteController.nuevoCliente(entidadDTO);
 
         if (result) {
-            listadoDTOS = clienteController.listarClientes();
-             refrescarTablaPrincipal();
-             vistaInicial();
+            refrescarTablaPrincipal();
         }
     }
 
@@ -404,32 +402,35 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     @Override
     public void eliminar() {
         if (clienteController.eliminarCliente(entidadDTO.getId())) {
-             refrescarTablaPrincipal();
+            refrescarTablaPrincipal();
         }
     }
-    
+
     @Override
-    public void cancelar(){
-        vistaCancelar(tblCliente,()->selectDTO());
+    public void cancelar() {
+        vistaCancelar(tblCliente, () -> selectDTO());
     }
     
     @Override
-    public void refrescarTablaPrincipal(){
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Nombre", "Celular", "Estado"};
+    }
+
+    @Override
+    public Object[] toRow(ClienteDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getNombre(),
+            e.getCelular(),
+            e.getEstado() ? "ON" : "OFF"
+        };
+    }
+
+    @Override
+    public void refrescarTablaPrincipal() {
         listadoDTOS = clienteController.listarClientes();
-        cargarTablaPrincipal(listadoDTOS);
+        CargarTabla(listadoDTOS,tblCliente);
         vistaInicial();
-    }
-
-    @Override
-    public void cargarTablaPrincipal(List<ClienteDTO> lista) {
-        String[] columnas = {"ID", "Nombre", "Celular","Estado"};
-        
-        DefaultTableModel modelo = builder.construirModelo(columnas, lista,
-                e -> new Object[]{e.getId(), e.getNombre(), e.getCelular(),e.getEstado()? "ON":"OFF"}
-        );
-
-        tblCliente.setModel(modelo);
-        AnchoColumnaTabla(tblCliente,50, 1);
     }
 
     @Override
@@ -445,13 +446,13 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     }
 
     @Override
-    public void selectDTO() {        
-        entidadDTO = obtenerEntidad(tblCliente);
+    public void selectDTO() {
+        obtenerEntidad(tblCliente);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
     }
-   
+
     @Override
     public void controlGetDTO() {
         txtNombre.setText(entidadDTO.getNombre());
@@ -463,10 +464,10 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     @Override
     public void controlSetDTO() {
-        entidadDTO.setNombre(txtNombre.getText());
-        entidadDTO.setNit(txtNit.getText());
+        entidadDTO.setNombre(Texto.capitalizeTexto(txtNombre.getText().strip()));
+        entidadDTO.setNit(txtNit.getText().toUpperCase().strip());
         entidadDTO.setCelular(txtCelular.getText());
-        entidadDTO.setDireccion(txtDireccion.getText());
+        entidadDTO.setDireccion(Texto.capitalizeTexto(txtDireccion.getText().strip()));
         entidadDTO.setEstado(chkEstado.isSelected());
     }
 

@@ -9,8 +9,9 @@ public interface IPanel<T> {
     void editar();
     void eliminar();
     void cancelar();
+    String[] getColumnNames();
+    Object[] toRow(T e);
     void refrescarTablaPrincipal();
-    void cargarTablaPrincipal(List<T> lista);
     void limpiar();    
     void selectDTO();
     void controlGetDTO();

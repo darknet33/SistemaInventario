@@ -1,6 +1,7 @@
 package sistemainventario.mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.CategoriaDTO;
 import sistemainventario.dto.ProductoDTO;
 import sistemainventario.entity.Producto;
@@ -20,9 +21,9 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
         dto.setMarca(entity.getMarca());
         dto.setProcedencia(entity.getProcedencia().toUpperCase());
         dto.setPeso(entity.getPeso());
-        dto.setStockInicial(entity.getStockInicial());
-        dto.setStockActual(entity.getStockActual());
-        dto.setStockMinimo(entity.getStockMinimo());
+        dto.setStockInicial(String.valueOf(entity.getStockInicial()));
+        dto.setStockActual(String.valueOf(entity.getStockActual()));
+        dto.setStockMinimo(String.valueOf(entity.getStockMinimo()));
         dto.setEstado(entity.getEstado());       
         dto.setFechaRegistro(entity.getFechaRegistro());
         dto.setFechaActualizado(entity.getFechaActualizado());
@@ -42,9 +43,9 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
         entity.setMarca(dto.getMarca());
         entity.setProcedencia(dto.getProcedencia());
         entity.setPeso(dto.getPeso());
-        entity.setStockInicial(dto.getStockInicial());
-        entity.setStockActual(dto.getStockActual());
-        entity.setStockMinimo(dto.getStockMinimo());
+        entity.setStockInicial(Integer.parseInt(dto.getStockInicial()));
+        entity.setStockActual(Integer.parseInt(dto.getStockActual()));
+        entity.setStockMinimo(Integer.parseInt(dto.getStockMinimo()));
         entity.setEstado(dto.getEstado());
         entity.setUsuario(usuarioMapper.toEntity(dto.getUsuario()));
         
@@ -56,7 +57,7 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
         return entities
                  .stream()
                  .map(this::toDTO)
-                 .toList();
+                 .collect(Collectors.toList());
     }
 
     @Override
@@ -64,6 +65,6 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
         return dtos
                  .stream()
                  .map(this::toEntity)
-                 .toList();
+                 .collect(Collectors.toList());
     }
 }
