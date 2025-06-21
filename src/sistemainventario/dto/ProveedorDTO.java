@@ -95,6 +95,29 @@ public class ProveedorDTO implements IDTO {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + this.Id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProveedorDTO other = (ProveedorDTO) obj;
+        return this.Id == other.Id;
+    }
+
+    
+    @Override
     public int getPK() {
         return Id;
     }

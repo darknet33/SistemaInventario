@@ -1,6 +1,7 @@
 package sistemainventario.views;
 
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 
 public interface IPanel<T> {
 

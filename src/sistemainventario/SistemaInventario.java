@@ -1,7 +1,6 @@
 package sistemainventario;
 
-import sistemainventario.controller.ClienteController;
-import sistemainventario.dto.ClienteDTO;
+import sistemainventario.util.Texto;
 import sistemainventario.views.LoginView;
 
 public class SistemaInventario {
@@ -13,22 +12,13 @@ public class SistemaInventario {
         login.setResizable(false);
         login.setTitle("Sistema de Inventario");
         login.setDefaultCloseOperation(LoginView.EXIT_ON_CLOSE);
+        test();
     }
     
-    private static void pruebaCliente(){
-               
-        ClienteController clienteController= new ClienteController();
-        ClienteDTO dto=clienteController.obtenerCliente(2);
-        
-        dto.setNombre("Roberto Gonzales");
-        dto.setNit("569864");
-        dto.setDireccion("Av alamos 231");
-        dto.setCelular("7884599");
-        dto.setEstado(false);
-        
-        clienteController.actualizarCliente(dto);
-        
-        clienteController.listarClientes().forEach(System.out::println);
+    private static void test(){
+        System.out.println(Texto.isDecimal("300"));
+        System.out.println(Texto.isDecimal("324.23"));
+        System.out.println(Texto.isDecimal(""));
     }
     
 }

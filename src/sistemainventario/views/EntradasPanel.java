@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CompraController;
 import sistemainventario.controller.ComprobanteController;
 import sistemainventario.controller.EstadoController;
@@ -20,7 +21,7 @@ import sistemainventario.util.ModeloTablaBuilder;
 import sistemainventario.util.Sesion;
 import sistemainventario.util.Texto;
 
-public class EntradasPanel extends ViewPanel<CompraDTO> {
+public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle<CompraDetalleDTO> {
 
     private final ProveedorController proveedorController = new ProveedorController();
     private List<ProveedorDTO> proveedoresDTOS;
@@ -32,8 +33,9 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
     private final ProductoController productoController = new ProductoController();
     private List<ProductoDTO> produtoDTOS;
 
-    protected ModeloTablaBuilder<CompraDetalleDTO> builderDetails = new ModeloTablaBuilder<>();
     private final CompraController compraController;
+    private ModeloTablaBuilder<CompraDetalleDTO> builderDetails = new ModeloTablaBuilder<>();
+    private List<CompraDetalleDTO> listaDetalle;
 
     public EntradasPanel() {
         this.compraController = new CompraController();
@@ -43,7 +45,6 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
         cargarComprobantes();
         cargarEstados();
         cargarProductos();
-
         ocultarPestañas(jtpPestanias);
     }
 
@@ -63,16 +64,16 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
         lblFecha = new javax.swing.JLabel();
         txtFecha = new javax.swing.JTextField();
         lblProveedor = new javax.swing.JLabel();
-        cboProveedores = new javax.swing.JComboBox<>();
+        cboProveedores = new javax.swing.JComboBox();
         lblComprobante = new javax.swing.JLabel();
-        cboComprobantes = new javax.swing.JComboBox<>();
+        cboComprobantes = new javax.swing.JComboBox();
         lblNroComprobante = new javax.swing.JLabel();
         txtNroComprobante = new javax.swing.JTextField();
         lblEstado = new javax.swing.JLabel();
-        cboEstados = new javax.swing.JComboBox<>();
+        cboEstados = new javax.swing.JComboBox();
         btnBuscarProductos = new javax.swing.JButton();
         txtBuscarProductos = new javax.swing.JTextField();
-        cboProductos = new javax.swing.JComboBox<>();
+        cboProductos = new javax.swing.JComboBox();
         lblCantidad = new javax.swing.JLabel();
         txtCantidad = new javax.swing.JTextField();
         lblCosto = new javax.swing.JLabel();
@@ -512,11 +513,15 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void btnQuitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitarMouseClicked
-        quitarDetalle();
+        CompraDetalleDTO detalle = existeDetalle((ProductoDTO) cboProductos.getSelectedItem());
+        quitarDetalle(detalle);
     }//GEN-LAST:event_btnQuitarMouseClicked
 
     private void btnAgregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarMouseClicked
-        agregarDetalle();
+        CompraDetalleDTO detalle = existeDetalle((ProductoDTO) cboProductos.getSelectedItem());
+        if (agregarDetalle(detalle)) {
+            cargarDetails();
+        }
     }//GEN-LAST:event_btnAgregarMouseClicked
 
     private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
@@ -540,10 +545,10 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
     private javax.swing.JLabel btnGuardar;
     private javax.swing.JLabel btnNuevo;
     private javax.swing.JLabel btnQuitar;
-    private javax.swing.JComboBox<String> cboComprobantes;
-    private javax.swing.JComboBox<String> cboEstados;
-    private javax.swing.JComboBox<String> cboProductos;
-    private javax.swing.JComboBox<String> cboProveedores;
+    private javax.swing.JComboBox cboComprobantes;
+    private javax.swing.JComboBox cboEstados;
+    private javax.swing.JComboBox cboProductos;
+    private javax.swing.JComboBox cboProveedores;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel jpAction;
@@ -585,9 +590,11 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
     @Override
     public void nuevo() {
         jtpPestanias.setSelectedIndex(1);
-        isEdit=false;
-        limpiar();
+        isEdit = false;
         entidadDTO = new CompraDTO();
+        listaDetalle = entidadDTO.getDetalles();
+        System.out.println(listaDetalle == null);
+        limpiar();
     }
 
     @Override
@@ -654,7 +661,7 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
         limpiarDetalle();
         txtCosto.setText("0");
 
-        tblDetalle.clearSelection();
+        cargarDetails();
         tblCompras.clearSelection();
     }
 
@@ -677,16 +684,17 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
         txtNroComprobante.setText(entidadDTO.getNroComprobante());
         cboEstados.setSelectedItem(entidadDTO.getEstado());
         txtTotal.setText(String.valueOf(entidadDTO.getTotal()));
-        
-        cargarDetalles();
+
+        listaDetalle = entidadDTO.getDetalles();
+        cargarDetails();
     }
 
     @Override
     public void controlSetDTO() {
 
-        ProveedorDTO proveedor = obtenerProveedor(cboProveedores.getSelectedItem().toString());
-        ComprobanteDTO comprobante = obtenerComprobante(cboComprobantes.getSelectedItem().toString());
-        EstadoDTO estado = obtenerEstado(cboEstados.getSelectedItem().toString());
+        ProveedorDTO proveedor = (ProveedorDTO) cboProveedores.getSelectedItem();
+        ComprobanteDTO comprobante = (ComprobanteDTO) cboComprobantes.getSelectedItem();
+        EstadoDTO estado = (EstadoDTO) cboEstados.getSelectedItem();
 
         entidadDTO.setFecha(txtFecha.getText().strip());
         entidadDTO.setProveedor(proveedor);
@@ -704,129 +712,58 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
 
     private void cargarProveedores() {
         proveedoresDTOS = proveedorController.listarProveedores();
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        proveedoresDTOS.forEach(p -> modelo.addElement(p.toString()));
+        DefaultComboBoxModel<ProveedorDTO> modelo = new DefaultComboBoxModel<>();
+        proveedoresDTOS.forEach(modelo::addElement);
         cboProveedores.setModel(modelo);
-    }
-
-    private ProveedorDTO obtenerProveedor(String toString) {
-        return proveedoresDTOS.stream()
-                .filter(e -> e.toString().equalsIgnoreCase(toString))
-                .findFirst()
-                .orElse(null);
     }
 
     private void cargarComprobantes() {
         comprobantesDTOS = comprobanteController.listarComprobante();
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        comprobantesDTOS.forEach(c -> modelo.addElement(c.toString()));
+        DefaultComboBoxModel<ComprobanteDTO> modelo = new DefaultComboBoxModel<>();
+        comprobantesDTOS.forEach(modelo::addElement);
         cboComprobantes.setModel(modelo);
-    }
-
-    private ComprobanteDTO obtenerComprobante(String toString) {
-        return comprobantesDTOS.stream()
-                .filter(e -> e.toString().equalsIgnoreCase(toString))
-                .findFirst()
-                .orElse(null);
     }
 
     private void cargarEstados() {
         estadosDTOS = estadoController.listarEstado();
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        estadosDTOS.forEach(e -> modelo.addElement(e.toString()));
+        DefaultComboBoxModel<EstadoDTO> modelo = new DefaultComboBoxModel<>();
+        estadosDTOS.forEach(modelo::addElement);
         cboEstados.setModel(modelo);
-    }
-
-    private EstadoDTO obtenerEstado(String toString) {
-        return estadosDTOS.stream()
-                .filter(e -> e.toString().equalsIgnoreCase(toString))
-                .findFirst()
-                .orElse(null);
     }
 
     private void cargarProductos() {
         produtoDTOS = productoController.listarProductos();
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        produtoDTOS.stream()
-                .map(Object::toString)
-                .forEach(modelo::addElement);
+        DefaultComboBoxModel<ProductoDTO> modelo = new DefaultComboBoxModel<>();
+        produtoDTOS.forEach(modelo::addElement);
         cboProductos.setModel(modelo);
     }
 
-    private ProductoDTO obtenerProducto(String toString) {
-        return produtoDTOS.stream()
-                .filter(e -> e.toString().equalsIgnoreCase(toString))
-                .findFirst()
-                .orElse(null);
-    }
-
+    @Override
     public CompraDetalleDTO existeDetalle(ProductoDTO producto) {
-        return entidadDTO.getDetalles().stream()
+        if (listaDetalle == null) {
+            return null;
+        }
+        return listaDetalle.stream()
                 .filter(d -> d.getProducto().getId() == producto.getId())
                 .findFirst()
                 .orElse(null);
     }
 
-    public void agregarDetalle() {
-        ProductoDTO producto = obtenerProducto(cboProductos.getSelectedItem().toString());
-        String cantidad = txtCantidad.getText().strip();
-        String costo = txtCosto.getText().strip();
-        boolean result;
-        CompraDetalleDTO detalleExistente = existeDetalle(producto);
-
-        if (detalleExistente != null) {
-            int cantidadAgregada=Integer.parseInt(detalleExistente.getCantidad())+1;
-            detalleExistente.setCantidad(String.valueOf(cantidadAgregada));
-            detalleExistente.setPrecio(costo);
-            compraController.editDetalle(detalleExistente);
-        } else {
-            CompraDetalleDTO nuevoDetalle = new CompraDetalleDTO();
-            nuevoDetalle.setIdMovimiento(entidadDTO.getId());
-            nuevoDetalle.setProducto(producto);
-            nuevoDetalle.setCantidad(cantidad);
-            nuevoDetalle.setPrecio(costo);
-            result = compraController.addDetalle(nuevoDetalle);
-            if (result) {
-                entidadDTO.getDetalles().add(nuevoDetalle);
-            }
-        }
-
-        cargarDetalles();
-        limpiarDetalle();
-    }
-
-    public void quitarDetalle() {
-        int fila = tblDetalle.getSelectedRow();
-        if (fila == -1) {
-            Mensajes.advertencia("Elija un registro del detalle de compra");
-            return;
-        }
-        int idProducto = (Integer) tblDetalle.getValueAt(fila, 0);
-
-        for (CompraDetalleDTO detalle : entidadDTO.getDetalles()) {
-            if (detalle.getProducto().getId() == idProducto) {
-                compraController.delDetalle(detalle);
-                entidadDTO.getDetalles().remove(detalle);
-            }
-        }
-
-        cargarDetalles();
-    }
-
-    public void cargarDetalles() {
-        String[] columnas = new String[]{"IDProducto", "Producto", "Cantidad", "Costo", "Importe"};
-        var model = builderDetails.construirModelo(
-                columnas,
-                entidadDTO.getDetalles(),
+    @Override
+    public void cargarDetails() {
+        DefaultTableModel model = builderDetails.construirModelo(
+                this.getColumnDetails(),
+                listaDetalle,
                 this::toRowDetails // referencia a método
         );
         tblDetalle.setModel(model);
-        txtTotal.setText(String.valueOf(sumarColumna(tblDetalle, 4)));
+        txtTotal.setText(actualizarTotal());
         AnchoColumnaTabla(tblDetalle, 0, 1);
         AnchoColumnaTabla(tblDetalle, 560, 2);
     }
 
-    private Object[] toRowDetails(CompraDetalleDTO e) {
+    @Override
+    public Object[] toRowDetails(CompraDetalleDTO e) {
         return new Object[]{
             e.getProducto().getId(),
             e.getProducto(),
@@ -835,4 +772,60 @@ public class EntradasPanel extends ViewPanel<CompraDTO> {
             Double.parseDouble(e.getPrecio()) * Integer.parseInt(e.getCantidad())
         };
     }
+
+    @Override
+    public String[] getColumnDetails() {
+        return new String[]{"IDProducto", "Producto", "Cantidad", "Costo", "Importe"};
+    }
+
+    private String actualizarTotal() {
+        return String.valueOf(listaDetalle.stream()
+                .mapToDouble(d -> Integer.parseInt(d.getCantidad()) * Double.parseDouble(d.getPrecio()))
+                .sum());
+    }
+
+    @Override
+    public boolean agregarDetalle(CompraDetalleDTO detalle) {
+        if (!isEdit && detalle == null) {
+            System.out.println("opcion 1");
+            detalle = new CompraDetalleDTO();
+            ControlsetDTODetails(detalle);
+            listaDetalle.add(detalle);
+        } else if (!isEdit && detalle != null) {
+            System.out.println("opcion 2");
+            detalle.setCantidad(cantidadNew(detalle.getCantidad(), +1));
+        } else if (isEdit && detalle == null) {
+            System.out.println("opcion 3");
+            detalle = new CompraDetalleDTO();
+            ControlsetDTODetails(detalle);
+            listaDetalle.add(detalle);
+            return compraController.addDetalle(detalle);
+        } else if (isEdit && detalle != null) {
+            System.out.println("opcion 4");
+            detalle.setCantidad(cantidadNew(detalle.getCantidad(), +1));
+            return compraController.editDetalle(detalle);
+        }
+        return true;
+    }
+
+    @Override
+    public String cantidadNew(String cantidadOld,int IncDec) {
+        int cantidad = Integer.parseInt(cantidadOld);
+        return  String.valueOf(cantidad + IncDec);
+        
+    }
+
+    @Override
+    public boolean quitarDetalle(CompraDetalleDTO detalle) {
+        return true;
+    }
+
+    @Override
+    public void ControlsetDTODetails(CompraDetalleDTO detalle) {
+        detalle.setIdMovimiento(entidadDTO.getId());
+        detalle.setProducto((ProductoDTO) cboProductos.getSelectedItem());
+        detalle.setCantidad(txtCantidad.getText().strip());
+        detalle.setPrecio(txtCosto.getText().strip());
+    }
+
 }

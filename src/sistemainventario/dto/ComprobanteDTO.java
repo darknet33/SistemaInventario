@@ -33,6 +33,28 @@ public class ComprobanteDTO implements IDTO {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ComprobanteDTO other = (ComprobanteDTO) obj;
+        return this.id == other.id;
+    }
+
+    @Override
     public int getPK() {
         return id;
     }

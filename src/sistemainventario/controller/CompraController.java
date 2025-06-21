@@ -68,7 +68,14 @@ public class CompraController {
         }
     }
     
-    public void delDetalle(CompraDetalleDTO detalle){
-        detalleService.eliminar(detalle.getId());
+    public boolean delDetalle(CompraDetalleDTO detalle){
+        try {
+            detalleService.eliminar(detalle.getId());
+            return true;
+        } catch (Exception e) {
+            Mensajes.errorValidaciones(e);
+            return false;
+        }
+        
     }
 }

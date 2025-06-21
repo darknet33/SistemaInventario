@@ -73,6 +73,7 @@ public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel imple
     /**
      * Método template: construye y muestra la tabla
      */
+    
     protected void CargarTabla(List<T> data, JTable table) {
         DefaultTableModel model = builder.construirModelo(
                 getColumnNames(),
@@ -118,25 +119,6 @@ public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel imple
         });
     }
 
-    public double sumarColumna(JTable tabla, int columnaIndex) {
-        double suma = 0.0;
-
-        for (int i = 0; i < tabla.getRowCount(); i++) {
-            Object valor = tabla.getValueAt(i, columnaIndex);
-            if (valor instanceof Number) {
-                suma += ((Number) valor).doubleValue();
-            } else {
-                try {
-                    suma += Double.parseDouble(valor.toString());
-                } catch (NumberFormatException e) {
-                    // Ignora valores no numéricos
-                }
-            }
-        }
-
-        return suma;
-    }
-
     public void ocultarPestañas(JTabbedPane Pestañas) {
         Pestañas.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
             @Override
@@ -157,5 +139,7 @@ public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel imple
         ventaAux.add(xPanel);
         ventaAux.setVisible(true);
     }
-
+    
+    
+    
 }
