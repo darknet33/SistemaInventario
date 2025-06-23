@@ -29,6 +29,7 @@ public class CompraController {
         try {
             compraService.guardar(compra);
             Mensajes.info("Se guardó la compra correctamente");
+            guardarDetalles(compra);
             return true;
         } catch (Exception e) {
             Mensajes.errorValidaciones(e);
@@ -77,5 +78,15 @@ public class CompraController {
             return false;
         }
         
+    }
+    
+    public void guardarDetalles(CompraDTO compra){
+        try {
+            int id=compraService.idCompra();
+            compra.getDetalles().stream()
+                    .peek(dc -> dc.setIdMovimiento(id))
+                    .forEach(this::addDetalle);
+        } catch (Exception e) {
+        }
     }
 }

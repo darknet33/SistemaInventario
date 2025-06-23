@@ -15,7 +15,7 @@ import sistemainventario.util.Mensajes;
 public class CompraDAO implements IDAO<Compra, Integer> {
 
     private final Connection conn;
-    
+
     public CompraDAO() {
         this.conn = ConexionDAO.getConexion();
     }
@@ -30,26 +30,26 @@ public class CompraDAO implements IDAO<Compra, Integer> {
         entity.setTotal(rs.getDouble("total_compra"));
 
         // Relacionales
-        ProveedorDAO proveedorDAO = new ProveedorDAO();        
+        ProveedorDAO proveedorDAO = new ProveedorDAO();
         Proveedor proveedor = proveedorDAO.getById(rs.getInt("proveedor_id"));
         entity.setProveedor(proveedor);
-        
+
         ComprobanteDAO comprobanteDAO = new ComprobanteDAO();
         Comprobante comprobante = comprobanteDAO.getById(rs.getInt("comprobante_id"));
         entity.setComprobante(comprobante);
-        
+
         EstadoDAO estadoDAO = new EstadoDAO();
         Estado estado = estadoDAO.getById(rs.getInt("estado_id"));
         entity.setEstado(estado);
-        
+
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         Usuario usuario = usuarioDAO.getById(rs.getInt("usuario_id"));
-        entity.setUsuario(usuario); 
-        
-        CompraDetalleDAO compradetalleDAO= new CompraDetalleDAO();
+        entity.setUsuario(usuario);
+
+        CompraDetalleDAO compradetalleDAO = new CompraDetalleDAO();
         List<CompraDetalle> detalle = compradetalleDAO.getByCompraId(rs.getInt("id_compra"));
         entity.setDetalles(detalle);
-        
+
         return entity;
     }
 
@@ -72,8 +72,7 @@ public class CompraDAO implements IDAO<Compra, Integer> {
     public List<Compra> getAll() {
         List<Compra> lista = new ArrayList<>();
         String sql = "SELECT * FROM compras";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 lista.add(mapResultSetToEntity(rs));
             }
@@ -87,7 +86,7 @@ public class CompraDAO implements IDAO<Compra, Integer> {
     public void save(Compra entity) {
         String sql = "INSERT INTO compras (fecha_compra, proveedor_id, comprobante_id, num_comprobante_compra, estado_id, total_compra, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setTimestamp(1,Timestamp.valueOf(entity.getFecha().atStartOfDay()));
+            stmt.setTimestamp(1, Timestamp.valueOf(entity.getFecha().atStartOfDay()));
             stmt.setInt(2, entity.getProveedor().getId());
             stmt.setInt(3, entity.getComprobante().getId());
             stmt.setString(4, entity.getNroComprobante());
@@ -139,5 +138,20 @@ public class CompraDAO implements IDAO<Compra, Integer> {
             Mensajes.error(sql, e);
         }
     }
-    
+
+    public int obtenerIDUltimaCompra() {
+        int idUltimo=0;
+        String sql = "SELECT LAST_INSERT_ID()";
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                idUltimo=rs.getInt(1);
+            }
+            return idUltimo;
+        } catch (SQLException e) {
+            Mensajes.error(sql, e);
+            return idUltimo;
+        }
+    }
+
 }

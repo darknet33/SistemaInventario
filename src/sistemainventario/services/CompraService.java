@@ -39,5 +39,9 @@ public class CompraService implements IService<CompraDTO, Integer>{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    public int idCompra(){
+        return compraDAO.obtenerIDUltimaCompra();
+    }
+    
     
 }

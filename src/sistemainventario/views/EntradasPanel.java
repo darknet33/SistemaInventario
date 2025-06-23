@@ -513,8 +513,16 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void btnQuitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitarMouseClicked
-        CompraDetalleDTO detalle = existeDetalle((ProductoDTO) cboProductos.getSelectedItem());
-        quitarDetalle(detalle);
+        int fila=tblDetalle.getSelectedRow();
+        if (fila==-1){
+            Mensajes.advertencia("Debe elejir un registro");
+            return;
+        }
+        ProductoDTO producto=(ProductoDTO) tblDetalle.getValueAt(fila, 1);
+        CompraDetalleDTO detalle = existeDetalle(producto);
+        if (quitarDetalle(detalle)){
+            cargarDetails();
+        }
     }//GEN-LAST:event_btnQuitarMouseClicked
 
     private void btnAgregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarMouseClicked
@@ -582,7 +590,7 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
                 ? compraController.actualizarCompra(entidadDTO)
                 : compraController.nuevaCompra(entidadDTO);
 
-        if (result) {
+        if (result) {            
             refrescarTablaPrincipal();
         }
     }
@@ -769,7 +777,7 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
             e.getProducto(),
             e.getCantidad(),
             e.getPrecio(),
-            Double.parseDouble(e.getPrecio()) * Integer.parseInt(e.getCantidad())
+            e.getImporte()
         };
     }
 
@@ -787,21 +795,17 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
     @Override
     public boolean agregarDetalle(CompraDetalleDTO detalle) {
         if (!isEdit && detalle == null) {
-            System.out.println("opcion 1");
             detalle = new CompraDetalleDTO();
             ControlsetDTODetails(detalle);
             listaDetalle.add(detalle);
         } else if (!isEdit && detalle != null) {
-            System.out.println("opcion 2");
             detalle.setCantidad(cantidadNew(detalle.getCantidad(), +1));
         } else if (isEdit && detalle == null) {
-            System.out.println("opcion 3");
             detalle = new CompraDetalleDTO();
             ControlsetDTODetails(detalle);
             listaDetalle.add(detalle);
             return compraController.addDetalle(detalle);
         } else if (isEdit && detalle != null) {
-            System.out.println("opcion 4");
             detalle.setCantidad(cantidadNew(detalle.getCantidad(), +1));
             return compraController.editDetalle(detalle);
         }
@@ -809,14 +813,30 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
     }
 
     @Override
-    public String cantidadNew(String cantidadOld,int IncDec) {
+    public String cantidadNew(String cantidadOld, int IncDec) {
         int cantidad = Integer.parseInt(cantidadOld);
-        return  String.valueOf(cantidad + IncDec);
-        
+        return String.valueOf(cantidad + IncDec);
+
     }
 
     @Override
     public boolean quitarDetalle(CompraDetalleDTO detalle) {
+        if (detalle.getIdMovimiento()<=0){
+            detalle.setCantidad(cantidadNew(detalle.getCantidad(), -1));
+            if(Integer.parseInt(detalle.getCantidad())<1){
+                listaDetalle.remove(detalle);
+                return true;
+            }
+        }else{
+            detalle.setCantidad(cantidadNew(detalle.getCantidad(), -1));
+            if(Integer.parseInt(detalle.getCantidad())>=1){
+                compraController.editDetalle(detalle);
+                return true;
+            }else{
+                listaDetalle.remove(detalle);
+                return compraController.delDetalle(detalle);
+            }
+        }
         return true;
     }
 
