@@ -1,6 +1,7 @@
 package sistemainventario.mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.EstadoDTO;
 import sistemainventario.entity.Estado;
 
@@ -28,11 +29,17 @@ public class EstadoMapper implements IMapper<Estado, EstadoDTO>{
 
     @Override
     public List<EstadoDTO> toDTOList(List<Estado> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Estado> toEntityList(List<EstadoDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .collect(Collectors.toList());
     }
 }

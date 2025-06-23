@@ -1,7 +1,7 @@
 package sistemainventario.dto;
 
 
-public class PermisoDTO {
+public class PermisoDTO implements IDTO{
     private int id;
     private String modulo;
     private boolean estado;
@@ -25,13 +25,24 @@ public class PermisoDTO {
         this.modulo = modulo;
     }
 
-    public boolean isEstado() {
+    public boolean getEstado() {
         return estado;
     }
 
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+    @Override
+    public String toString() {
+        return modulo;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
+    }
+    
     
     
 }

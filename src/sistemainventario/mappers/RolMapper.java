@@ -1,6 +1,7 @@
 package sistemainventario.mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.RolDTO;
 import sistemainventario.entity.Rol;
 
@@ -31,11 +32,17 @@ public class RolMapper implements IMapper<Rol, RolDTO>{
 
     @Override
     public List<RolDTO> toDTOList(List<Rol> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Rol> toEntityList(List<RolDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .collect(Collectors.toList());
     }
 }

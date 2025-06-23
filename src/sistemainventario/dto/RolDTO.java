@@ -2,7 +2,7 @@ package sistemainventario.dto;
 
 import java.util.List;
 
-public class RolDTO {
+public class RolDTO implements IDTO{
     private int id;
     private String nombre;
     private List<PermisoDTO> permisos;
@@ -33,6 +33,16 @@ public class RolDTO {
 
     public void setPermisos(List<PermisoDTO> permisos) {
         this.permisos = permisos;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
     }
     
     

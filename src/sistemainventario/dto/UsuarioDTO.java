@@ -2,7 +2,7 @@ package sistemainventario.dto;
 
 import java.util.Date;
 
-public class UsuarioDTO {
+public class UsuarioDTO implements IDTO{
     private int id;
     private String username;
     private String password;
@@ -98,12 +98,14 @@ public class UsuarioDTO {
         this.fechaActualizado = fechaActualizado;
     }
     
-    
-       
-    
     @Override
     public String toString() {
-        return "UsuarioDTO{" + "username=" + username + ", nombres=" + nombres + ", apellidos=" + apellidos + ", cargo=" + cargo + ", rol=" + rol.getNombre() + '}';
+        return username + " " + nombres + " " + apellidos + " " + cargo + " " + rol;
+    }
+
+    @Override
+    public int getPK() {
+        return id;
     }
     
 }

@@ -2,22 +2,20 @@ package sistemainventario.views;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.ClienteController;
 import sistemainventario.dto.ClienteDTO;
+import sistemainventario.util.Texto;
 
-public class ClientesPanel extends ViewPanel<ClienteDTO>{
+public class ClientesPanel extends ViewPanel<ClienteDTO> {
 
     private final ClienteController clienteController;
-    private List<ClienteDTO> clientes;
-    private ClienteDTO clienteDTO;
 
     public ClientesPanel() {
         this.clienteController = new ClienteController();
         initComponents();
         inicializarPaneles(jpDatos, jpAction, jpActionSave);
         refrescarTablaPrincipal();
-        
+        activarButton(btnBuscar);
     }
 
     @SuppressWarnings("unchecked")
@@ -347,7 +345,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         String valorBuscado = txtBuscar.getText();
-        cargarTablaPrincipal(buscarClientes(valorBuscado));
+        CargarTabla(buscarClientes(valorBuscado),tblCliente);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -380,11 +378,11 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
         controlSetDTO();
 
         boolean result = isEdit
-                ? clienteController.actualizarCliente(clienteDTO)
-                : clienteController.nuevoCliente(clienteDTO);
+                ? clienteController.actualizarCliente(entidadDTO)
+                : clienteController.nuevoCliente(entidadDTO);
 
         if (result) {
-             refrescarTablaPrincipal();
+            refrescarTablaPrincipal();
         }
     }
 
@@ -392,7 +390,7 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
     public void nuevo() {
         limpiar();
         vistaNuevo();
-        clienteDTO = new ClienteDTO();
+        entidadDTO = new ClienteDTO();
     }
 
     @Override
@@ -403,38 +401,36 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     @Override
     public void eliminar() {
-        if (clienteController.eliminarCliente(clienteDTO.getId())) {
-             refrescarTablaPrincipal();
-             vistaInicial();
+        if (clienteController.eliminarCliente(entidadDTO.getId())) {
+            refrescarTablaPrincipal();
         }
     }
-    
+
     @Override
-    public void cancelar(){
-        vistaCancelar(tblCliente);
+    public void cancelar() {
+        vistaCancelar(tblCliente, () -> selectDTO());
     }
     
     @Override
-    public void refrescarTablaPrincipal(){
-        clientes = clienteController.listarClientes();
-        cargarTablaPrincipal(clientes);
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Nombre", "Celular", "Estado"};
     }
 
     @Override
-    public void cargarTablaPrincipal(List<ClienteDTO> lista) {
-        String[] columnas = {"ID", "Nombre", "Celular"};
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Todas las celdas no editables
-            }
+    public Object[] toRow(ClienteDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getNombre(),
+            e.getCelular(),
+            e.getEstado() ? "ON" : "OFF"
         };
+    }
 
-        lista.stream()
-                .map(c -> new Object[]{c.getId(), c.getNombre(), c.getCelular()})
-                .forEach(modelo::addRow);
-
-        tblCliente.setModel(modelo);
+    @Override
+    public void refrescarTablaPrincipal() {
+        listadoDTOS = clienteController.listarClientes();
+        CargarTabla(listadoDTOS,tblCliente);
+        vistaInicial();
     }
 
     @Override
@@ -446,33 +442,33 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
         chkEstado.setSelected(false);
 
         tblCliente.clearSelection();
+        controlsEditable(true);
     }
 
     @Override
     public void selectDTO() {
-        int id = obtenerID(tblCliente);
-        clienteDTO = clienteController.obtenerCliente(id);
+        obtenerEntidad(tblCliente);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
     }
-   
+
     @Override
     public void controlGetDTO() {
-        txtNombre.setText(clienteDTO.getNombre());
-        txtNit.setText(clienteDTO.getNit());
-        txtCelular.setText(clienteDTO.getCelular());
-        txtDireccion.setText(clienteDTO.getDireccion());
-        chkEstado.setSelected(clienteDTO.getEstado());
+        txtNombre.setText(entidadDTO.getNombre());
+        txtNit.setText(entidadDTO.getNit());
+        txtCelular.setText(entidadDTO.getCelular());
+        txtDireccion.setText(entidadDTO.getDireccion());
+        chkEstado.setSelected(entidadDTO.getEstado());
     }
 
     @Override
     public void controlSetDTO() {
-        clienteDTO.setNombre(txtNombre.getText());
-        clienteDTO.setNit(txtNit.getText());
-        clienteDTO.setCelular(txtCelular.getText());
-        clienteDTO.setDireccion(txtDireccion.getText());
-        clienteDTO.setEstado(chkEstado.isSelected());
+        entidadDTO.setNombre(Texto.capitalizeTexto(txtNombre.getText().strip()));
+        entidadDTO.setNit(txtNit.getText().toUpperCase().strip());
+        entidadDTO.setCelular(txtCelular.getText());
+        entidadDTO.setDireccion(Texto.capitalizeTexto(txtDireccion.getText().strip()));
+        entidadDTO.setEstado(chkEstado.isSelected());
     }
 
     @Override
@@ -486,10 +482,10 @@ public class ClientesPanel extends ViewPanel<ClienteDTO>{
 
     private List<ClienteDTO> buscarClientes(String valorBuscado) {
         if (valorBuscado == null || valorBuscado.isEmpty()) {
-            return clientes;
+            return listadoDTOS;
         }
 
-        return this.clientes.stream()
+        return listadoDTOS.stream()
                 .filter(c -> c.toString().toLowerCase().contains(valorBuscado.toLowerCase()))
                 .collect(Collectors.toList());
     }

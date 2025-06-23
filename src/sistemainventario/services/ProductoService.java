@@ -23,9 +23,7 @@ public class ProductoService implements IService<ProductoDTO, Integer>{
 
     @Override
     public List<ProductoDTO> listarTodos() {
-        return productoDAO.getAll().stream()
-                                   .map(productoMapper::toDTO)
-                                   .toList();
+        return productoMapper.toDTOList(productoDAO.getAll());
     }
 
     @Override

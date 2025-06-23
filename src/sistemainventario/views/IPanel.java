@@ -1,6 +1,7 @@
 package sistemainventario.views;
 
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 
 public interface IPanel<T> {
 
@@ -9,8 +10,9 @@ public interface IPanel<T> {
     void editar();
     void eliminar();
     void cancelar();
+    String[] getColumnNames();
+    Object[] toRow(T e);
     void refrescarTablaPrincipal();
-    void cargarTablaPrincipal(List<T> lista);
     void limpiar();    
     void selectDTO();
     void controlGetDTO();

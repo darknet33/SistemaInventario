@@ -1,16 +1,12 @@
 package sistemainventario.views;
 
-import java.util.List;
-import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CategoriaController;
 import sistemainventario.dto.CategoriaDTO;
-import sistemainventario.util.ModeloTablaBuilder;
+import sistemainventario.util.Texto;
 
 public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     private final CategoriaController categoriaController;
-    private CategoriaDTO categoriaDTO;
-    private List<CategoriaDTO> categorias;
 
     public CategoriasPanel() {
         this.categoriaController = new CategoriaController();
@@ -63,7 +59,6 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
             }
         ));
         tblCategoria.setGridColor(new java.awt.Color(255, 255, 255));
-        tblCategoria.setRowHeight(20);
         tblCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblCategoriaMouseClicked(evt);
@@ -226,9 +221,9 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
                 .addComponent(btnNuevo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -276,12 +271,11 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
         controlSetDTO();
 
         boolean result = isEdit
-                ? categoriaController.actulizarCategoria(categoriaDTO)
-                : categoriaController.nuevaCategoria(categoriaDTO);
+                ? categoriaController.actulizarCategoria(entidadDTO)
+                : categoriaController.nuevaCategoria(entidadDTO);
 
         if (result) {
-            categorias = categoriaController.listarCategoria();
-            cargarTablaPrincipal(categorias);
+            refrescarTablaPrincipal();
         }
     }
 
@@ -289,7 +283,7 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     public void nuevo() {
         limpiar();
         vistaNuevo();
-        categoriaDTO= new CategoriaDTO();
+        entidadDTO = new CategoriaDTO();
     }
 
     @Override
@@ -299,34 +293,35 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
     }
 
     @Override
-    public void cancelar() {
-        vistaCancelar(tblCategoria);
-    }    
-
-    @Override
     public void eliminar() {
-        if (categoriaController.eliminarCategoria(categoriaDTO.getId())) {
+        if (categoriaController.eliminarCategoria(entidadDTO.getId())) {
             refrescarTablaPrincipal();
-            vistaInicial();
         }
     }
 
     @Override
-    public void refrescarTablaPrincipal() {
-        categorias = categoriaController.listarCategoria();
-        cargarTablaPrincipal(categorias);
+    public void cancelar() {
+        vistaCancelar(tblCategoria, () -> selectDTO());
     }
 
     @Override
-    public void cargarTablaPrincipal(List<CategoriaDTO> listaCategoria) {
-        String[] columnas = {"ID", "Nombre"};
-        
-        ModeloTablaBuilder<CategoriaDTO> builder = new ModeloTablaBuilder<>();
-        DefaultTableModel modelo = builder.construirModelo(columnas, listaCategoria,
-                c -> new Object[]{c.getId(), c.getNombre()}
-        );
+    public String[] getColumnNames() {
+        return new String[]{"ID", "Nombre"};
+    }
 
-        tblCategoria.setModel(modelo);
+    @Override
+    public Object[] toRow(CategoriaDTO e) {
+        return new Object[]{
+            e.getId(),
+            e.getNombre()
+        };
+    }
+
+    @Override
+    public void refrescarTablaPrincipal() {
+        listadoDTOS = categoriaController.listarCategoria();
+        CargarTabla(listadoDTOS,tblCategoria);
+        vistaInicial();
     }
 
     @Override
@@ -334,12 +329,12 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
         txtNombre.setText("");
 
         tblCategoria.clearSelection();
+        controlsEditable(true);
     }
 
     @Override
     public void selectDTO() {
-        int id = obtenerID(tblCategoria);
-        categoriaDTO = categoriaController.obtenerCategoria(id);
+        obtenerEntidad(tblCategoria);
         vistaSeleccion();
         controlGetDTO();
         controlsEditable(false);
@@ -347,19 +342,17 @@ public class CategoriasPanel extends ViewPanel<CategoriaDTO> {
 
     @Override
     public void controlGetDTO() {
-        txtNombre.setText(categoriaDTO.getNombre());
+        txtNombre.setText(entidadDTO.getNombre());
     }
 
     @Override
     public void controlSetDTO() {
-        categoriaDTO.setNombre(txtNombre.getText());
+        entidadDTO.setNombre(Texto.capitalize(txtNombre.getText().strip()));
     }
 
     @Override
-    public void controlsEditable(boolean  value) {
+    public void controlsEditable(boolean value) {
         txtNombre.setEditable(value);
     }
-
-
 
 }

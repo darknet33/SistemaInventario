@@ -15,11 +15,6 @@ import sistemainventario.util.Mensajes;
 public class CompraDAO implements IDAO<Compra, Integer> {
 
     private final Connection conn;
-    private final ProveedorDAO proveedorDAO = new ProveedorDAO();
-    private final ComprobanteDAO comprobanteDAO = new ComprobanteDAO();
-    private final EstadoDAO estadoDAO = new EstadoDAO();
-    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private final CompraDetalleDAO compradetalleDAO= new CompraDetalleDAO();
     
     public CompraDAO() {
         this.conn = ConexionDAO.getConexion();
@@ -30,23 +25,28 @@ public class CompraDAO implements IDAO<Compra, Integer> {
         Compra entity = new Compra();
 
         entity.setId(rs.getInt("id_compra"));
-        entity.setFecha(rs.getTimestamp("fecha_compra"));
+        entity.setFecha(rs.getTimestamp("fecha_compra").toLocalDateTime().toLocalDate());
         entity.setNroComprobante(rs.getString("num_comprobante_compra"));
         entity.setTotal(rs.getDouble("total_compra"));
 
-        // Relacionales        
+        // Relacionales
+        ProveedorDAO proveedorDAO = new ProveedorDAO();        
         Proveedor proveedor = proveedorDAO.getById(rs.getInt("proveedor_id"));
         entity.setProveedor(proveedor);
         
+        ComprobanteDAO comprobanteDAO = new ComprobanteDAO();
         Comprobante comprobante = comprobanteDAO.getById(rs.getInt("comprobante_id"));
         entity.setComprobante(comprobante);
         
+        EstadoDAO estadoDAO = new EstadoDAO();
         Estado estado = estadoDAO.getById(rs.getInt("estado_id"));
         entity.setEstado(estado);
         
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
         Usuario usuario = usuarioDAO.getById(rs.getInt("usuario_id"));
-        entity.setUsuario(usuario);        
+        entity.setUsuario(usuario); 
         
+        CompraDetalleDAO compradetalleDAO= new CompraDetalleDAO();
         List<CompraDetalle> detalle = compradetalleDAO.getByCompraId(rs.getInt("id_compra"));
         entity.setDetalles(detalle);
         
@@ -87,7 +87,7 @@ public class CompraDAO implements IDAO<Compra, Integer> {
     public void save(Compra entity) {
         String sql = "INSERT INTO compras (fecha_compra, proveedor_id, comprobante_id, num_comprobante_compra, estado_id, total_compra, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setTimestamp(1, new Timestamp(entity.getFecha().getTime()));
+            stmt.setTimestamp(1,Timestamp.valueOf(entity.getFecha().atStartOfDay()));
             stmt.setInt(2, entity.getProveedor().getId());
             stmt.setInt(3, entity.getComprobante().getId());
             stmt.setString(4, entity.getNroComprobante());
@@ -104,7 +104,7 @@ public class CompraDAO implements IDAO<Compra, Integer> {
     public void update(Compra entity) {
         String sql = "UPDATE compras SET fecha_compra = ?, proveedor_id = ?, comprobante_id = ?, num_comprobante_compra = ?, estado_id = ?, total_compra = ?, usuario_id = ? WHERE id_compra = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setTimestamp(1, new Timestamp(entity.getFecha().getTime()));
+            stmt.setTimestamp(1, Timestamp.valueOf(entity.getFecha().atStartOfDay()));
             stmt.setInt(2, entity.getProveedor().getId());
             stmt.setInt(3, entity.getComprobante().getId());
             stmt.setString(4, entity.getNroComprobante());

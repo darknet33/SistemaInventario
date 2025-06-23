@@ -3,7 +3,7 @@ package sistemainventario.dto;
 
 import java.util.Date;
 
-public class ProveedorDTO {
+public class ProveedorDTO implements IDTO {
     private int Id;
     private String Nombre;
     private String Nit;
@@ -91,7 +91,35 @@ public class ProveedorDTO {
 
     @Override
     public String toString() {
-        return "ProveedorDTO{" + "Id=" + Id + ", Nombre=" + Nombre + ", Nit=" + Nit + ", Materiales=" + Materiales + ", Contacto=" + Contacto + ", Celular=" + Celular + ", Email=" + Email + ", Estado=" + Estado + ", fechaRegistro=" + fechaRegistro + '}';
+        return Nombre ;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + this.Id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProveedorDTO other = (ProveedorDTO) obj;
+        return this.Id == other.Id;
+    }
+
+    
+    @Override
+    public int getPK() {
+        return Id;
     }
     
     

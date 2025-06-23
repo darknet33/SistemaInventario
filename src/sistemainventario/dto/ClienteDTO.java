@@ -2,7 +2,7 @@ package sistemainventario.dto;
 
 import java.util.Date;
 
-public class ClienteDTO {
+public class ClienteDTO implements IDTO {
     private int Id;
     private String Nombre;
     private String Nit;
@@ -69,7 +69,12 @@ public class ClienteDTO {
 
     @Override
     public String toString() {
-        return "ClienteDTO{" + "Id=" + Id + ", Nombre=" + Nombre + ", Nit=" + Nit + ", Celular=" + Celular + ", Direccion=" + Direccion + ", estado=" + estado + ", fechaRegistro=" + fechaRegistro + '}';
+        return Nombre ;
+    }
+
+    @Override
+    public int getPK() {
+        return Id;
     }
     
     

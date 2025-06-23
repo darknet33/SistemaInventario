@@ -3,7 +3,7 @@ package sistemainventario.dto;
 import java.util.Date;
 
 
-public class ProductoDTO {
+public class ProductoDTO implements IDTO{
     private int id;
     private String codigo;
     private CategoriaDTO categoria;
@@ -11,9 +11,9 @@ public class ProductoDTO {
     private String marca;
     private String procedencia;
     private String Peso;
-    private int stockInicial;
-    private int stockActual;
-    private int stockMinimo;
+    private String stockInicial;
+    private String stockActual;
+    private String stockMinimo;
     private Date fechaRegistro;
     private Date fechaActualizado;
     private boolean estado;
@@ -22,7 +22,7 @@ public class ProductoDTO {
     public ProductoDTO() {
     }
 
-    public ProductoDTO(int id, String codigo, CategoriaDTO categoria, String descripcion, String marca, String procedencia, String Peso, int stockInicial, int stockActual, int stockMinimo, Date fechaRegistro, Date fechaActualizado, boolean estado, UsuarioDTO usuario) {
+    public ProductoDTO(int id, String codigo, CategoriaDTO categoria, String descripcion, String marca, String procedencia, String Peso, String stockInicial, String stockActual, String stockMinimo, Date fechaRegistro, Date fechaActualizado, boolean estado, UsuarioDTO usuario) {
         this.id = id;
         this.codigo = codigo;
         this.categoria = categoria;
@@ -96,27 +96,27 @@ public class ProductoDTO {
         this.Peso = Peso;
     }
 
-    public int getStockInicial() {
+    public String getStockInicial() {
         return stockInicial;
     }
 
-    public void setStockInicial(int stockInicial) {
+    public void setStockInicial(String stockInicial) {
         this.stockInicial = stockInicial;
     }
 
-    public int getStockActual() {
+    public String getStockActual() {
         return stockActual;
     }
 
-    public void setStockActual(int stockActual) {
+    public void setStockActual(String stockActual) {
         this.stockActual = stockActual;
     }
 
-    public int getStockMinimo() {
+    public String getStockMinimo() {
         return stockMinimo;
     }
 
-    public void setStockMinimo(int stockMinimo) {
+    public void setStockMinimo(String stockMinimo) {
         this.stockMinimo = stockMinimo;
     }
 
@@ -154,7 +154,37 @@ public class ProductoDTO {
 
     @Override
     public String toString() {
-        return "ProductoDTO{" + "id=" + id + ", codigo=" + codigo + ", categoria=" + categoria + ", descripcion=" + descripcion + ", marca=" + marca + ", procedencia=" + procedencia + ", Peso=" + Peso + ", stockInicial=" + stockInicial + ", stockActual=" + stockActual + ", stockMinimo=" + stockMinimo + ", fechaRegistro=" + fechaRegistro + ", fechaActualizado=" + fechaActualizado + ", estado=" + estado + ", usuario=" + usuario + '}';
+        return categoria + " " + descripcion + " " + marca ;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 47 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProductoDTO other = (ProductoDTO) obj;
+        return this.id == other.id;
+    }
+    
+    
+    
+
+    @Override
+    public int getPK() {
+        return id;
     }
     
     

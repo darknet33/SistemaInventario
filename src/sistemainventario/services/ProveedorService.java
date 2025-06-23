@@ -23,10 +23,7 @@ public class ProveedorService implements IService<ProveedorDTO, Integer>{
 
     @Override
     public List<ProveedorDTO> listarTodos() {
-        return proveedorDAO.getAll()
-                            .stream()
-                            .map(proveedorMapper::toDTO)
-                            .toList();
+        return proveedorMapper.toDTOList(proveedorDAO.getAll());
     }
 
     @Override

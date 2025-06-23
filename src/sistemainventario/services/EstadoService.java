@@ -25,10 +25,7 @@ public class EstadoService implements IService<EstadoDTO, Integer>{
 
     @Override
     public List<EstadoDTO> listarTodos() {
-        return estadoDAO.getAll()
-                            .stream()
-                            .map(estadoMapper::toDTO)
-                            .toList();
+        return estadoMapper.toDTOList(estadoDAO.getAll());
     }
 
     @Override

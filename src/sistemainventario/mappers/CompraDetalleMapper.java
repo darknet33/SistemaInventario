@@ -2,6 +2,7 @@ package sistemainventario.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.CompraDetalleDTO;
 import sistemainventario.entity.CompraDetalle;
 
@@ -12,10 +13,10 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
     public CompraDetalleDTO toDTO(CompraDetalle entity) {
         CompraDetalleDTO dto= new CompraDetalleDTO();
         dto.setId(entity.getId());
-        dto.setMovimiento(compraMapper.toDTO(entity.getMovimiento()));
-        dto.setProduct(productoMapper.toDTO(entity.getProducto()));
-        dto.setCantidad(entity.getCantidad());
-        dto.setPrecio(entity.getPrecio());
+        dto.setIdMovimiento(entity.getIdMovimiento());
+        dto.setProducto(productoMapper.toDTO(entity.getProducto()));
+        dto.setCantidad(String.valueOf(entity.getCantidad()));
+        dto.setPrecio(String.valueOf(entity.getPrecio()));
 
         return dto;
     }
@@ -24,34 +25,28 @@ public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalle
     public CompraDetalle toEntity(CompraDetalleDTO dto) {
         CompraDetalle entity= new CompraDetalle();
         entity.setId(dto.getId());
-        entity.setMovimiento(compraMapper.toEntity(dto.getMovimiento()));
-        entity.setProducto(productoMapper.toEntity(dto.getProduct()));
-        entity.setCantidad(dto.getCantidad());
-        entity.setPrecio(dto.getPrecio());
+        entity.setIdMovimiento(dto.getIdMovimiento());
+        entity.setProducto(productoMapper.toEntity(dto.getProducto()));
+        entity.setCantidad(Integer.parseInt(dto.getCantidad()));
+        entity.setPrecio(Double.parseDouble(dto.getPrecio()));
 
         return entity;
     }
 
     @Override
     public List<CompraDetalleDTO> toDTOList(List<CompraDetalle> entities) {
-        List<CompraDetalleDTO> dtos=new ArrayList<>();
-        
-        entities.forEach(cd -> {
-            dtos.add(toDTO(cd));
-        });
-        
-        return dtos;
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .collect(Collectors.toList());
     }
 
     @Override
     public List<CompraDetalle> toEntityList(List<CompraDetalleDTO> dtos) {
-        List<CompraDetalle> entities=new ArrayList<>();
-        
-        dtos.forEach(cd -> {
-            entities.add(toEntity(cd));
-        });
-        
-        return entities;
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .collect(Collectors.toList());
     }
     
 }

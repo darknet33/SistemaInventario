@@ -88,21 +88,21 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTitulo" min="-2" pref="344" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblNombreCompleto" alignment="1" min="-2" pref="214" max="-2" attributes="0"/>
-                          <Component id="lblRol" alignment="1" min="-2" pref="217" max="-2" attributes="0"/>
+                      <EmptySpace pref="281" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lblRol" pref="217" max="32767" attributes="0"/>
+                          <Component id="lblNombreCompleto" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="btnMinimizar" min="-2" pref="24" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="btnCerrar" min="-2" pref="24" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="imagen1" min="-2" pref="64" max="-2" attributes="0"/>
+                          <Component id="imagen1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -125,7 +125,7 @@
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="lblRol" min="-2" pref="23" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lblNombreCompleto" min="-2" pref="23" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           </Group>
@@ -189,7 +189,6 @@
             </Component>
             <Component class="sistemainventario.util.Imagen" name="imagen1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="imagen1"/>
                 <Property name="ruta" type="java.lang.String" value="/resources/images/cabezera/Usuario.png"/>
               </Properties>
             </Component>
@@ -205,7 +204,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="944" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="948" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

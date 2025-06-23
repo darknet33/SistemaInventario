@@ -1,6 +1,7 @@
 package sistemainventario.util;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.PermisoDTO;
 import sistemainventario.dto.UsuarioDTO;
 
@@ -17,11 +18,11 @@ public class Sesion {
         return usuarioActual;
     }
     
-    public static PermisoDTO getPermiso(String modulo) {
+    public static List<String> getPermisos() {
         return listaPermisos.stream()
-        .filter(p -> p.getModulo().equalsIgnoreCase(modulo))
-        .findFirst()
-        .orElse(null);
+                            .filter(p -> p.getEstado()==true)
+                            .map(p -> p.getModulo()) 
+                            .collect(Collectors.toList());
     }
 
     public static void cerrarSesion() {

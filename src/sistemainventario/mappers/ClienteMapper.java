@@ -1,6 +1,7 @@
 package sistemainventario.mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import sistemainventario.dto.ClienteDTO;
 import sistemainventario.entity.Cliente;
 
@@ -38,12 +39,18 @@ public class ClienteMapper implements IMapper<Cliente, ClienteDTO>{
 
     @Override
     public List<ClienteDTO> toDTOList(List<Cliente> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return entities
+                 .stream()
+                 .map(this::toDTO)
+                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Cliente> toEntityList(List<ClienteDTO> dtos) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dtos
+                 .stream()
+                 .map(this::toEntity)
+                 .collect(Collectors.toList());
     }
     
 }
