@@ -2,38 +2,22 @@ package sistemainventario.views;
 
 import java.awt.event.ActionEvent;
 import javax.swing.*;
+import sistemainventario.controller.ConexionController;
 import sistemainventario.controller.LoginController;
 import sistemainventario.util.Mensajes;
 import sistemainventario.util.UIConstants;
 
-
 public final class LoginView extends javax.swing.JFrame {
-    private final LoginController controllerLogin;
+    
+    private final ConexionController conexionController=new ConexionController();
+    private LoginController loginController;
+
     public LoginView() {
-        this.controllerLogin= new LoginController();   
         initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("/RHINO.png")).getImage());
-        
-        jpBG.setBackground(UIConstants.COLOR_PRIMARIO);
-        lblTitulo.setForeground(UIConstants.COLOR_PRIMARIO);
-        lblUsuario.setForeground(UIConstants.COLOR_PRIMARIO);
-        lblContrasenia.setForeground(UIConstants.COLOR_PRIMARIO);
-        btnIngresar.setBackground(UIConstants.COLOR_PRIMARIO);
-        btnCerrar.setBackground(UIConstants.COLOR_SECUNDARIO);
-        lblLogo.setRuta("/logo.jpg");
-        
-        //Codigo para el ver el Enter y el Escape
-        getRootPane().setDefaultButton(btnIngresar);
-
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-            .put(KeyStroke.getKeyStroke("ESCAPE"), "cerrar");
-
-        getRootPane().getActionMap().put("cerrar", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                salir(); 
-            }
-        });
+        lblEstado.setForeground(UIConstants.COLOR_SECUNDARIO);
+        conexionController.verificarConexionDB(lblEstado);
+        apariencia();
+        funcionButton();        
     }
 
     @SuppressWarnings("unchecked")
@@ -41,6 +25,7 @@ public final class LoginView extends javax.swing.JFrame {
     private void initComponents() {
 
         jpBG = new javax.swing.JPanel();
+        lblEstado = new javax.swing.JLabel();
         jpContenedor = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         lblUsuario = new javax.swing.JLabel();
@@ -59,6 +44,11 @@ public final class LoginView extends javax.swing.JFrame {
 
         jpBG.setBackground(new java.awt.Color(0, 153, 255));
         jpBG.setPreferredSize(new java.awt.Dimension(1020, 750));
+
+        lblEstado.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblEstado.setForeground(new java.awt.Color(0, 153, 255));
+        lblEstado.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblEstado.setText("Usuario: ");
 
         jpContenedor.setBackground(new java.awt.Color(255, 255, 255));
         jpContenedor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
@@ -178,7 +168,9 @@ public final class LoginView extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jpContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpBGLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnMinimizar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -187,13 +179,14 @@ public final class LoginView extends javax.swing.JFrame {
         jpBGLayout.setVerticalGroup(
             jpBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpBGLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addGroup(jpBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnMinimizar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEstado))
                 .addGap(146, 146, 146)
                 .addComponent(jpContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(187, Short.MAX_VALUE))
+                .addContainerGap(189, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -212,13 +205,7 @@ public final class LoginView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        String user=txtUsuario.getText();
-        String pass=new String(txtContrasenia.getPassword());
-        
-        if (controllerLogin.Ingresar(user,pass)){
-            this.dispose();
-            new MainView().setVisible(true);
-        }
+        ingresar();
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -230,21 +217,9 @@ public final class LoginView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMinimizarMouseClicked
 
     private void btnCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCerrarMouseClicked
-       salir();
+        salir();
     }//GEN-LAST:event_btnCerrarMouseClicked
-    
-    
-    public void salir(){
-        if (Mensajes.confirmar("Seguro que Quiere Salir?")==0){
-                controllerLogin.cerrarConexion();
-                System.exit(0);
-        }
-    }
-    
-    public void minimizar(){
-        this.setState(sistemainventario.views.LoginView.ICONIFIED);
-    }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private sistemainventario.util.Imagen btnCerrar;
     private javax.swing.JButton btnIngresar;
@@ -253,10 +228,59 @@ public final class LoginView extends javax.swing.JFrame {
     private javax.swing.JPanel jpBG;
     private javax.swing.JPanel jpContenedor;
     private javax.swing.JLabel lblContrasenia;
+    private javax.swing.JLabel lblEstado;
     private sistemainventario.util.Imagen lblLogo;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
+    
+    
+    private void ingresar(){
+        this.loginController = new LoginController();
+        String user = txtUsuario.getText();
+        String pass = new String(txtContrasenia.getPassword());
+
+        if (loginController.Ingresar(user, pass)) {
+            this.dispose();
+            new MainView().setVisible(true);
+        }else{
+            conexionController.cerrarConexion();
+        }
+    }
+    private void salir() {
+        if (Mensajes.confirmar("Seguro que Quiere Salir?") == 0) {
+            conexionController.cerrarConexion();
+            System.exit(0);
+        }
+    }
+
+    private void apariencia() {
+        setIconImage(new ImageIcon(getClass().getResource("/RHINO.png")).getImage());
+
+        jpBG.setBackground(UIConstants.COLOR_PRIMARIO);
+        lblTitulo.setForeground(UIConstants.COLOR_PRIMARIO);
+        lblUsuario.setForeground(UIConstants.COLOR_PRIMARIO);
+        lblContrasenia.setForeground(UIConstants.COLOR_PRIMARIO);
+        btnIngresar.setBackground(UIConstants.COLOR_PRIMARIO);
+        btnCerrar.setBackground(UIConstants.COLOR_SECUNDARIO);
+        lblLogo.setRuta("/logo.jpg");
+    }
+
+    private void funcionButton() {
+        //Codigo para el ver el Enter y el Escape
+        getRootPane().setDefaultButton(btnIngresar);
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke("ESCAPE"), "cerrar");
+
+        getRootPane().getActionMap().put("cerrar", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                salir();
+            }
+        });
+    }
+
 }

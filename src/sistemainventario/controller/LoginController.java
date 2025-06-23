@@ -1,15 +1,13 @@
 package sistemainventario.controller;
 
-import sistemainventario.dao.ConexionDAO;
-import sistemainventario.dto.UsuarioDTO;
 import sistemainventario.services.UsuarioService;
 import sistemainventario.util.Mensajes;
 import sistemainventario.util.Sesion;
 
 public class LoginController {
-
+    
     private final UsuarioService usuarioService;
-
+    
     public LoginController() {
         this.usuarioService = new UsuarioService();
     }
@@ -23,18 +21,10 @@ public class LoginController {
             return false;
         }
     }
-    
+
     public void cerrarSesion (){
-        try {
-            usuarioService.actualizar(Sesion.getUsuario());
-        } catch (Exception e) {
-            Mensajes.errorValidaciones(e);
-        }finally{
-            Sesion.cerrarSesion();
-        }
+         Sesion.cerrarSesion();
     }
     
-    public void cerrarConexion(){
-        ConexionDAO.closeConexion();
-    }
+    
 }
