@@ -43,7 +43,7 @@ public class ProveedorDAO implements IDAO<Proveedor, Integer>{
                 return mapResultSetToEntity(rs);
             }            
         } catch (SQLException e) {
-            Mensajes.error(sql, e);            
+            throw new IllegalArgumentException(sql);            
         }
 
         return null;
@@ -62,7 +62,7 @@ public class ProveedorDAO implements IDAO<Proveedor, Integer>{
             }
             
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
 
         return lista;
@@ -81,7 +81,7 @@ public class ProveedorDAO implements IDAO<Proveedor, Integer>{
             stmt.setBoolean(7, entity.getEstado());
             stmt.executeUpdate();
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -99,7 +99,7 @@ public class ProveedorDAO implements IDAO<Proveedor, Integer>{
             stmt.setInt(8, entity.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -110,7 +110,7 @@ public class ProveedorDAO implements IDAO<Proveedor, Integer>{
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 

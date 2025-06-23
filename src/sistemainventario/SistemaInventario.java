@@ -12,7 +12,6 @@ public class SistemaInventario {
         login.setResizable(false);
         login.setTitle("Sistema de Inventario");
         login.setDefaultCloseOperation(LoginView.EXIT_ON_CLOSE);
-        test();
     }
     
     private static void test(){

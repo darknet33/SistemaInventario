@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import sistemainventario.entity.Cliente;
-import sistemainventario.util.Mensajes;
 
 
 public class ClienteDAO implements IDAO<Cliente, Integer>{
@@ -41,7 +40,7 @@ public class ClienteDAO implements IDAO<Cliente, Integer>{
             }
             
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
             
         }
 
@@ -61,7 +60,7 @@ public class ClienteDAO implements IDAO<Cliente, Integer>{
             }
             
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
 
         return lista;
@@ -78,7 +77,7 @@ public class ClienteDAO implements IDAO<Cliente, Integer>{
             stmt.setBoolean(5, entity.getEstado());
             stmt.executeUpdate();  
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -94,7 +93,7 @@ public class ClienteDAO implements IDAO<Cliente, Integer>{
             stmt.setInt(6, entity.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -105,7 +104,7 @@ public class ClienteDAO implements IDAO<Cliente, Integer>{
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 

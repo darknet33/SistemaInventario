@@ -1,27 +1,27 @@
 package sistemainventario.dao;
 
-import sistemainventario.entity.CompraDetalle;
+import sistemainventario.entity.VentaDetalle;
 import sistemainventario.entity.Producto;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
+public class VentaDetalleDAO implements IDAO<VentaDetalle, Integer> {
     private final Connection conn;
     
-    public CompraDetalleDAO() {
+    public VentaDetalleDAO() {
         this.conn = ConexionDAO.getConexion();
     }
 
     @Override
-    public CompraDetalle mapResultSetToEntity(ResultSet rs) throws SQLException {
-        CompraDetalle detalle = new CompraDetalle();
+    public VentaDetalle mapResultSetToEntity(ResultSet rs) throws SQLException {
+        VentaDetalle detalle = new VentaDetalle();
 
-        detalle.setId(rs.getInt("id_detalle_compra"));
-        detalle.setIdMovimiento(rs.getInt("compra_id"));
-        detalle.setCantidad(rs.getInt("cantidad_detalle_compra"));
-        detalle.setPrecio(rs.getDouble("costo_detalle_compra"));
+        detalle.setId(rs.getInt("id_detalle_venta"));
+        detalle.setIdMovimiento(rs.getInt("venta_id"));
+        detalle.setCantidad(rs.getInt("cantidad_detalle_venta"));
+        detalle.setPrecio(rs.getDouble("precio_detalle_venta"));
         
         ProductoDAO productoDAO = new ProductoDAO();
         Producto producto = productoDAO.getById(rs.getInt("producto_id"));
@@ -31,8 +31,8 @@ public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
     }
 
     @Override
-    public CompraDetalle getById(Integer id) {
-        String sql = "SELECT * FROM detalles_compra WHERE id_detalle_compra = ?";
+    public VentaDetalle getById(Integer id) {
+        String sql = "SELECT * FROM detalles_venta WHERE id_detalle_venta = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -47,9 +47,9 @@ public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
     }
 
     @Override
-    public List<CompraDetalle> getAll() {
-        List<CompraDetalle> lista = new ArrayList<>();
-        String sql = "SELECT * FROM detalles_compra";
+    public List<VentaDetalle> getAll() {
+        List<VentaDetalle> lista = new ArrayList<>();
+        String sql = "SELECT * FROM detalles_venta";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -64,12 +64,12 @@ public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
         return lista;
     }
 
-    public List<CompraDetalle> getByCompraId(int compraId) {
-        List<CompraDetalle> lista = new ArrayList<>();
-        String sql = "SELECT * FROM detalles_compra WHERE compra_id = ?";
+    public List<VentaDetalle> getByVentaId(int ventaId) {
+        List<VentaDetalle> lista = new ArrayList<>();
+        String sql = "SELECT * FROM detalles_venta WHERE venta_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, compraId);
+            stmt.setInt(1, ventaId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -83,8 +83,8 @@ public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
     }
 
     @Override
-    public void save(CompraDetalle entity) {
-        String sql = "INSERT INTO detalles_compra (compra_id, producto_id, cantidad_detalle_compra, costo_detalle_compra) VALUES (?, ?, ?, ?)";
+    public void save(VentaDetalle entity) {
+        String sql = "INSERT INTO detalles_venta (venta_id, producto_id, cantidad_detalle_venta, precio_detalle_venta) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, entity.getIdMovimiento());
             stmt.setInt(2, entity.getProducto().getId());
@@ -97,8 +97,8 @@ public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
     }
 
     @Override
-    public void update(CompraDetalle entity) {
-        String sql = "UPDATE detalles_compra SET compra_id = ?, producto_id = ?, cantidad_detalle_compra = ?, costo_detalle_compra = ? WHERE id_detalle_compra = ?";
+    public void update(VentaDetalle entity) {
+        String sql = "UPDATE detalles_venta SET venta_id = ?, producto_id = ?, cantidad_detalle_venta = ?, precio_detalle_venta = ? WHERE id_detalle_venta = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, entity.getIdMovimiento());
             stmt.setInt(2, entity.getProducto().getId());
@@ -113,7 +113,7 @@ public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM detalles_compra WHERE id_detalle_compra = ?";
+        String sql = "DELETE FROM detalles_venta WHERE id_detalle_venta = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

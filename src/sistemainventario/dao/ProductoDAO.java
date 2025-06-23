@@ -6,7 +6,6 @@ import java.util.List;
 import sistemainventario.entity.Categoria;
 import sistemainventario.entity.Producto;
 import sistemainventario.entity.Usuario;
-import sistemainventario.util.Mensajes;
 
 public class ProductoDAO implements IDAO<Producto, Integer> {
 
@@ -54,7 +53,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
                 return mapResultSetToEntity(rs);
             }
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
         return null;
     }
@@ -71,7 +70,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
             }
 
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
 
         return lista;
@@ -94,7 +93,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
             stmt.setInt(11, entity.getUsuario().getId());
             stmt.executeUpdate();
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -114,7 +113,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
             stmt.setInt(10, entity.getId());
             stmt.executeUpdate();
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -125,7 +124,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -138,7 +137,7 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
         return 0;
     }

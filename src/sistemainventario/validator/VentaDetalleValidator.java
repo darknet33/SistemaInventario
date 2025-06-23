@@ -1,11 +1,11 @@
 package sistemainventario.validator;
 
-import sistemainventario.dto.CompraDetalleDTO;
+import sistemainventario.dto.VentaDetalleDTO;
 import sistemainventario.util.Texto;
 
-public class CompraDetalleValidator {
+public class VentaDetalleValidator {
 
-    public static void Validar(CompraDetalleDTO dto) {
+    public static void Validar(VentaDetalleDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Detalle no Valido");
         }
@@ -23,11 +23,11 @@ public class CompraDetalleValidator {
         }
 
         if (dto.getPrecio().isEmpty()) {
-            throw new IllegalArgumentException("Costo Vacio");
+            throw new IllegalArgumentException("Precio Vacio");
         }
 
         if (!Texto.isDecimal(dto.getPrecio())) {
-            throw new IllegalArgumentException("Costo no Valida, ingrese solo numeros");
+            throw new IllegalArgumentException("Precio no Valida, ingrese solo numeros");
         }
 
     }

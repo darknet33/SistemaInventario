@@ -1,4 +1,3 @@
-
 package sistemainventario.dao;
 
 import sistemainventario.entity.Rol;
@@ -6,16 +5,15 @@ import sistemainventario.entity.Permiso;
 
 import java.sql.*;
 import java.util.*;
-import sistemainventario.util.*;
 
+public class RolDAO implements IDAO<Rol, Integer> {
 
-public class RolDAO implements IDAO<Rol, Integer>{
     private final Connection conn;
-    
+
     public RolDAO() {
         this.conn = ConexionDAO.getConexion();
     }
-    
+
     @Override
     public Rol mapResultSetToEntity(ResultSet rs) throws SQLException {
         Rol entity = new Rol();
@@ -25,7 +23,7 @@ public class RolDAO implements IDAO<Rol, Integer>{
 
         return entity;
     }
-    
+
     @Override
     public Rol getById(Integer id) {
         String sql = "SELECT * FROM roles WHERE id_rol = ?";
@@ -35,15 +33,15 @@ public class RolDAO implements IDAO<Rol, Integer>{
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {                
+            if (rs.next()) {
                 return mapResultSetToEntity(rs);
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al buscar Rol por ID: " + e.getMessage());
+            throw new IllegalArgumentException(sql);
         }
 
-        return null;    
+        return null;
     }
 
     @Override
@@ -51,15 +49,14 @@ public class RolDAO implements IDAO<Rol, Integer>{
         List<Rol> lista = new ArrayList<>();
         String sql = "SELECT * FROM roles";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 lista.add(mapResultSetToEntity(rs));
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al listar Roles: " + e.getMessage());
+            throw new IllegalArgumentException(sql);
         }
 
         return lista;
@@ -79,15 +76,15 @@ public class RolDAO implements IDAO<Rol, Integer>{
     public void delete(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     // Obtener todos los permisos asignados a un rol específico
     private List<Permiso> getByPermisosForRolId(long rolId) {
         List<Permiso> permisos = new ArrayList<>();
 
-        String sql = "SELECT id_permiso, modulo_permiso, estado_permiso " +
-                     "FROM permisos " +
-                     "JOIN rol_permiso ON id_permiso = permiso_id " +
-                     "WHERE rol_id = ?";
+        String sql = "SELECT id_permiso, modulo_permiso, estado_permiso "
+                + "FROM permisos "
+                + "JOIN rol_permiso ON id_permiso = permiso_id "
+                + "WHERE rol_id = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -103,7 +100,7 @@ public class RolDAO implements IDAO<Rol, Integer>{
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al listar los Permisos: " + e.getMessage());
+            throw new IllegalArgumentException(sql);
         }
 
         return permisos;

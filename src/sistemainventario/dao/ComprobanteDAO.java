@@ -35,7 +35,7 @@ public class ComprobanteDAO implements IDAO<Comprobante,Integer>{
             }
             
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
             
         }
 
@@ -55,7 +55,7 @@ public class ComprobanteDAO implements IDAO<Comprobante,Integer>{
             }
             
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
 
         return lista;
@@ -71,7 +71,7 @@ public class ComprobanteDAO implements IDAO<Comprobante,Integer>{
            stmt.setString(1, entity.getNombre());
            stmt.executeUpdate();
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -89,7 +89,7 @@ public class ComprobanteDAO implements IDAO<Comprobante,Integer>{
                 System.out.println("No se actualizó ninguna fila. ¿ID inexistente?");
             }
         } catch (SQLException e) {
-            Mensajes.error(sql, e);  // o solo el mensaje si prefieres no exponer el SQL
+            throw new IllegalArgumentException(sql);  // o solo el mensaje si prefieres no exponer el SQL
         }
     }
 
@@ -101,7 +101,7 @@ public class ComprobanteDAO implements IDAO<Comprobante,Integer>{
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 

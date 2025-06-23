@@ -1,13 +1,11 @@
 package sistemainventario.mappers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import sistemainventario.dto.CompraDetalleDTO;
 import sistemainventario.entity.CompraDetalle;
 
 public class CompraDetalleMapper implements IMapper<CompraDetalle, CompraDetalleDTO>{
-    private final CompraMapper compraMapper= new CompraMapper();
     private final ProductoMapper productoMapper= new ProductoMapper();
     @Override
     public CompraDetalleDTO toDTO(CompraDetalle entity) {

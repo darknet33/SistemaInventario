@@ -4,18 +4,17 @@ import sistemainventario.entity.Usuario;
 
 import java.sql.*;
 import java.util.*;
+import sistemainventario.dao.RolDAO;
 import sistemainventario.entity.Rol;
-import sistemainventario.util.*;
 
+public class UsuarioDAO implements IDAO<Usuario, Integer> {
 
-public class UsuarioDAO implements IDAO<Usuario,Integer>{
     private final Connection conn;
-    private final RolDAO rolDAO = new RolDAO();
-    
+
     public UsuarioDAO() {
         this.conn = ConexionDAO.getConexion();
     }
-    
+
     @Override
     public Usuario mapResultSetToEntity(ResultSet rs) throws SQLException {
         Usuario entity = new Usuario();
@@ -28,13 +27,14 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
         entity.setFechaRegistro(rs.getTimestamp("f_registro_usuario"));
         entity.setFechaActualizado(rs.getTimestamp("f_actualizado_usuario"));
         entity.setEstado(rs.getBoolean("estado_usuario"));
-        
-        Rol rol=rolDAO.getById(rs.getInt("rol_id"));
+
+        RolDAO rolDAO = new RolDAO();
+        Rol rol = rolDAO.getById(rs.getInt("rol_id"));
         entity.setRol(rol);
 
         return entity;
     }
-    
+
     @Override
     public Usuario getById(Integer id) {
         String sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
@@ -43,32 +43,31 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {                
+            if (rs.next()) {
                 return mapResultSetToEntity(rs);
             }
-            
+
         } catch (SQLException e) {
-           Mensajes.error(sql, e);
-            
+            throw new IllegalArgumentException(sql);
+
         }
 
         return null;
     }
-    
+
     @Override
     public List<Usuario> getAll() {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuarios";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 lista.add(mapResultSetToEntity(rs));
             }
-            
+
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
 
         return lista;
@@ -85,9 +84,9 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             stmt.setString(5, entity.getCargo());
             stmt.setInt(6, entity.getRol().getId());
             stmt.setBoolean(7, entity.getEstado());
-            stmt.executeUpdate();  
+            stmt.executeUpdate();
         } catch (Exception e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -105,7 +104,7 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             stmt.setInt(8, entity.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
 
@@ -116,10 +115,10 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);
+            throw new IllegalArgumentException(sql);
         }
     }
-    
+
     public Usuario getByUsername(String Username) {
         String sql = "SELECT * FROM usuarios WHERE username_usuario = ?";
 
@@ -130,14 +129,14 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             if (rs.next()) {
                 return mapResultSetToEntity(rs);
             }
-            
+
         } catch (SQLException e) {
-            Mensajes.error(sql, e);           
+            throw new IllegalArgumentException(sql);
         }
         return null;
     }
-    
-    public Usuario getByUsernameAndPassword(String username,String password) {
+
+    public Usuario getByUsernameAndPassword(String username, String password) {
         String sql = "SELECT * FROM usuarios WHERE username_usuario = ? AND password_usuario = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -148,9 +147,9 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             if (rs.next()) {
                 return mapResultSetToEntity(rs);
             }
-            
+
         } catch (SQLException e) {
-            Mensajes.error(sql, e);            
+            throw new IllegalArgumentException(sql);
         }
         return null;
     }
@@ -161,8 +160,8 @@ public class UsuarioDAO implements IDAO<Usuario,Integer>{
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            Mensajes.error(sql, e);   
+            throw new IllegalArgumentException(sql);
         }
     }
-    
+
 }

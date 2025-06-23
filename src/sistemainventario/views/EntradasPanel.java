@@ -3,6 +3,7 @@ package sistemainventario.views;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import sistemainventario.controller.CompraController;
@@ -366,25 +367,6 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
                 .addContainerGap()
                 .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jpComprasRegistroLayout.createSequentialGroup()
-                        .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jpComprasRegistroLayout.createSequentialGroup()
-                                .addComponent(lblProveedor)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cboProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblNroComprobante))
-                            .addGroup(jpComprasRegistroLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(lblFecha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblComprobante)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNroComprobante)
-                            .addComponent(cboComprobantes, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jpComprasRegistroLayout.createSequentialGroup()
                         .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jpComprasRegistroLayout.createSequentialGroup()
                                 .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,12 +397,30 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
                                 .addComponent(lblTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpComprasRegistroLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblEstado)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cboEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpComprasRegistroLayout.createSequentialGroup()
+                                .addComponent(lblProveedor)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cboProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblNroComprobante))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpComprasRegistroLayout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(lblFecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblComprobante))
+                            .addGroup(jpComprasRegistroLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(lblEstado)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jpComprasRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cboEstados, 0, 184, Short.MAX_VALUE)
+                            .addComponent(txtNroComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboComprobantes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(17, 17, 17))
         );
         jpComprasRegistroLayout.setVerticalGroup(
@@ -509,18 +509,19 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
     }//GEN-LAST:event_btnEliminarMouseClicked
 
     private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
-        // TODO add your handling code here:
+        String valorBuscado=txtBuscarProductos.getText().toLowerCase().strip();
+        buscarProductos(valorBuscado);
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void btnQuitarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnQuitarMouseClicked
-        int fila=tblDetalle.getSelectedRow();
-        if (fila==-1){
+        int fila = tblDetalle.getSelectedRow();
+        if (fila == -1) {
             Mensajes.advertencia("Debe elejir un registro");
             return;
         }
-        ProductoDTO producto=(ProductoDTO) tblDetalle.getValueAt(fila, 1);
+        ProductoDTO producto = (ProductoDTO) tblDetalle.getValueAt(fila, 1);
         CompraDetalleDTO detalle = existeDetalle(producto);
-        if (quitarDetalle(detalle)){
+        if (quitarDetalle(detalle)) {
             cargarDetails();
         }
     }//GEN-LAST:event_btnQuitarMouseClicked
@@ -590,7 +591,7 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
                 ? compraController.actualizarCompra(entidadDTO)
                 : compraController.nuevaCompra(entidadDTO);
 
-        if (result) {            
+        if (result) {
             refrescarTablaPrincipal();
         }
     }
@@ -662,7 +663,7 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
         cboComprobantes.setSelectedIndex(0);
         txtNroComprobante.setText("0");
         cboEstados.setSelectedIndex(0);
-        txtTotal.setText("0");
+        txtTotal.setText("0.0");
 
         txtBuscarProductos.setText("");
         cargarProductos();
@@ -746,6 +747,25 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
         cboProductos.setModel(modelo);
     }
 
+    private void buscarProductos(String valorBuscado) {
+        DefaultComboBoxModel<ProductoDTO> modelo = new DefaultComboBoxModel<>();
+        System.out.println(valorBuscado);
+        if (valorBuscado.equals("")) {
+            produtoDTOS.forEach(modelo::addElement);
+        } else {
+            List<ProductoDTO> filtrado = produtoDTOS.stream()
+                    .filter(p -> {
+                        System.out.println(p);
+                        boolean coin=p.getDescripcion().toLowerCase().contains(valorBuscado);
+                        System.out.println(coin);
+                        return coin;
+                    })
+                    .collect(Collectors.toList());
+            filtrado.forEach(modelo::addElement);
+        }
+        cboProductos.setModel(modelo);
+    }
+
     @Override
     public CompraDetalleDTO existeDetalle(ProductoDTO producto) {
         if (listaDetalle == null) {
@@ -821,18 +841,18 @@ public class EntradasPanel extends ViewPanel<CompraDTO> implements IPanelDetalle
 
     @Override
     public boolean quitarDetalle(CompraDetalleDTO detalle) {
-        if (detalle.getIdMovimiento()<=0){
+        if (detalle.getIdMovimiento() <= 0) {
             detalle.setCantidad(cantidadNew(detalle.getCantidad(), -1));
-            if(Integer.parseInt(detalle.getCantidad())<1){
+            if (Integer.parseInt(detalle.getCantidad()) < 1) {
                 listaDetalle.remove(detalle);
                 return true;
             }
-        }else{
+        } else {
             detalle.setCantidad(cantidadNew(detalle.getCantidad(), -1));
-            if(Integer.parseInt(detalle.getCantidad())>=1){
+            if (Integer.parseInt(detalle.getCantidad()) >= 1) {
                 compraController.editDetalle(detalle);
                 return true;
-            }else{
+            } else {
                 listaDetalle.remove(detalle);
                 return compraController.delDetalle(detalle);
             }

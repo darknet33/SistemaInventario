@@ -1,23 +1,23 @@
+
 package sistemainventario.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class Compra {
-
+public class Venta {
     private int id;
     private LocalDate fecha;
-    private Proveedor proveedor;
+    private Cliente cliente;
     private Comprobante comprobante;
     private String nroComprobante;
     private Estado estado;
     private double total;
+    private double impuesto;
+    private double descuento;
     private Usuario usuario;
-    private List<CompraDetalle> detalles;
+    private List<VentaDetalle> detalles;
 
-    public Compra() {
-        detalles = new ArrayList<CompraDetalle>();
+    public Venta() {
     }
 
     public int getId() {
@@ -36,12 +36,12 @@ public class Compra {
         this.fecha = fecha;
     }
 
-    public Proveedor getProveedor() {
-        return proveedor;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public Comprobante getComprobante() {
@@ -76,6 +76,22 @@ public class Compra {
         this.total = total;
     }
 
+    public double getImpuesto() {
+        return impuesto;
+    }
+
+    public void setImpuesto(double impuesto) {
+        this.impuesto = impuesto;
+    }
+
+    public double getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -84,12 +100,13 @@ public class Compra {
         this.usuario = usuario;
     }
 
-    public List<CompraDetalle> getDetalles() {
+    public List<VentaDetalle> getDetalles() {
         return detalles;
     }
 
-    public void setDetalles(List<CompraDetalle> detalles) {
+    public void setDetalles(List<VentaDetalle> detalles) {
         this.detalles = detalles;
     }
-
+    
+    
 }

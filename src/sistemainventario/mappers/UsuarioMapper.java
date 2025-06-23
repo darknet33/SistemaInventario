@@ -1,22 +1,18 @@
 package sistemainventario.mappers;
 
-
 import java.util.List;
-import java.sql.*;
 import sistemainventario.entity.Usuario;
 import sistemainventario.dto.UsuarioDTO;
-import sistemainventario.entity.Rol;
 import sistemainventario.dao.RolDAO;
 
 public class UsuarioMapper implements IMapper<Usuario, UsuarioDTO> {
+
     private final RolMapper rolMapper = new RolMapper();
-    private final RolDAO rolDAO=new RolDAO();
-    
-   
+
     @Override
     public UsuarioDTO toDTO(Usuario entity) {
         UsuarioDTO dto = new UsuarioDTO();
-        if (entity==null){
+        if (entity == null) {
             return null;
         }
         dto.setId(entity.getId());
@@ -54,16 +50,16 @@ public class UsuarioMapper implements IMapper<Usuario, UsuarioDTO> {
     @Override
     public List<UsuarioDTO> toDTOList(List<Usuario> entities) {
         return entities
-                 .stream()
-                 .map(this::toDTO)
-                 .toList();
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     @Override
     public List<Usuario> toEntityList(List<UsuarioDTO> dtos) {
         return dtos
-                 .stream()
-                 .map(this::toEntity)
-                 .toList();
+                .stream()
+                .map(this::toEntity)
+                .toList();
     }
 }
