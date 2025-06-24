@@ -1,0 +1,65 @@
+package sistemarhino.mappers;
+
+import java.util.List;
+import sistemarhino.entity.Usuario;
+import sistemarhino.dto.UsuarioDTO;
+import sistemarhino.dao.RolDAO;
+
+public class UsuarioMapper implements IMapper<Usuario, UsuarioDTO> {
+
+    private final RolMapper rolMapper = new RolMapper();
+
+    @Override
+    public UsuarioDTO toDTO(Usuario entity) {
+        UsuarioDTO dto = new UsuarioDTO();
+        if (entity == null) {
+            return null;
+        }
+        dto.setId(entity.getId());
+        dto.setUsername(entity.getUsername());
+        dto.setPassword(entity.getPassword());
+        dto.setNombres(entity.getNombres());
+        dto.setApellidos(entity.getApellidos());
+        dto.setCargo(entity.getCargo());
+        dto.setRol(rolMapper.toDTO(entity.getRol()));
+        dto.setEstado(entity.getEstado());
+        dto.setFechaRegistro(entity.getFechaRegistro());
+        dto.setFechaActualizado(entity.getFechaActualizado());
+
+        return dto;
+    }
+
+    @Override
+    public Usuario toEntity(UsuarioDTO dto) {
+        Usuario entity = new Usuario();
+
+        entity.setId(dto.getId());
+        entity.setUsername(dto.getUsername());
+        entity.setPassword(dto.getPassword());
+        entity.setNombres(dto.getNombres());
+        entity.setApellidos(dto.getApellidos());
+        entity.setCargo(dto.getCargo());
+        entity.setRol(rolMapper.toEntity(dto.getRol()));
+        entity.setEstado(dto.getEstado());
+        entity.setFechaRegistro(dto.getFechaRegistro());
+        entity.setFechaActualizado(dto.getFechaActualizado());
+
+        return entity;
+    }
+
+    @Override
+    public List<UsuarioDTO> toDTOList(List<Usuario> entities) {
+        return entities
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<Usuario> toEntityList(List<UsuarioDTO> dtos) {
+        return dtos
+                .stream()
+                .map(this::toEntity)
+                .toList();
+    }
+}

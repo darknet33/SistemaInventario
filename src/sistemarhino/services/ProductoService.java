@@ -1,0 +1,46 @@
+package sistemarhino.services;
+
+import java.util.List;
+import sistemarhino.dao.ProductoDAO;
+import sistemarhino.dto.ProductoDTO;
+import sistemarhino.mappers.ProductoMapper;
+import sistemarhino.validator.ProductoValidator;
+
+public class ProductoService implements IService<ProductoDTO, Integer>{
+    
+    private final ProductoDAO productoDAO;
+    private final ProductoMapper productoMapper;
+    
+    public ProductoService() {
+        this.productoDAO = new ProductoDAO();
+        this.productoMapper=new ProductoMapper();
+    }
+    
+    @Override
+    public ProductoDTO obtenerPorId(Integer id) {
+        return productoMapper.toDTO(productoDAO.getById(id));
+    }
+
+    @Override
+    public List<ProductoDTO> listarTodos() {
+        return productoMapper.toDTOList(productoDAO.getAll());
+    }
+
+    @Override
+    public void guardar(ProductoDTO dto) {
+        ProductoValidator.validar(dto);
+        productoDAO.save(productoMapper.toEntity(dto));
+    }
+
+    @Override
+    public void actualizar(ProductoDTO dto) {
+        ProductoValidator.validar(dto);
+        productoDAO.update(productoMapper.toEntity(dto));
+    }
+
+    @Override
+    public void eliminar(Integer id) {
+        productoDAO.delete(id);
+    }
+    
+}
