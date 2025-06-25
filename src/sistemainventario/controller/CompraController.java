@@ -82,7 +82,7 @@ public class CompraController {
 
     public void guardarDetalles(CompraDTO compra) {
         try {
-            int id = compraService.idCompra();
+            int id = compraService.getIDInsert();
             compra.getDetalles().stream()
                     .peek(dc -> dc.setIdMovimiento(id))
                     .forEach(this::addDetalle);

@@ -2,8 +2,8 @@ package sistemainventario.dto;
 
 import java.util.Date;
 
+public class ProductoDTO implements IDTO {
 
-public class ProductoDTO implements IDTO{
     private int id;
     private String codigo;
     private CategoriaDTO categoria;
@@ -20,6 +20,7 @@ public class ProductoDTO implements IDTO{
     private UsuarioDTO usuario;
 
     public ProductoDTO() {
+        this.categoria=new CategoriaDTO();
     }
 
     public ProductoDTO(int id, String codigo, CategoriaDTO categoria, String descripcion, String marca, String procedencia, String Peso, String stockInicial, String stockActual, String stockMinimo, Date fechaRegistro, Date fechaActualizado, boolean estado, UsuarioDTO usuario) {
@@ -39,7 +40,6 @@ public class ProductoDTO implements IDTO{
         this.usuario = usuario;
     }
 
-   
     public int getId() {
         return id;
     }
@@ -154,7 +154,7 @@ public class ProductoDTO implements IDTO{
 
     @Override
     public String toString() {
-        return categoria + " " + descripcion + " " + marca ;
+        return categoria + " " + descripcion + " " + marca;
     }
 
     @Override
@@ -178,15 +178,10 @@ public class ProductoDTO implements IDTO{
         final ProductoDTO other = (ProductoDTO) obj;
         return this.id == other.id;
     }
-    
-    
-    
 
     @Override
     public int getPK() {
         return id;
     }
-    
-    
-    
+
 }

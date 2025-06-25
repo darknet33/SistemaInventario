@@ -5,12 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import sistemainventario.entity.Categoria;
 
-public class CategoriaDAO implements IDAO<Categoria,Integer>{
-    private final Connection conn;
-
-    public CategoriaDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class CategoriaDAO extends DAO<Categoria,Integer>{
 
     @Override
     public Categoria mapResultSetToEntity(ResultSet rs) throws SQLException {
@@ -102,6 +97,25 @@ public class CategoriaDAO implements IDAO<Categoria,Integer>{
         } catch (SQLException e) {
             throw new IllegalArgumentException(sql);
         }
+    }
+    
+    public Categoria getByNombre(String nombre){
+        String sql = "SELECT * FROM categorias WHERE nombre_categoria = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nombre);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {                
+                return mapResultSetToEntity(rs);
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("se produce aqui el error");
+            throw new IllegalArgumentException(sql);
+        }
+
+        return null;
     }
 
     

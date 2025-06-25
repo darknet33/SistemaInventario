@@ -4,14 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import sistemainventario.entity.Comprobante;
-import sistemainventario.util.Mensajes;
 
-public class ComprobanteDAO implements IDAO<Comprobante,Integer>{
-    private final Connection conn;
-
-    public ComprobanteDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class ComprobanteDAO extends DAO<Comprobante,Integer>{
 
     @Override
     public Comprobante mapResultSetToEntity(ResultSet rs) throws SQLException {

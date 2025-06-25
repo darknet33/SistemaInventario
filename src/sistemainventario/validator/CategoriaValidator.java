@@ -6,9 +6,9 @@ public class CategoriaValidator {
     
     public static void validar(CategoriaDTO dto){
         if (dto==null)
-            throw new IllegalArgumentException("Categoria undefine");
+            throw new IllegalArgumentException("Categoria: undefine");
         
         if (dto.getNombre().isEmpty())
-            throw new IllegalArgumentException("El nombre es Obligatorio");
+            throw new IllegalArgumentException("Categoria: nombre es Obligatorio");
     }
 }

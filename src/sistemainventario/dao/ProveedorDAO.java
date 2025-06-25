@@ -8,12 +8,7 @@ import java.sql.*;
 import java.util.*;
 import sistemainventario.util.*;
 
-public class ProveedorDAO implements IDAO<Proveedor, Integer>{
-    private final Connection conn;
-    
-    public ProveedorDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class ProveedorDAO extends DAO<Proveedor, Integer>{
 
     @Override
     public Proveedor mapResultSetToEntity(ResultSet rs) throws SQLException {

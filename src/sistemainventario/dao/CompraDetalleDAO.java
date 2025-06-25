@@ -7,12 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompraDetalleDAO implements IDAO<CompraDetalle, Integer> {
-    private final Connection conn;
-    
-    public CompraDetalleDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class CompraDetalleDAO extends DAO<CompraDetalle, Integer> {
 
     @Override
     public CompraDetalle mapResultSetToEntity(ResultSet rs) throws SQLException {

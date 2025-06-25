@@ -7,6 +7,7 @@ import sistemainventario.controller.CategoriaController;
 import sistemainventario.controller.ProductoController;
 import sistemainventario.dto.CategoriaDTO;
 import sistemainventario.dto.ProductoDTO;
+import sistemainventario.mappers.ProductoExcelMapper;
 import sistemainventario.util.Sesion;
 import sistemainventario.util.Texto;
 
@@ -19,6 +20,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     public ProductosPanel() {
         this.productoController = new ProductoController();
         this.categoriaController = new CategoriaController();
+        controller=productoController;
         initComponents();
         inicializarPaneles(jpDatos, jpAction, jpActionSave);
         refrescarTablaPrincipal();
@@ -67,6 +69,8 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
         lblBuscar = new javax.swing.JLabel();
         cboCriterio = new javax.swing.JComboBox<>();
         btnBuscar = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
+        btnImportar = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(950, 600));
 
@@ -334,6 +338,20 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
             }
         });
 
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarActionPerformed(evt);
+            }
+        });
+
+        btnImportar.setText("Importar");
+        btnImportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpContainerLayout = new javax.swing.GroupLayout(jpContainer);
         jpContainer.setLayout(jpContainerLayout);
         jpContainerLayout.setHorizontalGroup(
@@ -351,10 +369,14 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cboCriterio, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBuscar)
-                        .addGap(71, 71, 71))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnImportar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExportar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))))
             .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jpContainerLayout.createSequentialGroup()
                     .addContainerGap()
@@ -371,7 +393,11 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblBuscar)
                         .addComponent(cboCriterio, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnBuscar))
+                    .addGroup(jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnImportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnExportar))
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
                 .addComponent(jpDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -429,12 +455,24 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
         vistaInicial();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    private void btnImportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarActionPerformed
+        if(importarDesdeExcel(new ProductoExcelMapper())){
+            refrescarTablaPrincipal();
+        }
+    }//GEN-LAST:event_btnImportarActionPerformed
+
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        exportarAExcel(listadoDTOS, new ProductoExcelMapper(), "Productos Exportados");
+    }//GEN-LAST:event_btnExportarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JLabel btnCancelar;
     private javax.swing.JLabel btnEditar;
     private javax.swing.JLabel btnEliminar;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JLabel btnGuardar;
+    private javax.swing.JButton btnImportar;
     private javax.swing.JLabel btnNuevo;
     private javax.swing.JLabel btnRefreshCategoria;
     private javax.swing.JComboBox<CategoriaDTO> cboCategoria;
@@ -492,6 +530,7 @@ public final class ProductosPanel extends ViewPanel<ProductoDTO> {
     public void editar() {
         vistaEditar();
         controlsEditable(true);
+        txtStockInicial.setEnabled(false);
     }
 
     @Override

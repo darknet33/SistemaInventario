@@ -14,6 +14,8 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
     public ProductoDTO toDTO(Producto entity){
         ProductoDTO dto=new ProductoDTO();
         
+        if (entity==null) return null;
+        
         dto.setId(entity.getId());
         dto.setCodigo(entity.getCodigo());        
         dto.setCategoria(categoriaMapper.toDTO(entity.getCategoria()));
@@ -35,6 +37,8 @@ public class ProductoMapper implements IMapper<Producto, ProductoDTO>{
     @Override
     public Producto toEntity(ProductoDTO dto){
         Producto entity=new Producto();
+        
+        if (dto==null) return null;
         
         entity.setId(dto.getId());
         entity.setCodigo(dto.getCodigo());

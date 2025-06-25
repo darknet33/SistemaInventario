@@ -7,13 +7,7 @@ import java.util.*;
 import sistemainventario.dao.RolDAO;
 import sistemainventario.entity.Rol;
 
-public class UsuarioDAO implements IDAO<Usuario, Integer> {
-
-    private final Connection conn;
-
-    public UsuarioDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class UsuarioDAO extends DAO<Usuario, Integer> {
 
     @Override
     public Usuario mapResultSetToEntity(ResultSet rs) throws SQLException {

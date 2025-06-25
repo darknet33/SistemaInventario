@@ -2,10 +2,12 @@ package sistemainventario.views;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -13,8 +15,13 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import sistemainventario.controller.IImportableController;
 import sistemainventario.dto.IDTO;
+import sistemainventario.mappers.ExcelMappable;
+import sistemainventario.util.ExcelUtil;
+import sistemainventario.util.Mensajes;
 import sistemainventario.util.ModeloTablaBuilder;
+import sistemainventario.util.Sesion;
 
 public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel implements IPanel<T> {
 
@@ -25,6 +32,7 @@ public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel imple
     protected int idDTO;
     protected ModeloTablaBuilder<T> builder = new ModeloTablaBuilder<>();
     protected T entidadDTO;
+    protected IImportableController<T> controller;
     protected List<T> listadoDTOS;
 
     protected void inicializarPaneles(JPanel datos, JPanel action, JPanel actionSave) {
@@ -73,7 +81,6 @@ public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel imple
     /**
      * Método template: construye y muestra la tabla
      */
-    
     protected void CargarTabla(List<T> data, JTable table) {
         DefaultTableModel model = builder.construirModelo(
                 getColumnNames(),
@@ -131,15 +138,86 @@ public abstract class ViewPanel<T extends IDTO> extends javax.swing.JPanel imple
             }
         });
     }
-    
-    public void ventaAuxiliar(JPanel xPanel,String titulo){
-        JFrame ventaAux=new JFrame(titulo);
+
+    public void ventaAuxiliar(JPanel xPanel, String titulo) {
+        JFrame ventaAux = new JFrame(titulo);
         ventaAux.setLocationRelativeTo(null);
         ventaAux.setSize(950, 600);
         ventaAux.add(xPanel);
         ventaAux.setVisible(true);
     }
-    
-    
-    
+
+    protected boolean accesoFuncionesEspeciales() {
+        if (Sesion.getUsuario().getRol().getId() != 1) {
+            Mensajes.advertencia("Solo los usuarios con rango Administrador tiene acceso a esta funcion");
+            return false;
+        }
+        return true;
+    }
+
+    protected boolean importarDesdeExcel(ExcelMappable<T> mapper) {
+        if (!accesoFuncionesEspeciales()) return false;
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar archivo Excel");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Excel (*.xlsx)", "xlsx"));
+
+        int resultado = fileChooser.showOpenDialog(this);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+
+            try {
+                List<T> datos = ExcelUtil.importFromExcel(archivo, mapper);
+
+                if (controller instanceof IImportableController) {
+                    IImportableController<T> importable = (IImportableController<T>) controller;
+                    importable.importar(datos, Sesion.getUsuario());
+                    return true;
+                } else {
+                    Mensajes.advertencia("Este módulo no admite importación.");
+                    return false;
+                }
+
+            } catch (Exception ex) {
+                Mensajes.errorValidaciones(ex);
+                return false;
+            }
+        }
+
+        return false; // El usuario canceló el diálogo
+    }
+
+    protected boolean exportarAExcel(List<T> datos, ExcelMappable<T> mapper, String nombreSugerido) {
+
+        if (!accesoFuncionesEspeciales()) return false;
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar archivo Excel");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Excel (*.xlsx)", "xlsx"));
+        fileChooser.setSelectedFile(new File(nombreSugerido + ".xlsx"));
+
+        int resultado = fileChooser.showSaveDialog(this);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+
+            // Asegurarse de que tenga extensión .xlsx
+            if (!archivo.getName().toLowerCase().endsWith(".xlsx")) {
+                archivo = new File(archivo.getAbsolutePath() + ".xlsx");
+            }
+
+            try {
+                ExcelUtil.exportToExcel(datos, mapper, archivo.getAbsolutePath());
+                Mensajes.info("Archivo exportado correctamente:\n" + archivo.getAbsolutePath());
+                return true;
+            } catch (Exception ex) {
+                Mensajes.errorValidaciones(ex);
+                return false;
+            }
+        }
+
+        return false; // El usuario canceló
+    }
+
 }

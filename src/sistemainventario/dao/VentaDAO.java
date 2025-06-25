@@ -1,23 +1,16 @@
 package sistemainventario.dao;
 
-import sistemainventario.entity.Comprobante;
-import sistemainventario.entity.Estado;
-import sistemainventario.entity.Usuario;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import sistemainventario.entity.Cliente;
 import sistemainventario.entity.Venta;
 import sistemainventario.entity.VentaDetalle;
+import sistemainventario.entity.Comprobante;
+import sistemainventario.entity.Estado;
+import sistemainventario.entity.Usuario;
 
-public class VentaDAO implements IDAO<Venta, Integer> {
-
-    private final Connection conn;
-
-    public VentaDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class VentaDAO extends DAO<Venta, Integer> {
 
     @Override
     public Venta mapResultSetToEntity(ResultSet rs) throws SQLException {
@@ -139,19 +132,6 @@ public class VentaDAO implements IDAO<Venta, Integer> {
             stmt.setInt(1, nuevoEstadoId);
             stmt.setInt(2, id);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(sql);
-        }
-    }
-
-    public int obtenerIDUltimaVenta() {
-        int idUltimo = 0;
-        String sql = "SELECT LAST_INSERT_ID()";
-        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                idUltimo = rs.getInt(1);
-            }
-            return idUltimo;
         } catch (SQLException e) {
             throw new IllegalArgumentException(sql);
         }

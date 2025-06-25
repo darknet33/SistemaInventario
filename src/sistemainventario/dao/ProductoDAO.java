@@ -7,15 +7,7 @@ import sistemainventario.entity.Categoria;
 import sistemainventario.entity.Producto;
 import sistemainventario.entity.Usuario;
 
-public class ProductoDAO implements IDAO<Producto, Integer> {
-
-    private final Connection conn;
-    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
-    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-    public ProductoDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class ProductoDAO extends DAO<Producto, Integer> {
 
     @Override
     public Producto mapResultSetToEntity(ResultSet rs) throws SQLException {
@@ -33,9 +25,11 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
         entity.setFechaActualizado(rs.getTimestamp("f_actualizado_producto"));
         entity.setEstado(rs.getBoolean("estado_producto"));
 
+        CategoriaDAO categoriaDAO = new CategoriaDAO();
         Categoria categoria = categoriaDAO.getById(rs.getInt("categoria_id"));
         entity.setCategoria(categoria);
 
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
         Usuario usuario = usuarioDAO.getById(rs.getInt("usuario_id"));
         entity.setUsuario(usuario);
 
@@ -126,6 +120,21 @@ public class ProductoDAO implements IDAO<Producto, Integer> {
         } catch (SQLException e) {
             throw new IllegalArgumentException(sql);
         }
+    }
+
+    public Producto getByCodigo(String codigo) {
+        String sql = "SELECT * FROM productos WHERE codigo_producto = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, codigo.toUpperCase());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToEntity(rs);
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(sql);
+        }
+        return null;
     }
 
     public int contarPorCategoria(Integer categoriaId) {

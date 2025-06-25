@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConexionDAO {
 
-    private static final String URL = "jdbc:mariadb://localhost:3307/testSistema";
+    private static final String URL = "jdbc:mariadb://localhost:3307/testsistema";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
     private static Connection conexion = null;

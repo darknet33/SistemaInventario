@@ -5,12 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import sistemainventario.entity.Estado;
 
-public class EstadoDAO implements IDAO<Estado,Integer>{
-    private final Connection conn;
-
-    public EstadoDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class EstadoDAO extends DAO<Estado,Integer>{
 
     @Override
     public Estado mapResultSetToEntity(ResultSet rs) throws SQLException {

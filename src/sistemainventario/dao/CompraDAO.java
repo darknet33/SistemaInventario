@@ -11,14 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompraDAO implements IDAO<Compra, Integer> {
-
-    private final Connection conn;
-
-    public CompraDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
-
+public class CompraDAO extends DAO<Compra, Integer> {
+    
     @Override
     public Compra mapResultSetToEntity(ResultSet rs) throws SQLException {
         Compra entity = new Compra();
@@ -133,20 +127,6 @@ public class CompraDAO implements IDAO<Compra, Integer> {
             stmt.setInt(1, nuevoEstadoId);
             stmt.setInt(2, id);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(sql);
-        }
-    }
-
-    public int obtenerIDUltimaCompra() {
-        int idUltimo=0;
-        String sql = "SELECT LAST_INSERT_ID()";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                idUltimo=rs.getInt(1);
-            }
-            return idUltimo;
         } catch (SQLException e) {
             throw new IllegalArgumentException(sql);
         }

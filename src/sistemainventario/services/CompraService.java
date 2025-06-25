@@ -16,7 +16,7 @@ public class CompraService implements IService<CompraDTO, Integer>{
 
     @Override
     public CompraDTO obtenerPorId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return compraMapper.toDTO(compraDAO.getById(id));
     }
 
     @Override
@@ -39,8 +39,8 @@ public class CompraService implements IService<CompraDTO, Integer>{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    public int idCompra(){
-        return compraDAO.obtenerIDUltimaCompra();
+    public int getIDInsert(){
+        return compraDAO.obtenerID();
     }
     
     

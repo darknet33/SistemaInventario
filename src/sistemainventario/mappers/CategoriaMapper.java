@@ -11,6 +11,8 @@ public class CategoriaMapper implements IMapper<Categoria, CategoriaDTO>{
     public CategoriaDTO toDTO(Categoria entity){
         CategoriaDTO dto=new CategoriaDTO();
         
+        if(entity==null) return null;
+        
         dto.setId(entity.getId());
         dto.setNombre(entity.getNombre());
         
@@ -20,6 +22,8 @@ public class CategoriaMapper implements IMapper<Categoria, CategoriaDTO>{
     @Override
     public Categoria toEntity(CategoriaDTO dto){
         Categoria entity=new Categoria();
+        
+        if(dto==null) return null;
         
         entity.setId(dto.getId());
         entity.setNombre(dto.getNombre());

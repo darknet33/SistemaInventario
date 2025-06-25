@@ -49,6 +49,14 @@ public class CategoriaService implements IService<CategoriaDTO, Integer>{
             categoriaDAO.delete(id); 
         }
     }
+    
+    public CategoriaDTO obtenerPorNombre(String nombre){
+        return categoriaMapper.toDTO(categoriaDAO.getByNombre(nombre));
+    }
+    
+    public int getIDInsert(){
+        return categoriaDAO.obtenerID();
+    }
 
     
 }

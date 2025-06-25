@@ -6,13 +6,7 @@ import sistemainventario.entity.Permiso;
 import java.sql.*;
 import java.util.*;
 
-public class RolDAO implements IDAO<Rol, Integer> {
-
-    private final Connection conn;
-
-    public RolDAO() {
-        this.conn = ConexionDAO.getConexion();
-    }
+public class RolDAO extends DAO<Rol, Integer> {
 
     @Override
     public Rol mapResultSetToEntity(ResultSet rs) throws SQLException {

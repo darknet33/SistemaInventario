@@ -40,7 +40,7 @@ public class VentaService implements IService<VentaDTO, Integer>{
     }
     
     public int idVenta(){
-        return ventaDAO.obtenerIDUltimaVenta();
+        return ventaDAO.obtenerID();
     }
     
     
