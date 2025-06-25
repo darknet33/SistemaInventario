@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\royto\OneDrive\Documentos\Proyecto General\JAVA SIstema Inventario\SistemaInventario\store\Sistema RINHO.jar</jar>
-  <outfile>C:\Users\royto\OneDrive\Documentos\Proyecto General\JAVA SIstema Inventario\SistemaInventario\store\Sistema Rinho.exe</outfile>
+  <jar>D:\SistemaInventario\store\Sistema RINHO 1.0.jar</jar>
+  <outfile>D:\SistemaInventario\store\Sistema Rhino 1.0.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,12 +13,18 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\royto\OneDrive\Documentos\Proyecto General\JAVA SIstema Inventario\SistemaInventario\src\RINHO.ico</icon>
+  <icon>D:\SistemaInventario\src\RHINO.ico</icon>
   <jre>
-    <path>C:\Program Files\Eclipse Adoptium\jre-22.0.2.9-hotspot\bin</path>
+    <path>%JAVA_HOME%;%PATH%</path>
     <requiresJdk>false</requiresJdk>
-    <requires64Bit>false</requires64Bit>
-    <minVersion></minVersion>
+    <requires64Bit>true</requires64Bit>
+    <minVersion>22</minVersion>
     <maxVersion></maxVersion>
   </jre>
+  <splash>
+    <file>D:\SistemaInventario\store\logo.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
 </launch4jConfig>
