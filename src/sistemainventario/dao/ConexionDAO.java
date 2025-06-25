@@ -6,28 +6,50 @@ import java.sql.SQLException;
 
 public class ConexionDAO {
 
-    private static final String URL = "jdbc:mariadb://localhost:3307/testsistema";
-    private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    public enum MotorBD {
+        MARIADB, POSTGRESQL
+    }
+
+    // Cambiar aquí para seleccionar el motor
+    private static final MotorBD MOTOR = MotorBD.MARIADB; // o POSTGRESQL
+
+    // Configuración para MariaDB
+    private static final String MARIADB_URL = "jdbc:mariadb://localhost:3307/testsistema";
+    private static final String MARIADB_DRIVER = "org.mariadb.jdbc.Driver";
+    private static final String MARIADB_USER = "root"; //rhino
+    private static final String MARIADB_PASSWORD = "root";  //rhino_password
+
+    // Configuración para PostgreSQL
+    private static final String POSTGRES_URL = "jdbc:postgresql://db.ngngawuhzingkbbanfkv.supabase.co:5432/postgres?user=postgres&password=gyrx100PRE#?sslmode=require";
+    private static final String POSTGRES_DRIVER = "org.postgresql.Driver";
+    private static final String POSTGRES_USER = "rhino";
+    private static final String POSTGRES_PASSWORD = "gyrx100pre";
+
     private static Connection conexion = null;
 
-    // Constructor privado para evitar instanciación
     private ConexionDAO() {
     }
 
     public static Connection getConexion() {
         try {
             if (conexion == null || conexion.isClosed()) {
-                // Registrar el driver si aún no lo hizo (por seguridad)
-                Class.forName("org.mariadb.jdbc.Driver");
-                conexion = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("✔ Conexión establecida.");
+                switch (MOTOR) {
+                    case MARIADB:
+                        Class.forName(MARIADB_DRIVER);
+                        conexion = DriverManager.getConnection(MARIADB_URL, MARIADB_USER, MARIADB_PASSWORD);
+                        break;
+                    case POSTGRESQL:
+                        Class.forName(POSTGRES_DRIVER);
+                        conexion = DriverManager.getConnection(POSTGRES_URL);
+                        break;
+                }
+                System.out.println("✔ Conexión establecida a " + MOTOR);
             }
             return conexion;
         } catch (ClassNotFoundException e) {
-            System.err.println("✘ Driver JDBC no encontrado: " + e.getMessage());
+            System.err.println("✘ Driver no encontrado: " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("✘ Error al conectar a la base de datos: " + e.getMessage());
+            System.err.println("✘ Error al conectar: " + e.getMessage());
         }
         return null;
     }
@@ -39,20 +61,30 @@ public class ConexionDAO {
                 System.out.println("✔ Conexión cerrada.");
             }
         } catch (SQLException e) {
-            System.err.println("✘ Error al cerrar la conexión: " + e.getMessage());
+            System.err.println("✘ Error al cerrar conexión: " + e.getMessage());
         }
     }
 
     public static boolean probarConexion() {
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
-            Connection testConn = DriverManager.getConnection(URL, USER, PASSWORD);
-            testConn.close(); // solo probar, no guardar
+            Connection testConn;
+            switch (MOTOR) {
+                case MARIADB:
+                    Class.forName(MARIADB_DRIVER);
+                    testConn = DriverManager.getConnection(MARIADB_URL, MARIADB_USER, MARIADB_PASSWORD);
+                    break;
+                case POSTGRESQL:
+                    Class.forName(POSTGRES_DRIVER);
+                    testConn = DriverManager.getConnection(POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD);
+                    break;
+                default:
+                    return false;
+            }
+            testConn.close();
             return true;
         } catch (Exception e) {
             System.err.println("❌ Error al probar conexión: " + e.getMessage());
             return false;
         }
     }
-
 }
